@@ -4,142 +4,165 @@
             <v-toolbar flat color="white">
                 <v-btn @click="crearPDF()"><v-icon>print</v-icon></v-btn>
                 <v-toolbar-title>Crews</v-toolbar-title>
-                    <v-divider
-                    class="mx-2"
-                    inset
-                    vertical
-                    ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="1000px">
-                        <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
-                        <v-card>
-                            <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>            
-                            <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
-                                <v-flex xs3 sm3 md3>
-                                    <v-select v-model="idpersona"
-                                    :items = "personas" label = "Crew">
-                                    </v-select>
-                                </v-flex>                                
-                                <v-flex xs3 sm3 md3>
-                                    <v-text-field v-model="cuil" label="CUIL">
-                                    </v-text-field>
-                                </v-flex>
-                                <template>
-                                <v-menu
-                                    ref="menu"
-                                    v-model="menu"
-                                    :close-on-content-click="false"
-                                    :nudge-right="40"
-                                    lazy
-                                    transition="scale-transition"
-                                    offset-y
-                                    full-width
-                                    min-width="290px"
-                                >
-                                    <template v-slot:activator="{ on }">
-                                    <v-text-field
-                                        v-model="fecnacimiento"
-                                        label="Fecha Nacimiento"
-                                        prepend-icon="event"
-                                        readonly
-                                        v-on="on"
-                                    ></v-text-field>
-                                    </template>
-                                    <v-date-picker
-                                    ref="picker"
+                <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+                    right
+                    color="error"
+                    >
+                    {{ snacktext }}
+                    <v-btn 
+                        color="error"
+                        dark
+                        vertical
+                        text
+                        @click="snackbar = false"
+                    >
+                        Cerrar
+                    </v-btn>
+                </v-snackbar>   
+                <v-divider
+                class="mx-2"
+                inset
+                vertical
+                ></v-divider>
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="1000px">
+                    <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>            
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                            <v-flex xs3 sm3 md3>
+                                <v-autocomplete 
+                                    v-model="idpersona" 
+                                    clearable
+                                    :items = "personas" 
+                                    :search-input.sync="searchp" 
+                                    label = "Crew">
+                                </v-autocomplete>
+                            </v-flex>                                
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field v-model="cuil" label="CUIL">
+                                </v-text-field>
+                            </v-flex>
+                            <template>
+                            <v-menu
+                                ref="menu"
+                                v-model="menu"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px"
+                            >
+                                <template v-slot:activator="{ on }">
+                                <v-text-field
                                     v-model="fecnacimiento"
-                                    :max="new Date().toISOString().substr(0, 10)"
-                                    min="1950-01-01"
-                                    @change="save"
-                                    ></v-date-picker>
-                                </v-menu>
+                                    label="Fecha Nacimiento"
+                                    prepend-icon="event"
+                                    readonly
+                                    v-on="on"
+                                ></v-text-field>
                                 </template>
-                                <v-flex xs3 sm3 md3>
-                                    <v-text-field v-model="nacionalidad" label="Nacionalidad">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs3 sm3 md3>
-                                    <v-text-field v-model="estudioscursados" label="Estudios Cursados">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs2 sm2 md2>
-                                    <v-select v-model="estadocivil"
-                                    :items = "estadocivils" label = "Estado Civil">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs3 sm3 md3>
-                                    <v-text-field v-model="datosconyugue" label="Datos Cónyugue">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs1 sm1 md1>
-                                    <v-text-field v-model="cantidadhijos" label="#Hijos">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs3 sm3 md3>
-                                    <v-text-field v-model="listammaanacimientohijos" label="<MMAA;> Nacimiento Hijos">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs3 sm3 md3>
-                                    <v-text-field v-model="sindicato" label="Sindicato">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs3 sm3 md3>
-                                    <v-text-field v-model="numafiliadosindicato" label="#Afiliado Sindicato">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs3 sm3 md3>
-                                    <v-text-field v-model="obrasocial" label="Obra Social">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs3 sm3 md3>
-                                    <v-text-field v-model="numafiliadoobrasocial" label="#Afiliado Obra Social">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12 v-show="valida">
-                                    <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
-                                    </div>
-                                </v-flex>
-                                </v-layout>
-                            </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-                                <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="adModal" max-width="290">
-                        <v-card>
-                            <v-card-title class="headline" v-if="adAccion==1">¿Activar Crew?</v-card-title>
-                            <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Crew?</v-card-title>
-                            <v-card-text>
-                                Estás a punto de 
-                                <span v-if="adAccion==1">Activar </span>
-                                <span v-if="adAccion==2">Desactivar </span>
-                                el crew {{ adNombre }}
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
-                                    Cancelar
-                                </v-btn>
-                                <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
-                                    Activar
-                                </v-btn>
-                                <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
-                                    Desactivar
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </v-toolbar>
+                                <v-date-picker
+                                ref="picker"
+                                v-model="fecnacimiento"
+                                @change="save"
+                                ></v-date-picker>
+                            </v-menu>
+                            </template>
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field v-model="nacionalidad" label="Nacionalidad">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field v-model="estudioscursados" label="Estudios Cursados">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs2 sm2 md2>
+                                <v-select v-model="estadocivil"
+                                :items = "estadocivils" label = "Estado Civil">
+                                </v-select>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field v-model="datosconyugue" label="Datos Cónyugue">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs1 sm1 md1>
+                                <v-text-field v-model="cantidadhijos" label="#Hijos">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field v-model="listammaanacimientohijos" label="<MMAA;> Nacimiento Hijos">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field v-model="sindicato" label="Sindicato">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field v-model="numafiliadosindicato" label="#Afiliado Sindicato">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field v-model="obrasocial" label="Obra Social">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field v-model="numafiliadoobrasocial" label="#Afiliado Obra Social">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field v-model="cbu" label="CBU">
+                                </v-text-field>
+                            </v-flex>                            
+                            <v-flex xs12 sm12 md12 v-show="valida">
+                                <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                                </div>
+                            </v-flex>
+                            </v-layout>
+                        </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="adModal" max-width="290">
+                    <v-card>
+                        <v-card-title class="headline" v-if="adAccion==1">¿Activar Crew?</v-card-title>
+                        <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Crew?</v-card-title>
+                        <v-card-text>
+                            Estás a punto de 
+                            <span v-if="adAccion==1">Activar </span>
+                            <span v-if="adAccion==2">Desactivar </span>
+                            el crew {{ adNombre }}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
+                                Cancelar
+                            </v-btn>
+                            <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
+                                Activar
+                            </v-btn>
+                            <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
+                                Desactivar
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-toolbar>
             <v-data-table
                 :headers="headers"
                 :items="crews"
@@ -185,6 +208,7 @@
                     <td>{{ props.item.numafiliadosindicato }}</td>
                     <td>{{ props.item.obrasocial }}</td>
                     <td>{{ props.item.numafiliadoobrasocial }}</td>
+                    <td>{{ props.item.cbu }}</td>
                     <td>
                         <div v-if="props.item.activo">
                             <span class="blue--text">Activo</span>
@@ -209,12 +233,15 @@
     export default {
         data: () => {
             return {
+                snackbar:false,
+                snacktext: 'Hola',
+                timeout: 4000,
                 fecnacimiento: null,
                 menu: false,
                 off:false,
                 crews:[],
                 personas:[],               
-                estadocivils:['Soltero/a','Casado/a','Separado/a','Divorciado/a','Viudo/a'],
+                estadocivils:['Soltero/a','Casado/a','Separado/a','Divorciado/a','Viudo/a','Concubino/a'],
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
@@ -231,9 +258,11 @@
                     { text: '#Afiliado Sindicato', value: 'numafiliadosindicato', sortable: true  },
                     { text: 'Obra Social', value: 'obrasocial', sortable: true  },
                     { text: '#Afiliado Obra Social', value: 'numafiliadoobrasocial', sortable: true  },
+                    { text: 'CBU', value: 'cbu', sortable: true  },
                     { text: 'Estado', value: 'activo', sortable: true  }                
                 ],
                 search: '',
+                searchp: '',
                 editedIndex: -1,
                 idcrew: '',
                 idpersona: '',
@@ -248,6 +277,7 @@
                 numafiliadosindicato:'',
                 obrasocial:'',
                 numafiliadoobrasocial:'',
+                cbu:'',
                 valida: 0,
                 validaMensaje:[],
                 adModal: 0,
@@ -289,7 +319,8 @@
                     {title: "Sindicato", dataKey: "sindicato"}, 
                     {title: "#Afiliado", dataKey: "numafiliadosindicato"},
                     {title: "Obrasocial", dataKey: "obrasocial"}, 
-                    {title: "#Afiliado", dataKey: "numafiliadoobrasocial"}, 
+                    {title: "#Afiliado", dataKey: "numafiliadoobrasocial"},
+                    {title: "CBU", dataKey: "cbu"},
                     {title: "Activo", dataKey: "activo"}
                 ];
                 var rows = [];
@@ -297,7 +328,7 @@
                 this.crews.map(function(x){
                     rows.push({nombre:x.nombre,cuil:x.cuil, fecnacimiento:x.fecnacimiento, nacionalidad:x.nacionalidad,
                     estadocivil:x.estadocivil, sindicato:x.sindicato,numafiliadosindicato:x.numafiliadosindicato,obrasocial:x.obrasocial,
-                    numafiliadoobrasocial:x.numafiliadoobrasocial, activo:x.activo});
+                    numafiliadoobrasocial:x.numafiliadoobrasocial, cbu:x.cbu, activo:x.activo});
                 });
 
                 // Only pt supported (not mm or in)
@@ -314,12 +345,14 @@
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-				console.log(configuracion);
+				//console.log(configuracion);
                 axios.get('api/Crews/Listar',configuracion).then(function(response){
-                    console.log(response);
+                    // console.log(response);
                     me.crews=response.data;
                 }).catch(function(error){
-                    console.log(error);
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
                 });
             },
             select(){
@@ -334,7 +367,9 @@
                         me.personas.push({text: x.nombre,value:x.idpersona});
                     });
                 }).catch(function(error){
-                    console.log(error);
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
                 });
             },
             editItem (item) {
@@ -352,6 +387,7 @@
                 this.numafiliadosindicato = item.numafiliadosindicato;
                 this.obrasocial = item.obrasocial;
                 this.numafiliadoobrasocial = item.numafiliadoobrasocial;
+                this.cbu = item.cbu;
                 this.editedIndex=1;
                 this.dialog = true
             },
@@ -374,8 +410,10 @@
                 this.numafiliadosindicato="";
                 this.obrasocial="";
                 this.numafiliadoobrasocial="";
+                this.cbu="";
                 this.editedIndex=1;
                 this.editedIndex=-1;
+                this.searchp="";
             },
             guardar () {
                 if (this.validar()){
@@ -387,7 +425,7 @@
                     //Código para editar
                     //Código para guardar
                     let me=this;
-                    console.log(me);
+                    // console.log(me);
                     axios.put('api/Crews/Actualizar',{
                         'idcrew': me.idcrew,
                         'idpersona':me.idpersona,
@@ -402,18 +440,21 @@
                         'sindicato':me.sindicato,
                         'numafiliadosindicato':me.numafiliadosindicato,
                         'obrasocial':me.obrasocial,
-                        'numafiliadoobrasocial':me.numafiliadoobrasocial
+                        'numafiliadoobrasocial':me.numafiliadoobrasocial,
+                        'cbu':me.cbu
                     },configuracion).then(function(response){
                         me.close();
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 } else {
                     //Código para guardar
                     let me=this;
-                    console.log(me);
+                    // console.log(me);
                     axios.post('api/Crews/Crear',{
                         'idpersona':me.idpersona,
                         'cuil':me.cuil,
@@ -427,12 +468,15 @@
                         'sindicato':me.sindicato,
                         'numafiliadosindicato':me.numafiliadosindicato,
                         'obrasocial':me.obrasocial,
-                        'numafiliadoobrasocial':me.numafiliadoobrasocial
+                        'numafiliadoobrasocial':me.numafiliadoobrasocial,
+                        'cbu':me.cbu
                     },configuracion).then(function(response){
                         me.close();
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 }
@@ -440,7 +484,9 @@
             validar(){
                 this.valida=0;
                 this.validaMensaje=[];
-
+                if (!this.idpersona){
+                    this.validaMensaje.push("Seleccione una Persona.");
+                }
                 if (this.nacionalidad.length<3 || this.nacionalidad.length>50){
                     this.validaMensaje.push("La nacionalidad debe tener más de 3 caracteres y menos de 20 caracteres.");
                 }
@@ -450,8 +496,17 @@
                 if (!this.fecnacimiento){
                     this.validaMensaje.push("Ingrese fecha de nacimiento.");
                 }
+                if (!this.nacionalidad){
+                    this.validaMensaje.push("Ingrese nacionalidad.");
+                }
+                if (!this.estudioscursados){
+                    this.validaMensaje.push("Ingrese estudios cursados.");
+                }
                 if (!this.estadocivil){
                     this.validaMensaje.push("Ingrese estado civil.");
+                }
+                if (!this.cantidadhijos){
+                    this.validaMensaje.push("Ingrese la cantidad de hijos.");
                 }
                 if (this.validaMensaje.length){
                     this.valida=1;
@@ -486,6 +541,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -500,6 +557,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             }

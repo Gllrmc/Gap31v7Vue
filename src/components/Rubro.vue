@@ -4,76 +4,89 @@
             <v-toolbar flat color="white">
                 <v-btn @click="crearPDF()"><v-icon>print</v-icon></v-btn>
                 <v-toolbar-title>Rubros</v-toolbar-title>
-                    <v-divider
-                    class="mx-2"
-                    inset
-                    vertical
-                    ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="500px">
-                        <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
-                        <v-card>
-                            <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>
-                            <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
-                                <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="orden" label="Orden"></v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="rubroes" label="Rubro (ES)"></v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="rubroen" label="Rubro (EN)"></v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12>
-                                    <input type="checkbox" id="confidencial" v-model="confidencial">
-                                    <label for = "confidencial"> Confidencial?</label>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12 v-show="valida">
-                                    <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
-                                    </div>
-                                </v-flex>
-                                </v-layout>
-                            </v-container>
-                            </v-card-text>
-                
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-                                <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="adModal" max-width="290">
-                        <v-card>
-                            <v-card-title class="headline" v-if="adAccion==1">¿Activar Rubro?</v-card-title>
-                            <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Rubro?</v-card-title>
-                            <v-card-text>
-                                Estás a punto de 
-                                <span v-if="adAccion==1">Activar </span>
-                                <span v-if="adAccion==2">Desactivar </span>
-                                el rubro {{ adNombre }}
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
-                                    Cancelar
-                                </v-btn>
-                                <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
-                                    Activar
-                                </v-btn>
-                                <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
-                                    Desactivar
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </v-toolbar>
+                <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+                    right
+                    color="error"
+                    >
+                    {{ snacktext }}
+                    <v-btn 
+                        color="error"
+                        dark
+                        vertical
+                        text
+                        @click="snackbar = false"
+                    >
+                        Cerrar
+                    </v-btn>
+                </v-snackbar>   
+                <v-divider
+                class="mx-2"
+                inset
+                vertical
+                ></v-divider>
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="500px">
+                    <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                            <v-flex xs12 sm12 md12>
+                                <v-text-field v-model="orden" label="Orden"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12>
+                                <v-text-field v-model="rubroes" label="Rubro (ES)"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12>
+                                <v-text-field v-model="rubroen" label="Rubro (EN)"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12 v-show="valida">
+                                <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                                </div>
+                            </v-flex>
+                            </v-layout>
+                        </v-container>
+                        </v-card-text>
+            
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="adModal" max-width="290">
+                    <v-card>
+                        <v-card-title class="headline" v-if="adAccion==1">¿Activar Rubro?</v-card-title>
+                        <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Rubro?</v-card-title>
+                        <v-card-text>
+                            Estás a punto de 
+                            <span v-if="adAccion==1">Activar </span>
+                            <span v-if="adAccion==2">Desactivar </span>
+                            el rubro {{ adNombre }}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
+                                Cancelar
+                            </v-btn>
+                            <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
+                                Activar
+                            </v-btn>
+                            <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
+                                Desactivar
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-toolbar>
             <v-data-table
                 :headers="headers"
                 :items="rubros"
@@ -108,15 +121,6 @@
                     </td>
                     <td>{{ props.item.orden }}</td>
                     <td>{{ props.item.rubroes }}</td>
-                    <td>{{ props.item.rubroen }}</td>
-                    <td>
-                        <div v-if="props.item.confidencial">
-                            <span class="red--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="blue--text">No</span>
-                        </div>
-                    </td>
                     <td>
                         <div v-if="props.item.activo">
                             <span class="blue--text">Activo</span>
@@ -140,14 +144,15 @@
     export default {
         data(){
             return {
+                snackbar:false,
+                snacktext: 'Hola',
+                timeout: 4000,
                 rubros:[],                
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
                     { text: 'Orden', value: 'orden', sortable: true },
                     { text: 'Rubro (ES)', value: 'rubroes', sortable: true  },
-                    { text: 'Rubro (EN)', value: 'rubroen', sortable: true  },
-                    { text: 'Confidencial', value: 'confidencial', sortable: false },
                     { text: 'Estado', value: 'activo', sortable: false }                
                 ],
                 search: '',
@@ -156,7 +161,6 @@
                 orden: '',
                 rubroes: '',
                 rubroen: '',
-                confidencial: false,
                 valida: 0,
                 validaMensaje:[],
                 adModal: 0,
@@ -185,12 +189,11 @@
                 var columns = [
                     {title: "Orden", dataKey: "orden"}, 
                     {title: "Rubroes", dataKey: "rubroes"},
-                    {title: "Rubroen", dataKey: "rubroen"},
-                    {title: "Confidencial", dataKey: "confidencial"}
+                    {title: "Rubroen", dataKey: "rubroen"}
                 ];
                 var rows = [];
                 this.rubros.map(function(x){
-                    rows.push({orden:x.orden,rubroes:x.rubroes,rubroen:x.rubroen,confidencial:x.con});
+                    rows.push({orden:x.orden,rubroes:x.rubroes,rubroen:x.rubroen});
                 });
 
                 // Only pt supported (not mm or in)
@@ -211,6 +214,8 @@
                     //console.log(response);
                     me.rubros=response.data;
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -219,7 +224,6 @@
                 this.orden=item.orden;
                 this.rubroes=item.rubroes;
                 this.rubroen=item.rubroen;
-                this.confidencial=item.confidencial;
                 this.editedIndex=1;
                 this.dialog = true
             },
@@ -238,7 +242,6 @@
                 this.orden="";
                 this.rubroes="";
                 this.rubroen="";
-                this.confidencial="";
                 this.editedIndex=-1;
             },
             guardar () {
@@ -255,13 +258,14 @@
                         'idrubro':me.idrubro,
                         'rubroes': me.rubroes,
                         'rubroen': me.rubroen,
-                        'orden' : me.orden,
-                        'confidencial' : me.confidencial
+                        'orden' : me.orden
                     },configuracion).then(function(response){
                         me.close();
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 } else {
@@ -270,13 +274,15 @@
                     axios.post('api/Rubros/Crear',{
                         'rubroes': me.rubroes,
                         'rubroen': me.rubroen,
-                        'orden' : me.orden,
-                        'confidencial' : me.confidencial
+                        'orden' : me.orden
                     },configuracion).then(function(response){
+                        console.log(response);
                         me.close();
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 }
@@ -324,6 +330,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -338,6 +346,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             }

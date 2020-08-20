@@ -3,343 +3,402 @@
         <v-flex>
             <v-toolbar flat color="white">
                 <v-btn @click="crearPDF()"><v-icon>print</v-icon></v-btn>
-                <v-toolbar-title>Proyecto</v-toolbar-title>
-                    <v-divider
-                    class="mx-2"
-                    inset
-                    vertical
-                    ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="1000px">
-                        <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
-                        <v-card>
-                            <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>            
-                            <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
-                                    <v-flex xs6 sm6 md6>
-                                        <v-text-field v-model="proyecto" label="Proyecto">
-                                        </v-text-field>
+                <v-toolbar-title>Proyectos en Cartera</v-toolbar-title>
+                <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+                    right
+                    color="error"
+                    >
+                    {{ snacktext }}
+                    <v-btn 
+                        color="error"
+                        dark
+                        vertical
+                        text
+                        @click="snackbar = false"
+                    >
+                        Cerrar
+                    </v-btn>
+                </v-snackbar>                    
+                <v-divider
+                class="mx-2"
+                inset
+                vertical
+                ></v-divider>
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="1200px">
+                    <!-- <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn> -->
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>            
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                                <v-flex xs1 sm1 md1>
+                                    <v-text-field v-model="orden" disabled label="#Proyecto">
+                                    </v-text-field>
+                                </v-flex>
+                                <v-flex xs7 sm md7>
+                                    <v-text-field v-model="proyecto" disabled label="Proyecto">
+                                    </v-text-field>
+                                </v-flex>
+                                <v-flex xs4 sm4 md4>
+                                    <v-select v-model="idcliente"
+                                    @change="selectProyectosDeCliente()"
+                                    :items = "clientes" label = "Cliente">
+                                    </v-select>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-autocomplete 
+                                        v-model="idep" 
+                                        clearable
+                                        :search-input.sync="searchep" 
+                                        :items = "eps" 
+                                        label = "E.P.">
+                                    </v-autocomplete>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-autocomplete 
+                                        v-model="idorigen"
+                                        clearable
+                                        :search-input.sync="searchor" 
+                                        :items = "origenes" 
+                                        label = "Origen">
+                                    </v-autocomplete>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-autocomplete 
+                                        v-model="idagencia"
+                                        clearable
+                                        :search-input.sync="searchag" 
+                                        :items = "agencias" 
+                                        label = "Agencia">
+                                    </v-autocomplete>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-select v-model="idterritorio"
+                                    :items = "territorios" disabled label = "Territorio">
+                                    </v-select>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-autocomplete 
+                                        v-model="iddirector"
+                                        :search-input.sync="searchdi" 
+                                        :items = "directores" 
+                                        label = "Director">
+                                    </v-autocomplete>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-autocomplete 
+                                        v-model="idcodirector"
+                                        clearable
+                                        :search-input.sync="searchco" 
+                                        :items = "directores" 
+                                        label = "Co-director">
+                                    </v-autocomplete>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-select v-model="idtipoprod" 
+                                    :items = "tipoprods" 
+                                    label="Tipo de Produccion">
+                                    </v-select>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-select v-model="idproductora"
+                                    :items = "productoras" label = "Productora">
+                                    </v-select>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-select v-model="idempresa"
+                                    :items = "empresas" label = "Empresa">
+                                    </v-select>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-select v-model="idlp"
+                                    clearable
+                                    :items = "lps" label = "L.P.">
+                                    </v-select>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-select v-model="idcp"
+                                    clearable
+                                    :items = "cps" label = "C.P.">
+                                    </v-select>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-autocomplete 
+                                        v-model="idraiz"
+                                        clearable
+                                        :search-input.sync="searchra" 
+                                        :items = "raices" 
+                                        label = "Proyecto Raíz">
+                                    </v-autocomplete>
+                                </v-flex>
+                                <template>
+                                    <v-flex xs12 sm3 md3>
+                                        <v-menu
+                                            v-model="menu1"
+                                            :close-on-content-click="false"
+                                            :nudge-right="40"
+                                            lazy
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            min-width="290px"
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
+                                                    v-model="fecadjudicacion"
+                                                    label="Fecha Adjudicación"
+                                                    prepend-icon="event"
+                                                    readonly
+                                                    v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker v-model="fecadjudicacion" @input="menu1 = false"></v-date-picker>
+                                        </v-menu>
                                     </v-flex>
-                                    <v-flex xs6 sm6 md6>
-                                        <v-text-field v-model="producto" label="Producto">
-                                        </v-text-field>
+                                </template>
+                                <template>
+                                    <v-flex xs12 sm3 md3>
+                                        <v-menu
+                                            v-model="menu6"
+                                            :close-on-content-click="false"
+                                            :nudge-right="40"
+                                            lazy
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            min-width="290px"
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
+                                                    v-model="fecrodaje"
+                                                    label="Rodaje"
+                                                    prepend-icon="event"
+                                                    readonly
+                                                    v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker v-model="fecrodaje" @input="menu6 = false"></v-date-picker>
+                                        </v-menu>
                                     </v-flex>
-                                    <v-flex xs6 sm6 md6>
-                                        <v-select v-model="idcliente"
-                                        @change="selectProyectosDeCliente()"
-                                        :items = "clientes" label = "Cliente">
-                                        </v-select>
+                                </template>
+                                <template>
+                                    <v-flex xs12 sm3 md3>
+                                        <v-menu
+                                            v-model="menu7"
+                                            :close-on-content-click="false"
+                                            :nudge-right="40"
+                                            lazy
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            min-width="290px"
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
+                                                    v-model="fecoffline"
+                                                    label="Offline"
+                                                    prepend-icon="event"
+                                                    readonly
+                                                    v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker v-model="fecoffline" @input="menu7 = false"></v-date-picker>
+                                        </v-menu>
                                     </v-flex>
-                                    <v-flex xs6 sm6 md6>
-                                        <v-select v-model="idraiz"
-                                        :items = "raices" label = "Proyecto Raíz">
-                                        </v-select>
+                                </template>
+                                <template>
+                                    <v-flex xs12 sm3 md3>
+                                        <v-menu
+                                            v-model="menu8"
+                                            :close-on-content-click="false"
+                                            :nudge-right="40"
+                                            lazy
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            min-width="290px"
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
+                                                    v-model="feconline"
+                                                    label="Online"
+                                                    prepend-icon="event"
+                                                    readonly
+                                                    v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker v-model="feconline" @input="menu8 = false"></v-date-picker>
+                                        </v-menu>
                                     </v-flex>
-                                    <v-flex xs3 sm3 md3>
-                                        <v-select v-model="idempresa"
-                                        :items = "empresas" label = "Empresa">
-                                        </v-select>
+                                </template>
+                                <template>
+                                    <v-flex xs12 sm3 md3>
+                                        <v-menu
+                                            v-model="menu2"
+                                            :close-on-content-click="false"
+                                            :nudge-right="40"
+                                            lazy
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            min-width="290px"
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
+                                                    v-model="fecdesdxd"
+                                                    label="Inicio DxD"
+                                                    prepend-icon="event"
+                                                    readonly
+                                                    v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker 
+                                                v-model="fecdesdxd" 
+                                                @input="menu2 = false">
+                                            </v-date-picker>
+                                        </v-menu>
                                     </v-flex>
-                                    <v-flex xs3 sm3 md3>
-                                        <v-select v-model="idterritorio"
-                                        :items = "territorios" label = "Territorio">
-                                        </v-select>
-                                    </v-flex>
-                                    <v-flex xs3 sm3 md3>
-                                        <v-select v-model="idagencia"
-                                        :items = "agencias" label = "Agencia">
-                                        </v-select>
-                                    </v-flex>
-                                    <v-flex xs3 sm3 md3>
-                                        <v-select v-model="idproductora"
-                                        :items = "productoras" label = "Productora">
-                                        </v-select>
-                                    </v-flex>
-                                    <v-flex xs3 sm3 md3>
-                                        <v-select v-model="iddirector"
-                                        :items = "directores" label = "Director">
-                                        </v-select>
-                                    </v-flex>
-                                    <v-flex xs3 sm3 md3>
-                                        <v-select v-model="idep"
-                                        :items = "eps" label = "E.P.">
-                                        </v-select>
-                                    </v-flex>
-                                    <v-flex xs3 sm3 md3>
-                                        <v-select v-model="idlp"
-                                        :items = "lps" label = "L.P.">
-                                        </v-select>
-                                    </v-flex>
-                                    <v-flex xs3 sm3 md3>
-                                        <v-select v-model="idcp"
-                                        :items = "cps" label = "C.P.">
-                                        </v-select>
-                                    </v-flex>
-                                    <template>
-                                        <v-flex xs12 sm3 md3>
-                                            <v-menu
-                                                v-model="menu1"
-                                                :close-on-content-click="false"
-                                                :nudge-right="40"
-                                                lazy
-                                                transition="scale-transition"
-                                                offset-y
-                                                full-width
-                                                min-width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field
-                                                        v-model="fecadjudicacion"
-                                                        label="Fecha Adjudicación"
-                                                        prepend-icon="event"
-                                                        readonly
-                                                        v-on="on"
-                                                    ></v-text-field>
-                                                </template>
-                                                <v-date-picker v-model="fecadjudicacion" @input="menu1 = false"></v-date-picker>
-                                            </v-menu>
-                                        </v-flex>
-                                    </template>
-                                    <template>
-                                        <v-flex xs12 sm3 md3>
-                                            <v-menu
-                                                v-model="menu6"
-                                                :close-on-content-click="false"
-                                                :nudge-right="40"
-                                                lazy
-                                                transition="scale-transition"
-                                                offset-y
-                                                full-width
-                                                min-width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field
-                                                        v-model="fecrodaje"
-                                                        label="Rodaje"
-                                                        prepend-icon="event"
-                                                        readonly
-                                                        v-on="on"
-                                                    ></v-text-field>
-                                                </template>
-                                                <v-date-picker v-model="fecrodaje" @input="menu6 = false"></v-date-picker>
-                                            </v-menu>
-                                        </v-flex>
-                                    </template>
-                                    <template>
-                                        <v-flex xs12 sm3 md3>
-                                            <v-menu
-                                                v-model="menu7"
-                                                :close-on-content-click="false"
-                                                :nudge-right="40"
-                                                lazy
-                                                transition="scale-transition"
-                                                offset-y
-                                                full-width
-                                                min-width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field
-                                                        v-model="fecoffline"
-                                                        label="Offline"
-                                                        prepend-icon="event"
-                                                        readonly
-                                                        v-on="on"
-                                                    ></v-text-field>
-                                                </template>
-                                                <v-date-picker v-model="fecoffline" @input="menu7 = false"></v-date-picker>
-                                            </v-menu>
-                                        </v-flex>
-                                    </template>
-                                    <template>
-                                        <v-flex xs12 sm3 md3>
-                                            <v-menu
-                                                v-model="menu8"
-                                                :close-on-content-click="false"
-                                                :nudge-right="40"
-                                                lazy
-                                                transition="scale-transition"
-                                                offset-y
-                                                full-width
-                                                min-width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field
-                                                        v-model="feconline"
-                                                        label="Online"
-                                                        prepend-icon="event"
-                                                        readonly
-                                                        v-on="on"
-                                                    ></v-text-field>
-                                                </template>
-                                                <v-date-picker v-model="feconline" @input="menu8 = false"></v-date-picker>
-                                            </v-menu>
-                                        </v-flex>
-                                    </template>
-                                    <template>
-                                        <v-flex xs12 sm3 md3>
-                                            <v-menu
-                                                v-model="menu2"
-                                                :close-on-content-click="false"
-                                                :nudge-right="40"
-                                                lazy
-                                                transition="scale-transition"
-                                                offset-y
-                                                full-width
-                                                min-width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field
-                                                        v-model="fecdesdxd"
-                                                        label="Inicio DxD"
-                                                        prepend-icon="event"
-                                                        readonly
-                                                        v-on="on"
-                                                    ></v-text-field>
-                                                </template>
-                                                <v-date-picker 
-                                                    v-model="fecdesdxd" 
-                                                    @input="menu2 = false">
-                                                </v-date-picker>
-                                            </v-menu>
-                                        </v-flex>
-                                    </template>
-                                    <template>
-                                        <v-flex xs12 sm3 md3>
-                                            <v-menu
-                                                v-model="menu3"
-                                                :close-on-content-click="false"
-                                                :nudge-right="40"
-                                                lazy
-                                                transition="scale-transition"
-                                                offset-y
-                                                full-width
-                                                min-width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field
-                                                        v-model="fechasdxd"
-                                                        label="Fin DxD"
-                                                        prepend-icon="event"
-                                                        readonly
-                                                        v-on="on"
-                                                    ></v-text-field>
-                                                </template>
-                                                <v-date-picker 
+                                </template>
+                                <template>
+                                    <v-flex xs12 sm3 md3>
+                                        <v-menu
+                                            v-model="menu3"
+                                            :close-on-content-click="false"
+                                            :nudge-right="40"
+                                            lazy
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            min-width="290px"
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
                                                     v-model="fechasdxd"
-                                                    :min = "fecdesdxd" 
-                                                    @input="menu3 = false">
-                                                </v-date-picker>
-                                            </v-menu>
-                                        </v-flex>
-                                    </template>
-                                    <template>
-                                        <v-flex xs12 sm3 md3>
-                                            <v-menu
-                                                v-model="menu4"
-                                                :close-on-content-click="false"
-                                                :nudge-right="40"
-                                                lazy
-                                                transition="scale-transition"
-                                                offset-y
-                                                full-width
-                                                min-width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field
-                                                        v-model="fecdescf"
-                                                        label="Inicio CF"
-                                                        prepend-icon="event"
-                                                        readonly
-                                                        v-on="on"
-                                                    ></v-text-field>
-                                                </template>
-                                                <v-date-picker v-model="fecdescf" @input="menu4 = false"></v-date-picker>
-                                            </v-menu>
-                                        </v-flex>
-                                    </template>
-                                    <template>
-                                        <v-flex xs12 sm3 md3>
-                                            <v-menu
-                                                v-model="menu5"
-                                                :close-on-content-click="false"
-                                                :nudge-right="40"
-                                                lazy
-                                                transition="scale-transition"
-                                                offset-y
-                                                full-width
-                                                min-width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field
-                                                        v-model="fechascf"
-                                                        label="Fin CF"
-                                                        prepend-icon="event"
-                                                        readonly
-                                                        v-on="on"
-                                                    ></v-text-field>
-                                                </template>
-                                                <v-date-picker 
+                                                    label="Fin DxD"
+                                                    prepend-icon="event"
+                                                    readonly
+                                                    v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker 
+                                                v-model="fechasdxd"
+                                                :min = "fecdesdxd" 
+                                                @input="menu3 = false">
+                                            </v-date-picker>
+                                        </v-menu>
+                                    </v-flex>
+                                </template>
+                                <template>
+                                    <v-flex xs12 sm3 md3>
+                                        <v-menu
+                                            v-model="menu4"
+                                            :close-on-content-click="false"
+                                            :nudge-right="40"
+                                            lazy
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            min-width="290px"
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
+                                                    v-model="fecdescf"
+                                                    label="Inicio CF"
+                                                    prepend-icon="event"
+                                                    readonly
+                                                    v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker v-model="fecdescf" @input="menu4 = false"></v-date-picker>
+                                        </v-menu>
+                                    </v-flex>
+                                </template>
+                                <template>
+                                    <v-flex xs12 sm3 md3>
+                                        <v-menu
+                                            v-model="menu5"
+                                            :close-on-content-click="false"
+                                            :nudge-right="40"
+                                            lazy
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            min-width="290px"
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
                                                     v-model="fechascf"
-                                                    :min = "fecdescf" 
-                                                    @input="menu5 = false">
-                                                </v-date-picker>
-                                            </v-menu>
-                                        </v-flex>
-                                    </template>
-                                    <v-flex xs3 sm3 md3>
-                                        <v-text-field type="number" v-model="ars1usd" label="ARS/USD">
-                                        </v-text-field>
+                                                    label="Fin CF"
+                                                    prepend-icon="event"
+                                                    readonly
+                                                    v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker 
+                                                v-model="fechascf"
+                                                :min = "fecdescf" 
+                                                @input="menu5 = false">
+                                            </v-date-picker>
+                                        </v-menu>
                                     </v-flex>
-                                    <v-flex xs12 sm12 md12 v-show="valida">
-                                        <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
-                                        </div>
-                                    </v-flex>
-                                </v-layout>
-                            </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-                                <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="adModal" max-width="290">
-                        <v-card>
-                            <v-card-title class="headline" v-if="adAccion==1">¿Activar Proyecto?</v-card-title>
-                            <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Proyecto?</v-card-title>
-                            <v-card-text>
-                                Estás a punto de 
-                                <span v-if="adAccion==1">Activar </span>
-                                <span v-if="adAccion==2">Desactivar </span>
-                                el proyecto {{ adNombre }}
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
-                                    Cancelar
-                                </v-btn>
-                                <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
-                                    Activar
-                                </v-btn>
-                                <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
-                                    Desactivar
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>                </v-toolbar>
+                                </template>
+                                <v-flex xs3 sm3 md3>
+                                    <v-text-field type="number" v-model="ars1usd" label="ARS/USD">
+                                    </v-text-field>
+                                </v-flex>
+                                <v-flex xs12 sm12 md12 v-show="valida">
+                                    <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                                    </div>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="adModal" max-width="290">
+                    <v-card>
+                        <v-card-title class="headline" v-if="adAccion==1">¿Activar Proyecto?</v-card-title>
+                        <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Proyecto?</v-card-title>
+                        <v-card-text>
+                            Estás a punto de 
+                            <span v-if="adAccion==1">Activar </span>
+                            <span v-if="adAccion==2">Desactivar </span>
+                            el proyecto {{ adNombre }}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
+                                Cancelar
+                            </v-btn>
+                            <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
+                                Activar
+                            </v-btn>
+                            <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
+                                Desactivar
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>                
+            </v-toolbar>
             <v-data-table
                 :headers="headers"
                 :items="proyectos"
                 :search="search"
                 class="elevation-1"
 				>
-                <template slot="items" slot-scope="props">
+                <template v-if="!props.item.cierreprod" slot="items" slot-scope="props">
                     <td class="justify-center layout px-0">
                         <v-icon
                         small
@@ -363,16 +422,19 @@
                             >
                             check
                             </v-icon>
-                        </template>                    </td>
-                    <td>{{ props.item.idproyecto }}</td>
+                        </template>                    
+                    </td>
+                    <td>{{ props.item.orden }}</td>
                     <td>{{ props.item.proyecto }}</td>
-                    <td>{{ props.item.producto }}</td>
+                    <td>{{ props.item.tipoprod }}</td>
                     <td>{{ props.item.cliente }}</td>
                     <td>{{ props.item.empresa }}</td>
+                    <td>{{ props.item.origen }}</td>
                     <td>{{ props.item.territorio }}</td>
                     <td>{{ props.item.agencia }}</td>
                     <td>{{ props.item.productora }}</td>
                     <td>{{ props.item.director }}</td>
+                    <td>{{ props.item.codirector }}</td>
                     <td>{{ props.item.ep }}</td>
                     <td>{{ props.item.lp }}</td>
                     <td>{{ props.item.cp }}</td>
@@ -435,13 +497,23 @@
                         </div>
                     </td>
                     <td>{{ props.item.cierreprod }}</td>
-                    <td>{{ props.item.feccierreprod }}</td>
+                    <td>
+                        <div v-if="props.item.feccierreprod">
+                            {{ props.item.feccierreprod.substr(0, 10) }}
+                        </div>
+                        <div v-else>
+                            {{ props.item.feccierreprod }}
+                        </div>
+                    </td>                    
                     <td>{{ props.item.cierreadmin }}</td>
-                    <td>{{ props.item.feccierreadmin }}</td>
-                    <td>{{ props.item.iduseralta }}</td>
-                    <td>{{ props.item.fecalta }}</td>
-                    <td>{{ props.item.iduserumod }}</td>
-                    <td>{{ props.item.fecumod }}</td>
+                    <td>
+                        <div v-if="props.item.feccierreadmin">
+                            {{ props.item.feccierreadmin.substr(0, 10) }}
+                        </div>
+                        <div v-else>
+                            {{ props.item.feccierreadmin }}
+                        </div>
+                    </td>   
                     <td>
                         <div v-if="props.item.activo">
                             <span class="blue--text">Activo</span>
@@ -450,6 +522,10 @@
                             <span class="red--text">Inactivo</span>
                         </div>
                     </td>
+                    <td>{{ props.item.iduseralta }}</td>
+                    <td>{{ props.item.fecalta.substr(0, 16) }}</td>
+                    <td>{{ props.item.iduserumod }}</td>
+                    <td>{{ props.item.fecumod.substr(0, 16) }}</td>
                 </template>
                 <template slot="no-data">
                 <v-btn color="primary" @click="listar">Resetear</v-btn>
@@ -466,6 +542,9 @@
     export default {
         data: () => {
             return {
+                snackbar:false,
+                snacktext: 'Hola',
+                timeout: 4000,
                 fecadjudicacion: null,
                 fecdesdxd: null,
                 fechasdxd: null,
@@ -483,6 +562,8 @@
                 menu6: false,
                 menu7: false,
                 menu8: false,
+                origenes:[],
+                tipoprods:[],
                 proyectos:[],
                 empresas:[],
                 territorios:[],
@@ -497,15 +578,17 @@
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
-                    { text: 'Id', value: 'idproyecto', sortable: true },
+                    { text: '#Proyecto', value: 'orden', sortable: true },
                     { text: 'Nombre del Proyecto', value: 'proyecto', sortable: true },
-                    { text: 'Producto', value: 'producto', sortable: true },
+                    { text: 'Tipo Producción', value: 'tipoprod', sortable: true },
                     { text: 'Cliente', value: 'cliente', sortable: true },
                     { text: 'Empresa', value: 'empresa', sortable: true },
+                    { text: 'Origen', value: 'origen', sortable: true },
                     { text: 'Territorio', value: 'territorio', sortable: true },
                     { text: 'Agencia', value: 'agencia', sortable: true },
                     { text: 'Productora', value: 'productora', sortable: true },
                     { text: 'Director', value: 'director', sortable: true },
+                    { text: 'Co-Director', value: 'codirector', sortable: true },
                     { text: 'E.P.', value: 'ep', sortable: true },
                     { text: 'L.P.', value: 'lp', sortable: true },
                     { text: 'C.P.', value: 'cp', sortable: true },
@@ -522,24 +605,33 @@
                     { text: 'Fec.Cierre Producción', value: 'feccierreprod', sortable: true },
                     { text: 'CierreAdm', value: 'cierreadmin', sortable: true },
                     { text: 'Fec.Cierre Administración', value: 'feccierreadmin', sortable: true },
+                    { text: 'Estado', value: 'activo', sortable: true  },           
                     { text: 'Creado', value: 'iduseralta', sortable: true },
                     { text: 'Fec.Creación', value: 'fecalta', sortable: true },
                     { text: 'UltMod', value: 'iduserumod', sortable: true },
-                    { text: 'Fec.UltMod', value: 'fecumod', sortable: true },
-                    { text: 'Estado', value: 'activo', sortable: true  }                
+                    { text: 'Fec.UltMod', value: 'fecumod', sortable: true }
                 ],
                 search: '',
+                searchdi: '',
+                searchco: '',
+                searchep: '',
+                searchor: '',
+                searchag: '',
+                searchra: '',
                 editedIndex: -1,
                 idproyecto: '',
                 idraiz: '',
+                orden:'',
                 proyecto:'',
-                producto:'',
+                idtipoprod:'',
+                idorigen:'',
+                idagencia:'',
                 idempresa:'',
                 idterritorio:'',
-                idagencia:'',
                 idproductora:'',
                 idcliente:'',
                 iddirector:'',
+                idcodirector:'',
                 idep:'',
                 idlp:'',
                 idcp:'',
@@ -562,7 +654,7 @@
         computed: {
             formTitle () {
                 return this.editedIndex === -1 ? 'Nuevo proyecto' : 'Actualizar proyecto'
-            }
+            }            
         },
 
         watch: {
@@ -578,8 +670,9 @@
         methods:{
             crearPDF(){
                 var columns = [
+                    {title: "#Proyecto", dataKey: "orden"},
                     {title: "Proyecto", dataKey: "proyecto"},
-                    {title: "Producto", dataKey: "producto"},
+                    {title: "Tipo Produccion", dataKey: "tipoprod"},
                     {title: "Cliente", dataKey: "cliente"},
                     {title: "Empresa", dataKey: "empresa"},
                     {title: "Director", dataKey: "director"},
@@ -593,7 +686,7 @@
                 var rows = [];
 
                 this.proyectos.map(function(x){
-                    rows.push({proyecto:x.proyecto, producto:x.producto, cliente:x.cliente, empresa:x.empresa,
+                    rows.push({orden:x.orden, proyecto:x.proyecto, tipoprod:x.tipoprod, cliente:x.cliente, empresa:x.empresa,
                     director:x.director, ep: x.ep, fecadjudicacion: x.fecadjudicacion, fecdesdxd: x.fecdesdxd,
                     fecoffline:x.offline, feconline:x.online, fecrodaje:x.fecrodaje});
                 });
@@ -619,9 +712,11 @@
                     //console.log(response);
                     proyectoRaizArray=response.data;
                     proyectoRaizArray.map(function(x){
-                        me.raices.push({text: x.proyecto,value:x.idproyecto});
+                        me.raices.push({text: x.orden + ' ' + x.proyecto,value: x.idproyecto});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },            
@@ -629,16 +724,32 @@
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-				//console.log(configuracion);
-                axios.get('api/Proyectos/Listar',configuracion).then(function(response){
-                    console.log(response);
-                    me.proyectos=response.data;
-                }).catch(function(error){
-                    console.log(error);
-                });
+                //console.log(configuracion);
+                if (this.$store.state.usuario.rol =='Administrador' || this.$store.state.usuario.rol =='JefeAdministracion' 
+                    || this.$store.state.usuario.rol =='ExecutiveProducer' ){
+                    axios.get('api/Proyectos/Listar',configuracion).then(function(response){
+                        //console.log(response);
+                        me.proyectos=response.data;
+                    }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
+                    });
+                } else {
+                    axios.get('api/Proyectos/Listarusuario/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
+                        //console.log(response);
+                        me.proyectos=response.data;
+                    }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
+                    });
+                }
             },
             select(){
                 let me=this;
+                var origenesArray=[];
+                var tipoprodsArray=[];
                 var empresasArray=[];
                 var territoriosArray=[];
                 var agenciasArray=[];
@@ -649,6 +760,28 @@
                 var cpsArray=[];
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
+                axios.get('api/Origenes/Select',configuracion).then(function(response){
+                    //console.log(response);
+                    origenesArray=response.data;
+                    origenesArray.map(function(x){
+                        me.origenes.push({text: x.origen,value:x.idorigen});
+                    });
+                }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
+                    console.log(error);
+                });
+				axios.get('api/Tipoprods/Select',configuracion).then(function(response){
+                    //console.log(response);
+                    tipoprodsArray=response.data;
+                    tipoprodsArray.map(function(x){
+                        me.tipoprods.push({text: x.tipoprod,value:x.idtipoprod});
+                    });
+                }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
+                    console.log(error);
+                });
 				axios.get('api/Empresas/Select',configuracion).then(function(response){
                     //console.log(response);
                     empresasArray=response.data;
@@ -656,6 +789,8 @@
                         me.empresas.push({text: x.empresa,value:x.idempresa});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
                 axios.get('api/Territorios/Select',configuracion).then(function(response){
@@ -665,6 +800,8 @@
                         me.territorios.push({text: x.territorio,value:x.idterritorio});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
 				axios.get('api/Agencias/Select',configuracion).then(function(response){
@@ -674,6 +811,8 @@
                         me.agencias.push({text: x.agencia,value:x.idagencia});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
 				axios.get('api/Productoras/Select',configuracion).then(function(response){
@@ -683,6 +822,8 @@
                         me.productoras.push({text: x.productora,value:x.idproductora});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
                 var clientesArray=[];
@@ -690,9 +831,11 @@
                     //console.log(response);
                     clientesArray=response.data;
                     clientesArray.map(function(x){
-                        me.clientes.push({text: x.razonsocial,value:x.idcliente});
+                        me.clientes.push({text: x.razonsocial,value:x.idcliente, activo:x.activo});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
 				axios.get('api/Personas/SelectDirectores',configuracion).then(function(response){
@@ -702,6 +845,8 @@
                         me.directores.push({text: x.nombre,value:x.idpersona});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
 				axios.get('api/Personas/SelectEps',configuracion).then(function(response){
@@ -711,6 +856,8 @@
                         me.eps.push({text: x.nombre,value:x.idpersona});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
 				axios.get('api/Personas/SelectLps',configuracion).then(function(response){
@@ -720,6 +867,8 @@
                         me.lps.push({text: x.nombre,value:x.idpersona});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
 				axios.get('api/Personas/SelectCps',configuracion).then(function(response){
@@ -729,68 +878,39 @@
                         me.cps.push({text: x.nombre,value:x.idpersona});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
             editItem (item) {
+                // console.log(item);
                 this.idproyecto = item.idproyecto;
                 this.idcliente = item.idcliente;
                 this.selectProyectosDeCliente();
                 this.idraiz = item.idraiz;
+                this.orden = item.orden;
                 this.proyecto = item.proyecto;
-                this.producto = item.producto;
+                this.idtipoprod = item.idtipoprod;
                 this.idempresa = item.idempresa;
                 this.idterritorio = item.idterritorio;
                 this.idagencia = item.idagencia;
+                this.idorigen = item.idorigen,
                 this.idproductora = item.idproductora;
                 this.iddirector = item.iddirector;
+                this.idcodirector = item.idcodirector;
                 this.idep = item.idep;
                 this.idlp = item.idlp;
                 this.idcp = item.idcp;
                 this.ars1usd = item.ars1usd;
                 this.fecadjudicacion = item.fecadjudicacion.substr(0, 10);
-                if (item.fecdesdxd ) {
-                    this.fecdesdxd = item.fecdesdxd.substr(0, 10);
-                }
-                else{
-                    this.fecdesdxd = item.fecdesdxd;
-                }
-                if (item.fechasdxd){
-                    this.fechasdxd = item.fechasdxd.substr(0, 10);
-                }
-                else{
-                    this.fechasdxd = item.fechasdxd;
-                }
-                if (item.fecdescf){
-                    this.fecdescf = item.fecdescf.substr(0, 10);
-                }
-                else{
-                    this.fecdescf = item.fecdescf;
-                }
-                if (item.fechascf){
-                    this.fechascf = item.fechascf.substr(0, 10);
-                }
-                else{
-                    this.fechascf = item.fechascf;
-                }
-                if (item.fecrodaje){
-                    this.fecrodaje = item.fecrodaje.substr(0, 10);
-                }
-                else{
-                    this.fecrodaje = item.fecrodaje;
-                }
-                if (item.fecoffline){
-                    this.fecoffline = item.fecoffline.substr(0, 10);
-                }
-                else{
-                    this.fecoffline = item.fecoffline
-                }
-                if (item.feconline){
-                    this.feconline = item.feconline.substr(0, 10);
-                }
-                else{
-                    this.feconline = item.feconline;
-                }
+                this.fecdesdxd = item.fecdesdxd?item.fecdesdxd.substr(0, 10):item.fecdesdxd;
+                this.fechasdxd = item.fechasdxd?item.fechasdxd.substr(0, 10):item.fechasdxd;
+                this.fecdescf = item.fecdescf?item.fecdescf.substr(0, 10):item.fecdescf;
+                this.fechascf = item.fechascf?item.fechascf.substr(0, 10):item.fechascf;
+                this.fecrodaje = item.fecrodaje?item.fecrodaje.substr(0, 10):item.fecrodaje;
+                this.fecoffline = item.fecoffline?item.fecoffline.substr(0, 10):item.fecoffline;
+                this.feconline = item.fecoffline?item.feconline.substr(0, 10):item.fecoffline;
                 this.cierreprod = item.cierreprod;
                 this.feccierreprod = item.feccierreprod;
                 this.cierreadmin = item.cierreadmin;
@@ -809,14 +929,17 @@
             limpiar(){
                 this.idproyecto = "";
                 this.idraiz = "";
+                this.orden = "";
                 this.proyecto = "";
-                this.producto = "";
+                this.idtipoprod = "";
                 this.idempresa = "";
                 this.idterritorio = "";
                 this.idagencia = "";
+                this.idorigen = "";
                 this.idproductora = "";
                 this.idcliente = "";
                 this.iddirector = "";
+                this.idcodirector = "";
                 this.idep = "";
                 this.idlp = "";
                 this.idcp = "";
@@ -844,24 +967,27 @@
                 if (this.validar()){
                     return;
                 }
+                var date = new Date();
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
                 if (this.editedIndex > -1) {
                     //Código para editar
                     //Código para guardar
                     let me=this;
-                    console.log(me);
+                    //console.log(me);
                     axios.put('api/Proyectos/Actualizar',{
                         'idproyecto': me.idproyecto,
                         'idraiz': me.idraiz,
+                        'orden': me.orden,
                         'proyecto': me.proyecto,
-                        'producto': me.producto,
+                        'idorigen': me.idorigen,
                         'idempresa': me.idempresa,
-                        'idterritorio': me.idterritorio,
+                        'idtipoprod': me.idtipoprod,
                         'idagencia': me.idagencia,
                         'idproductora': me.idproductora,
                         'idcliente': me.idcliente,
                         'iddirector': me.iddirector,
+                        'idcodirector': me.idcodirector,
                         'idep': me.idep,
                         'idlp': me.idlp,
                         'idcp': me.idcp,
@@ -881,28 +1007,32 @@
                         'iduseralta': me.iduseralta,
                         'fecalta': me.fecalta,
                         'iduserumod': me.$store.state.usuario.idusuario,
-                        'fecumod': new Date().toISOString()
+                        'fecumod': new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString()
                     },configuracion).then(function(response){
                         me.close();
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 } else {
                     //Código para guardar
                     let me=this;
-                    console.log(me);
+                    //console.log(me);
                     axios.post('api/Proyectos/Crear',{
                         'idraiz': me.idraiz,
+                        'orden': me.orden,
                         'proyecto': me.proyecto,
-                        'producto': me.producto,
+                        'idtipoprod': me.idtipoprod,
                         'idempresa': me.idempresa,
-                        'idterritorio': me.idterritorio,
+                        'idorigen': me.idorigen,
                         'idagencia': me.idagencia,
                         'idproductora': me.idproductora,
                         'idcliente': me.idcliente,
                         'iddirector': me.iddirector,
+                        'idcodirector': me.idcodirector,
                         'idep': me.idep,
                         'idlp': me.idlp,
                         'idcp': me.idcp,
@@ -921,6 +1051,8 @@
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 }
@@ -929,14 +1061,20 @@
                 this.valida=0;
                 this.validaMensaje=[];
 
+                if (!this.orden){
+                    this.validaMensaje.push("Ingrese #Proyecto generado en Gecom.");
+                }
                 if (this.proyecto.length<3 || this.proyecto.length>50){
                     this.validaMensaje.push("El proyecto debe tener más de 3 caracteres y menos de 50 caracteres.");
+                }
+                if (!this.idtipoprod){
+                    this.validaMensaje.push("Ingrese una tipo de produccion.");
                 }
                 if (!this.idempresa){
                     this.validaMensaje.push("Ingrese una empresa.");
                 }
-                if (!this.idterritorio){
-                    this.validaMensaje.push("Ingrese un territorio.");
+                if (!this.idorigen){
+                    this.validaMensaje.push("Ingrese un origen.");
                 }
                 if (!this.idagencia){
                     this.validaMensaje.push("Ingrese una agencia.");
@@ -966,7 +1104,7 @@
             },
             activarDesactivarMostrar(accion,item){
                 this.adModal=1;
-                this.adNombre=item.proyecto;
+                this.adNombre=item.orden + '|' + item.proyecto;
                 this.adId=item.idproyecto;                
                 if (accion==1){
                     this.adAccion=1;
@@ -992,6 +1130,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -1006,6 +1146,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             }

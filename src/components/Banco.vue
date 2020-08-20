@@ -2,8 +2,26 @@
     <v-layout align-start>
         <v-flex>
             <v-toolbar flat color="white">
-                <v-toolbar-title>Categorías</v-toolbar-title>
-                    <v-divider
+                <v-btn @click="crearPDF()"><v-icon>print</v-icon></v-btn>
+                <v-toolbar-title>Bancos</v-toolbar-title>
+                <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+                    right
+                    color="error"
+                    >
+                    {{ snacktext }}
+                    <v-btn 
+                        color="error"
+                        dark
+                        vertical
+                        text
+                        @click="snackbar = false"
+                    >
+                        Cerrar
+                    </v-btn>
+                </v-snackbar>    
+                <v-divider
                     class="mx-2"
                     inset
                     vertical
@@ -12,98 +30,89 @@
                     <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
                     <v-spacer></v-spacer>
                     <v-dialog v-model="dialog" max-width="500px">
-                        <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
-                        <v-card>
-                            <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>
-                
-                            <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
+                    <v-btn slot="activator" color="primary" dark class="mb-2">Nueva</v-btn>
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
                                 <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="nombre" label="Nombre"></v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="descripcion" label="Descripción"></v-text-field>
+                                    <v-text-field v-model="nombre" label="Banco"></v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm12 md12 v-show="valida">
                                     <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
                                     </div>
                                 </v-flex>
-                                </v-layout>
-                            </v-container>
-                            </v-card-text>
-                
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-                                <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="adModal" max-width="290">
-                        <v-card>
-                            <v-card-title class="headline" v-if="adAccion==1">¿Activar Item?</v-card-title>
-                            <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Item?</v-card-title>
-                            <v-card-text>
-                                Estás a punto de 
-                                <span v-if="adAccion==1">Activar </span>
-                                <span v-if="adAccion==2">Desactivar </span>
-                                el ítem {{ adNombre }}
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
-                                    Cancelar
-                                </v-btn>
-                                <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
-                                    Activar
-                                </v-btn>
-                                <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
-                                    Desactivar
-                                </v-btn>
-                            </v-card-actions>
+                            </v-layout>
+                        </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="adModal" max-width="290">
+                    <v-card>
+                        <v-card-title class="headline" v-if="adAccion==1">¿Activar Item?</v-card-title>
+                        <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Item?</v-card-title>
+                        <v-card-text>
+                            Estás a punto de 
+                            <span v-if="adAccion==1">Activar </span>
+                            <span v-if="adAccion==2">Desactivar </span>
+                            el ítem {{ adNombre }}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
+                                Cancelar
+                            </v-btn>
+                            <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
+                                Activar
+                            </v-btn>
+                            <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
+                                Desactivar
+                            </v-btn>
+                        </v-card-actions>
 
-                        </v-card>
-                    </v-dialog>
-                </v-toolbar>
+                    </v-card>
+                </v-dialog>
+            </v-toolbar>
             <v-data-table
                 :headers="headers"
-                :items="categorias"
+                :items="bancos"
                 :search="search"
                 class="elevation-1"
             >
                 <template slot="items" slot-scope="props">
                     <td class="justify-center layout px-0">
-                        <v-icon
-                        small
-                        class="mr-2"
+                        <v-icon small class="mr-2" 
                         @click="editItem(props.item)"
                         >
                         edit
                         </v-icon>
-                        <template v-if="props.item.condicion">
-                            <v-icon
-                            small
+                        <template v-if="props.item.activo">
+                            <v-icon small
                             @click="activarDesactivarMostrar(2,props.item)"
                             >
                             block
                             </v-icon>
                         </template>
                         <template v-else>
-                            <v-icon
-                            small
+                            <v-icon small
                             @click="activarDesactivarMostrar(1,props.item)"
                             >
                             check
                             </v-icon>
                         </template>
                     </td>
+                    <td>{{ props.item.idbanco }}</td>
                     <td>{{ props.item.nombre }}</td>
-                    <td>{{ props.item.descripcion }}</td>
                     <td>
-                        <div v-if="props.item.condicion">
+                        <div v-if="props.item.activo">
                             <span class="blue--text">Activo</span>
                         </div>
                         <div v-else>
@@ -120,22 +129,27 @@
 </template>
 <script>
     import axios from 'axios'
+    import jsPDF from 'jspdf'
+    import autoTable from 'jspdf-autotable';
     export default {
         data(){
-            return {
-                categorias:[],                
+            return {          
+                snackbar:false,
+                snacktext: 'Hola',
+                timeout: 4000,
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
-                    { text: 'Nombre', value: 'nombre' },
-                    { text: 'Descripción', value: 'descripcion', sortable: false  },
-                    { text: 'Estado', value: 'condicion', sortable: false  }                
+                    { text: 'Id', value: 'idbanco', sortable: true },
+                    { text: 'Banco', value: 'banco' },
+                    { text: 'Estado', value: 'activo', sortable: true  }                
                 ],
                 search: '',
                 editedIndex: -1,
-                id: '',
-                nombre: '',
-                descripcion: '',
+                idbanco:'',
+                nombre:'',
+                bancos:[                   
+                ],
                 valida: 0,
                 validaMensaje:[],
                 adModal: 0,
@@ -146,7 +160,7 @@
         },
         computed: {
             formTitle () {
-                return this.editedIndex === -1 ? 'Nueva categoría' : 'Actualizar categoría'
+                return this.editedIndex === -1 ? 'Nuevo banco' : 'Actualizar banco'
             }
         },
 
@@ -160,38 +174,52 @@
             this.listar();
         },
         methods:{
+            crearPDF(){
+                var columns = [
+                    {title: "Id", dataKey: "idbanco"},
+                    {title: "Banco", dataKey: "nombre"},
+                    {title: "Estado", dataKey: "activo"},
+                ];
+                var rows = [];
+
+                this.bancos.map(function(x){
+                    rows.push({idbanco:x.idbanco,nombre:x.nombre,activo:x.activo ? "Activo" : "Inactivo"});
+                });
+
+                // Only pt supported (not mm or in)
+                var doc = new jsPDF('p', 'pt');
+                doc.autoTable(columns, rows, {
+                    margin: {top: 60},
+                    addPageContent: function(data) {
+                        doc.text("Listado de Bancos", 40, 30);
+                    }
+                });
+                doc.save('Bancos.pdf');
+            },
             listar(){
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                axios.get('api/Categorias/Listar',configuracion).then(function(response){
+                axios.get('api/Bancos/Listar',configuracion).then(function(response){
                     //console.log(response);
-                    me.categorias=response.data;
+                    me.bancos=response.data;
                 }).catch(function(error){
-                    console.log(error);
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     me.snackbar = true;                     console.log(error);
                 });
             },
             editItem (item) {
-                this.id=item.idcategoria;
+                this.idbanco=item.idbanco;
                 this.nombre=item.nombre;
-                this.descripcion=item.descripcion;
                 this.editedIndex=1;
                 this.dialog = true
             },
-
-            deleteItem (item) {
-                const index = this.desserts.indexOf(item)
-                confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
-            },
-
             close () {
                 this.dialog = false;
                 this.limpiar();
             },
             limpiar(){
-                this.id="";
+                this.idbanco="";
                 this.nombre="";
-                this.descripcion="";
                 this.editedIndex=-1;
             },
             guardar () {
@@ -204,29 +232,32 @@
                     //Código para editar
                     //Código para guardar
                     let me=this;
-                    axios.put('api/Categorias/Actualizar',{
-                        'idcategoria':me.id,
-                        'nombre': me.nombre,
-                        'descripcion': me.descripcion
+                    axios.put('api/Bancos/Actualizar',{
+                        'idbanco':me.idbanco,
+                        'nombre': me.nombre
                     },configuracion).then(function(response){
                         me.close();
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
+                        me.snackbar = true;                     
                         console.log(error);
                     });
                 } else {
                     //Código para guardar
                     let me=this;
-                    axios.post('api/Categorias/Crear',{
-                        'nombre': me.nombre,
-                        'descripcion': me.descripcion
+                    axios.post('api/Bancos/Crear',{
+                        'nombre': me.nombre
                     },configuracion).then(function(response){
                         me.close();
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
+                        me.snackbar = true;                     
                         console.log(error);
+
                     });
                 }
             },
@@ -235,7 +266,7 @@
                 this.validaMensaje=[];
 
                 if (this.nombre.length<3 || this.nombre.length>50){
-                    this.validaMensaje.push("El nombre debe tener más de 3 caracteres y menos de 50 caracteres");
+                    this.validaMensaje.push("El nombre del banco no debe tener menos de 3 caracteres y mas de 50 caracteres.");
                 }
                 if (this.validaMensaje.length){
                     this.valida=1;
@@ -245,7 +276,7 @@
             activarDesactivarMostrar(accion,item){
                 this.adModal=1;
                 this.adNombre=item.nombre;
-                this.adId=item.idcategoria;                
+                this.adId=item.idbanco;                
                 if (accion==1){
                     this.adAccion=1;
                 }
@@ -263,28 +294,34 @@
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                axios.put('api/Categorias/Activar/'+this.adId,{},configuracion).then(function(response){
+                axios.put('api/Bancos/Activar/'+this.adId,{},configuracion).then(function(response){
                     me.adModal=0;
                     me.adAccion=0;
                     me.adNombre="";
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
+                    me.snackbar = true;                     
                     console.log(error);
+
                 });
             },
             desactivar(){
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                axios.put('api/Categorias/Desactivar/'+this.adId,{},configuracion).then(function(response){
+                axios.put('api/Bancos/Desactivar/'+this.adId,{},configuracion).then(function(response){
                     me.adModal=0;
                     me.adAccion=0;
                     me.adNombre="";
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
+                    me.snackbar = true;                     
                     console.log(error);
+
                 });
             }
         }        

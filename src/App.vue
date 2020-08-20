@@ -8,7 +8,7 @@
       v-if="logueado"
     >
       <v-list dense>
-        <template v-if="esAdministrador || esJefeAdministracion || esVendedor">
+        <template v-if="esAdministrador || esJefeAdministracion || esAsistAdministracion ||  esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer || esAsistGeneral ">
           <v-list-tile :to="{name:'home'}">
             <v-list-tile-action>
               <v-icon>home</v-icon>
@@ -18,7 +18,68 @@
             </v-list-tile-title>
           </v-list-tile>
         </template>
-        <template v-if="esAdministrador || esJefeAdministracion">
+        <template v-if="esAdministrador || esJefeAdministracion || esAsistAdministracion || esExecutiveProducer">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Gestionar Limbo
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'limbos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Prospectos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'hlimbos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Histórico
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'alimbos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Aprobar/Cerrar Prospectos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'actproy'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Activar Proyecto
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'traficos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Trafico
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+        </template>
+        <template v-if="esAdministrador || esJefeAdministracion || esAsistAdministracion ||  esExecutiveProducer || esLineProducer || esChiefProducer ">
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
@@ -33,7 +94,7 @@
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Proyectos
+                  Proyectos en Cartera
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -47,7 +108,7 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'flujoscaja'}">
+            <v-list-tile :to="{ name: 'flujocajas'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
@@ -57,7 +118,7 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'cierreep'}">
+            <v-list-tile :to="{ name: 'cierreprod'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
@@ -77,9 +138,19 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile :to="{ name: 'proyectoscerrados'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Proyectos Cerrados
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>            
           </v-list-group>
         </template>
-        <template v-if="esAdministrador || esJefeAdministracion">
+        <template v-if="esAdministrador || esJefeAdministracion || esAsistAdministracion ||  esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer || esAsistGeneral ">
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
@@ -108,7 +179,7 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'rendicionesfondos'}">
+            <v-list-tile :to="{ name: 'rendicionfondos'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
@@ -118,9 +189,19 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile :to="{ name: 'devolucionfondos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Devolucion de Fondos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>                        
           </v-list-group>
         </template>
-        <template v-if="esAdministrador || esJefeAdministracion">
+        <template v-if="esAdministrador || esJefeAdministracion || esAsistAdministracion ||  esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer ">
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
@@ -129,7 +210,7 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'ordenpago'}">
+            <v-list-tile :to="{ name: 'ordenpagos'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
@@ -139,13 +220,13 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'registropago'}">
+            <v-list-tile :to="{ name: 'registropagos'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Registro de Pagos
+                  Registro de Pago
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -156,16 +237,6 @@
               <v-list-tile-content>
                 <v-list-tile-title>
                   Proveedores
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile :to="{ name: 'opcionespagoproveedor'}">
-              <v-list-tile-action>
-                <v-icon>table_chart</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  Opciones Pago Proveedor
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -181,45 +252,96 @@
             </v-list-tile>
           </v-list-group>  
         </template>
-        <template v-if="esAdministrador || esJefeAdministracion">
+        <template v-if="esAdministrador || esJefeAdministracion || esAsistAdministracion ||  esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer || esAsistGeneral ">
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Gestionar Day by Day
+                  Gestionar Garantias
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'daybyday'}">
+            <v-list-tile :to="{ name: 'solcheque'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Day by Day
+                  Cheques / Solicitud
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'registrodiariodaybyday'}">
+            <v-list-tile :to="{ name: 'entcheque'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Registro Actividades Diarias
+                  Entrega de Cheque
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'tarifascargo'}">
+            <v-list-tile :to="{ name: 'reccheque'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Tarifas por Cargo
+                  Recupero de Cheque
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+          </v-list-group>
+        </template>
+        <template v-if="esAdministrador || esJefeAdministracion || esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer ">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Gestionar DxD Shooting
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'recursosdxd'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Proyecto/Crew/Bolo
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'realdxd'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Actividades Crew
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'tarifadxd'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Proyecto/Item-Cargo SICA 
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'sica'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Minimos SICA
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>            
             <v-list-tile :to="{ name: 'crews'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
@@ -242,7 +364,190 @@
             </v-list-tile>
           </v-list-group>  
         </template>
-        <template v-if="esAdministrador || esJefeAdministracion">
+        <template v-if="esAdministrador || esJefeAdministracion || esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer ">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Gestionar DxD Post
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'proveedorpost'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Proveedor/Tarifas Post
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'realpost'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Actividades Post
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>         
+            <v-list-tile :to="{ name: 'proveedores'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Proveedores
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'personas'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Personas
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>  
+        </template>        
+        <template v-if="esAdministrador || esJefeAdministracion || esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer ">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Gestionar DxD Stop Motion
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'proveedormotion'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Proveedor/Tarifas Stop Motion
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'realmotion'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Actividades Stop Motion
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>         
+            <v-list-tile :to="{ name: 'proveedores'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Proveedores
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'personas'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Personas
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>  
+        </template>
+        <template v-if="esAdministrador || esJefeAdministracion || esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer ">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Exportar Datos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'controlpptodate'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Control Presupuestario
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'controlrendicion'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Control Pedido/Rendicion
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'controlpagos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Control Pagos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>         
+            <v-list-tile :to="{ name: 'controlgarantias'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Control Garantias
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>         
+            <v-list-tile :to="{ name: 'controlshooting'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Control DxD Shooting
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>         
+            <v-list-tile :to="{ name: 'controlpost'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Control DxD Post
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'controlmotion'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Control DxD Stop Motion
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>  
+        </template>
+        <template v-if="esAdministrador || esJefeAdministracion ">
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
@@ -293,8 +598,15 @@
             </v-list-tile>
           </v-list-group>  
         </template>
-        <template v-if="esAdministrador || esJefeAdministracion">
+        <template v-if="esAdministrador || esJefeAdministracion || esAsistAdministracion ||  esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer ">
           <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Datos Maestros
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
             <v-list-tile :to="{ name: 'agencias'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
@@ -302,13 +614,6 @@
               <v-list-tile-content>
                 <v-list-tile-title>
                   Agencias
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile slot="activator">
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  Datos Maestros
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -329,26 +634,6 @@
               <v-list-tile-content>
                 <v-list-tile-title>
                   Crew
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile :to="{ name: 'empresas'}">
-              <v-list-tile-action>
-                <v-icon>table_chart</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  Empresas
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile :to="{ name: 'paises'}">
-              <v-list-tile-action>
-                <v-icon>table_chart</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  Paises
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -382,6 +667,97 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+          </v-list-group>           
+        </template>
+        <template v-if="esAdministrador || esJefeAdministracion || esAsistAdministracion ||  esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer ">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Tablas de Configuración
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'bancos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Bancos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'empresas'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Empresas
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'estados'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Estados
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'origenes'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Origenes
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'paises'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Paises
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'parametros'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Parametros
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'pitchs'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Pitch
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'posiciones'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Posiciones
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
             <v-list-tile :to="{ name: 'provincias'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
@@ -389,6 +765,16 @@
               <v-list-tile-content>
                 <v-list-tile-title>
                   Provincias
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'resultados'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Resultados
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -402,9 +788,29 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-          </v-list-group>  
+            <v-list-tile :to="{ name: 'tipoprods'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Tipo de Produccion
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'tipoproys'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Tipo de Proyecto
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>           
         </template>
-        <template v-if="esAdministrador">
+        <template v-if="esAdministrador || esJefeAdministracion || esAsistAdministracion ||  esExecutiveProducer ">
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
@@ -433,14 +839,24 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile :to="{ name: 'usuarioproyectos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Asignar Proyectos a Usuarios
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>           
           </v-list-group>
         </template>
-        <template v-if="esAdministrador">
+        <!-- <template v-if="esAdministrador">
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Consultas
+                  SandBox
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -454,13 +870,13 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: ''}">
+            <v-list-tile :to="{ name: 'prueba2'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Consultas compras
+                  Upload
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -470,16 +886,16 @@
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Consultas ventas
+                  Filtros
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
           </v-list-group>
-        </template>
+        </template> -->
       </v-list>
     </v-navigation-drawer>
     <v-toolbar
-      color="blue darken-3"
+      color="primary"
       dark
       app
       :clipped-left="$vuetify.breakpoint.mdAndUp"
@@ -490,7 +906,7 @@
         <span class="hidden-sm-and-down">GAP - Gestión Administrativa de Proyectos</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="salir" v-if="logueado" icon>
+      <v-btn @click="salir" v-if="logueado">
         <v-icon>logout</v-icon> Salir
       </v-btn>
       <v-btn :to="{name: 'login'}" v-else>
@@ -509,7 +925,7 @@
         <v-flex text-xs-center>
           <v-card flat tile color="primary" class="white--text">
             <v-card-text class="white--text pt-0">
-              Akiel &copy;2019
+              Akiel &copy;2019 - Version 6.R31
             </v-card-text>
           </v-card>
         </v-flex>
@@ -553,6 +969,18 @@ export default {
     },
     esAsistProduccion(){
       return this.$store.state.usuario && this.$store.state.usuario.rol =='AsistProduccion';
+    },
+    esExecutiveProducer(){
+      return this.$store.state.usuario && this.$store.state.usuario.rol =='ExecutiveProducer';
+    },
+    esLineProducer(){
+      return this.$store.state.usuario && this.$store.state.usuario.rol =='LineProducer';
+    },
+    esChiefProducer(){
+      return this.$store.state.usuario && this.$store.state.usuario.rol =='ChiefProducer';
+    },
+    esAsistGeneral(){
+      return this.$store.state.usuario && this.$store.state.usuario.rol =='AsistGeneral';
     }
   },
   created(){

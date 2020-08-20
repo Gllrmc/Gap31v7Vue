@@ -4,104 +4,121 @@
             <v-toolbar flat color="white">
                 <v-btn @click="crearPDF()"><v-icon>print</v-icon></v-btn>
                 <v-toolbar-title>Empresas</v-toolbar-title>
-                    <v-divider
-                    class="mx-2"
-                    inset
-                    vertical
-                    ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="500px">
-                        <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
-                        <v-card>
-                            <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>            
-                            <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
-                                <v-flex xs6 sm6 md6>
-                                    <v-text-field v-model="empresa" label="Empresa">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs6 sm6 md6>
-                                    <v-text-field v-model="cuit" label="CUIT">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs6 sm6 md6>
-                                    <v-text-field v-model="direccion" label="Dirección">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs6 sm6 md6>
-                                    <v-text-field v-model="localidad" label="Localidad">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs6 sm6 md6>
-                                    <v-text-field v-model="cpostal" label="C.P.">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs6 sm6 md6>
-                                    <v-select v-model="idprovincia"
-                                    :items = "provincias" label = "Provincia">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs6 sm6 md6>
-                                    <v-select v-model="idpais"
-                                    :items = "paises" label = "País">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs6 sm6 md6>
-                                    <v-text-field v-model="telefono" label="telefono">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs6 sm6 md6>
-                                    <v-text-field v-model="email" label="eMail">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs6 sm6 md6>
-                                    <v-text-field v-model="webpage" label="Web Page">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12 v-show="valida">
-                                    <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
-                                    </div>
-                                </v-flex>
-                                </v-layout>
-                            </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-                                <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="adModal" max-width="290">
-                        <v-card>
-                            <v-card-title class="headline" v-if="adAccion==1">¿Activar Item?</v-card-title>
-                            <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Item?</v-card-title>
-                            <v-card-text>
-                                Estás a punto de 
-                                <span v-if="adAccion==1">Activar </span>
-                                <span v-if="adAccion==2">Desactivar </span>
-                                el ítem {{ adNombre }}
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
-                                    Cancelar
-                                </v-btn>
-                                <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
-                                    Activar
-                                </v-btn>
-                                <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
-                                    Desactivar
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                </v-toolbar>
+                <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+                    right
+                    color="error"
+                    >
+                    {{ snacktext }}
+                    <v-btn 
+                        color="error"
+                        dark
+                        vertical
+                        text
+                        @click="snackbar = false"
+                    >
+                        Cerrar
+                    </v-btn>
+                </v-snackbar>                   
+                <v-divider
+                class="mx-2"
+                inset
+                vertical
+                ></v-divider>
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="500px">
+                    <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>            
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                            <v-flex xs6 sm6 md6>
+                                <v-text-field v-model="empresa" label="Empresa">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs6 sm6 md6>
+                                <v-text-field v-model="cuit" label="CUIT">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs6 sm6 md6>
+                                <v-text-field v-model="direccion" label="Dirección">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs6 sm6 md6>
+                                <v-text-field v-model="localidad" label="Localidad">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs6 sm6 md6>
+                                <v-text-field v-model="cpostal" label="C.P.">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs6 sm6 md6>
+                                <v-select v-model="idprovincia"
+                                :items = "provincias" label = "Provincia">
+                                </v-select>
+                            </v-flex>
+                            <v-flex xs6 sm6 md6>
+                                <v-select v-model="idpais"
+                                :items = "paises" label = "País">
+                                </v-select>
+                            </v-flex>
+                            <v-flex xs6 sm6 md6>
+                                <v-text-field v-model="telefono" label="telefono">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs6 sm6 md6>
+                                <v-text-field v-model="email" label="eMail">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs6 sm6 md6>
+                                <v-text-field v-model="webpage" label="Web Page">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12 v-show="valida">
+                                <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                                </div>
+                            </v-flex>
+                            </v-layout>
+                        </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="adModal" max-width="290">
+                    <v-card>
+                        <v-card-title class="headline" v-if="adAccion==1">¿Activar Item?</v-card-title>
+                        <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Item?</v-card-title>
+                        <v-card-text>
+                            Estás a punto de 
+                            <span v-if="adAccion==1">Activar </span>
+                            <span v-if="adAccion==2">Desactivar </span>
+                            el ítem {{ adNombre }}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
+                                Cancelar
+                            </v-btn>
+                            <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
+                                Activar
+                            </v-btn>
+                            <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
+                                Desactivar
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-toolbar>
             <v-data-table
                 :headers="headers"
                 :items="empresas"
@@ -167,6 +184,9 @@
     export default {
         data(){
             return {
+                snackbar:false,
+                snacktext: 'Hola',
+                timeout: 4000,
                 empresas:[],
                 paises: [],
                 provincias: [],               
@@ -258,11 +278,13 @@
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-				console.log(configuracion);
+				// console.log(configuracion);
                 axios.get('api/Empresas/Listar',configuracion).then(function(response){
-                    console.log(response);
+                    // console.log(response);
                     me.empresas=response.data;
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -273,21 +295,25 @@
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
                 axios.get('api/Paises/Select',configuracion).then(function(response){
-                    console.log(response);
+                    // console.log(response);
                     paisesArray=response.data;
                     paisesArray.map(function(x){
                         me.paises.push({text: x.pais,value:x.idpais});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
 				axios.get('api/Provincias/Select',configuracion).then(function(response){
-                    console.log(response);
+                    // console.log(response);
                     provinciasArray=response.data;
                     provinciasArray.map(function(x){
                         me.provincias.push({text: x.provincia,value:x.idprovincia});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -350,6 +376,8 @@
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 } else {
@@ -371,6 +399,8 @@
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 }
@@ -421,6 +451,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -435,6 +467,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             }

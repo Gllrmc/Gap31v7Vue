@@ -4,62 +4,82 @@
             <v-toolbar flat color="white">
                 <v-btn @click="crearPDF()"><v-icon>print</v-icon></v-btn>
                 <v-toolbar-title>Productoras</v-toolbar-title>
-                    <v-divider
-                    class="mx-2"
-                    inset
-                    vertical
-                    ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="500px">
-                        <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
-                        <v-card>
-                            <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>
-                            <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
-                                    <v-flex xs12 sm12 md12>
-                                        <v-text-field v-model="productora" label="Productora"></v-text-field>
-                                    </v-flex>
-                                </v-layout>
-                            </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-                                <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="adModal" max-width="290">
-                        <v-card>
-                            <v-card-title class="headline" v-if="adAccion==1">¿Activar Item?</v-card-title>
-                            <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Item?</v-card-title>
-                            <v-card-text>
-                                Estás a punto de 
-                                <span v-if="adAccion==1">Activar </span>
-                                <span v-if="adAccion==2">Desactivar </span>
-                                el ítem {{ adNombre }}
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
-                                    Cancelar
-                                </v-btn>
-                                <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
-                                    Activar
-                                </v-btn>
-                                <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
-                                    Desactivar
-                                </v-btn>
-                            </v-card-actions>
-
-                        </v-card>
-                    </v-dialog>
-                </v-toolbar>
+                <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+                    right
+                    color="error"
+                    >
+                    {{ snacktext }}
+                    <v-btn 
+                        color="error"
+                        dark
+                        vertical
+                        text
+                        @click="snackbar = false"
+                    >
+                        Cerrar
+                    </v-btn>
+                </v-snackbar>                   
+                <v-divider
+                class="mx-2"
+                inset
+                vertical
+                ></v-divider>
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="500px">
+                    <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                                <v-flex xs12 sm12 md12>
+                                    <v-text-field v-model="productora" label="Productora"></v-text-field>
+                                </v-flex>
+                                <v-flex xs12 sm12 md12 v-show="valida">
+                                    <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                                    </div>
+                                </v-flex>                                
+                            </v-layout>
+                        </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="adModal" max-width="290">
+                    <v-card>
+                        <v-card-title class="headline" v-if="adAccion==1">¿Activar Item?</v-card-title>
+                        <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Item?</v-card-title>
+                        <v-card-text>
+                            Estás a punto de 
+                            <span v-if="adAccion==1">Activar </span>
+                            <span v-if="adAccion==2">Desactivar </span>
+                            el ítem {{ adNombre }}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
+                                Cancelar
+                            </v-btn>
+                            <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
+                                Activar
+                            </v-btn>
+                            <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
+                                Desactivar
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-toolbar>
             <v-data-table
                 :headers="headers"
                 :items="productoras"
@@ -112,7 +132,10 @@
     import autoTable from 'jspdf-autotable';
     export default {
         data(){
-            return {          
+            return {
+                snackbar:false,
+                snacktext: 'Hola',
+                timeout: 4000,
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
@@ -180,6 +203,8 @@
                     //console.log(response);
                     me.productoras=response.data;
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -216,6 +241,8 @@
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 } else {
@@ -228,6 +255,8 @@
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 }
@@ -272,6 +301,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -286,6 +317,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             }

@@ -4,82 +4,111 @@
             <v-toolbar flat color="white">
                 <v-btn @click="crearPDF()"><v-icon>print</v-icon></v-btn>
                 <v-toolbar-title>Subrubros</v-toolbar-title>
-                    <v-divider
-                    class="mx-2"
-                    inset
-                    vertical
-                    ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="1000px">
-                        <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
-                        <v-card>
-                            <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>
-                            <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
-                                <v-flex xs2 sm2 md2>
-                                    <v-text-field v-model="orden" label="Orden">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs10 sm10 md10>
-                                    <v-select v-model="idrubro"
-                                    :items="rubros" label="Rubros">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="subrubroes" label="Subrubro(ES)"></v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="subrubroen" label="Subrubro(EN)"></v-text-field>
-                                </v-flex>
-                                <v-flex xs4 sm4 md4>
-                                    <v-text-field type="number" v-model="numhoja" label="#Hoja">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12 v-show="valida">
-                                    <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
-                                    </div>
-                                </v-flex>
-                                </v-layout>
-                            </v-container>
-                            </v-card-text>                
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-                                <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="adModal" max-width="290">
-                        <v-card>
-                            <v-card-title class="headline" v-if="adAccion==1">¿Activar Item?</v-card-title>
-                            <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Item?</v-card-title>
-                            <v-card-text>
-                                Estás a punto de 
-                                <span v-if="adAccion==1">Activar </span>
-                                <span v-if="adAccion==2">Desactivar </span>
-                                el ítem {{ adNombre }}
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
-                                    Cancelar
-                                </v-btn>
-                                <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
-                                    Activar
-                                </v-btn>
-                                <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
-                                    Desactivar
-                                </v-btn>
-                            </v-card-actions>
+                <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+                    right
+                    color="error"
+                    >
+                    {{ snacktext }}
+                    <v-btn 
+                        color="error"
+                        dark
+                        vertical
+                        text
+                        @click="snackbar = false"
+                    >
+                        Cerrar
+                    </v-btn>
+                </v-snackbar>                  
+                <v-divider
+                class="mx-2"
+                inset
+                vertical
+                ></v-divider>
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="1000px">
+                    <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                            <v-flex xs2 sm2 md2>
+                                <v-text-field v-model="orden" label="Orden">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs10 sm10 md10>
+                                <v-select v-model="idrubro"
+                                :items="rubros" label="Rubros">
+                                </v-select>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12>
+                                <v-text-field v-model="subrubroes" label="Subrubro(ES)"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12>
+                                <v-text-field v-model="subrubroen" label="Subrubro(EN)"></v-text-field>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <input type="checkbox" id="vivo" v-model="vivo">
+                                <label for = "vivo"> Es Vivo?</label>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <input type="checkbox" id="post" v-model="post">
+                                <label for = "post"> Es Post?</label>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <input type="checkbox" id="conf" v-model="conf">
+                                <label for = "conf"> Es Confidencial?</label>
+                            </v-flex>
+                            <v-flex xs3 sm3 md3>
+                                <v-text-field type="number" v-model="numhoja" label="#Hoja">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12 v-show="valida">
+                                <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                                </div>
+                            </v-flex>
+                            </v-layout>
+                        </v-container>
+                        </v-card-text>                
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="adModal" max-width="290">
+                    <v-card>
+                        <v-card-title class="headline" v-if="adAccion==1">¿Activar Item?</v-card-title>
+                        <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Item?</v-card-title>
+                        <v-card-text>
+                            Estás a punto de 
+                            <span v-if="adAccion==1">Activar </span>
+                            <span v-if="adAccion==2">Desactivar </span>
+                            el ítem {{ adNombre }}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
+                                Cancelar
+                            </v-btn>
+                            <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
+                                Activar
+                            </v-btn>
+                            <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
+                                Desactivar
+                            </v-btn>
+                        </v-card-actions>
 
-                        </v-card>
-                    </v-dialog>
-                </v-toolbar>
+                    </v-card>
+                </v-dialog>
+            </v-toolbar>
             <v-data-table
                 :headers="headers"
                 :items="subrubros"
@@ -113,11 +142,34 @@
                         </template>
                     </td>
                     <td>{{ props.item.orden }}</td>
-                    <td>{{ props.item.rubroes }}</td>
                     <td>{{ props.item.subrubroes }}</td>
-                    <td>{{ props.item.rubroen }}</td>
-                    <td>{{ props.item.subrubroen }}</td>
+                    <td>{{ props.item.rubroorden }}</td>
+                    <td>{{ props.item.rubroes }}</td>
                     <td>{{ props.item.numhoja }}</td>
+                    <td>
+                        <div v-if="props.item.vivo">
+                            <span class="blue--text">Si</span>
+                        </div>
+                        <div v-else>
+                            <span class="red--text">No</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div v-if="props.item.post">
+                            <span class="blue--text">Si</span>
+                        </div>
+                        <div v-else>
+                            <span class="red--text">No</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div v-if="props.item.conf">
+                            <span class="blue--text">Si</span>
+                        </div>
+                        <div v-else>
+                            <span class="red--text">No</span>
+                        </div>
+                    </td>
                     <td>
                         <div v-if="props.item.activo">
                             <span class="blue--text">Activo</span>
@@ -141,17 +193,22 @@
     export default {
         data(){
             return {
+                snackbar:false,
+                snacktext: 'Hola',
+                timeout: 4000,
                 rubros:[],
                 subrubros:[],                
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
                     { text: 'Orden', value: 'orden' },
-                    { text: 'Rubro (ES)', value: 'rubroes' },
                     { text: 'Subrubro (ES)', value: 'subrubroes' },
-                    { text: 'Rubro (EN)', value: 'rubroen' },
-                    { text: 'Subrubro (EN)', value: 'subrubroen' },
+                    { text: '#Rubro', value: 'rubroorden' },
+                    { text: 'Rubro (ES)', value: 'rubroes' },
                     { text: '#Hoja', value: 'numhoja' },
+                    { text: 'Es Vivo?', value: 'vivo' },
+                    { text: 'Es Post?', value: 'post' },
+                    { text: 'Es Conf?', value: 'conf' },
                     { text: 'Estado', value: 'activo', sortable: false  }                
                 ],
                 search: '',
@@ -159,10 +216,13 @@
                 id: '',
                 // Inicializar variables Lookup
                 idrubro:'',
+                rubroorden:'',
                 orden: '',
                 subrubroes: '',
                 subrubroen: '',
                 numhoja: '',
+                vivo:false,
+                post:false,
                 valida: 0,
                 validaMensaje:[],
                 adModal: 0,
@@ -194,7 +254,7 @@
                     {title: "Rubro", dataKey: "idrubro"}, 
                     {title: "Subrubroes", dataKey: "subrubroes"},
                     {title: "Subrubroen", dataKey: "subrubroen"}, 
-                    {title: "#Hoja", dataKey: "numhoja"},
+                    {title: "#Hoja", dataKey: "numhoja"}
                 ];
                 var rows = [];
 
@@ -216,11 +276,13 @@
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                console.log(configuracion);
+                // console.log(configuracion);
                 axios.get('api/Subrubros/Listar',configuracion).then(function(response){
-                    console.log(response);
+                    // console.log(response);
                     me.subrubros=response.data;
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -232,9 +294,11 @@
                 axios.get('api/Rubros/Select',configuracion).then(function(response){
                     rubrosArray=response.data;
                     rubrosArray.map(function(x){
-                        me.rubros.push({text: x.rubroes+' / '+ x.rubroen, value: x.idrubro });
+                        me.rubros.push({text: x.orden + ': ' + x.rubroes, value: x.idrubro });
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -244,6 +308,9 @@
                 this.subrubroes=item.subrubroes;
                 this.subrubroen=item.subrubroen;
                 this.numhoja=item.numhoja;
+                this.vivo=item.vivo;
+                this.post=item.post;
+                this.conf=item.conf;
                 this.orden=item.orden;
                 this.editedIndex=1;
                 this.dialog = true
@@ -259,6 +326,9 @@
                 this.subrubroen="";
                 this.orden="";
                 this.numhoja="";
+                this.vivo=false;
+                this.post=false;
+                this.conf=false;
                 this.editedIndex=-1;
             },
             guardar () {
@@ -277,12 +347,17 @@
                         'orden':me.orden,
                         'subrubroes': me.subrubroes,
                         'subrubroen':me.subrubroen,
-                        'numhoja':me.numhoja
+                        'numhoja':me.numhoja,
+                        'post':me.post,
+                        'conf':me.conf,
+                        'vivo':me.vivo
                     },configuracion).then(function(response){
                         me.close();
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 } else {
@@ -293,12 +368,17 @@
                         'orden':me.orden,
                         'subrubroes': me.subrubroes,
                         'subrubroen':me.subrubroen,
-                        'numhoja':me.numhoja
+                        'numhoja':me.numhoja,
+                        'post':me.post,
+                        'conf':me.conf,
+                        'vivo':me.vivo
                     },configuracion).then(function(response){
                         me.close();
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 }
@@ -352,6 +432,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -366,6 +448,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             }

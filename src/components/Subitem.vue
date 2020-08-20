@@ -4,78 +4,95 @@
             <v-toolbar flat color="white">
                 <v-btn @click="crearPDF()"><v-icon>print</v-icon></v-btn>
                 <v-toolbar-title>Subitems</v-toolbar-title>
-                    <v-divider
-                    class="mx-2"
-                    inset
-                    vertical
-                    ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="1000px">
-                        <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
-                        <v-card>
-                            <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>
-                            <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
-                                <v-flex xs2 sm2 md2>
-                                    <v-text-field v-model="orden" label="Orden">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs10 sm10 md10>
-                                    <v-select v-model="iditem"
-                                    :items="items" label="Item">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="subitemes" label="Subitem(ES)"></v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="subitemen" label="Subitem(EN)"></v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12 v-show="valida">
-                                    <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
-                                    </div>
-                                </v-flex>
-                                </v-layout>
-                            </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-                                <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="adModal" max-width="290">
-                        <v-card>
-                            <v-card-title class="headline" v-if="adAccion==1">¿Activar Subitem?</v-card-title>
-                            <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Subitem?</v-card-title>
-                            <v-card-text>
-                                Estás a punto de 
-                                <span v-if="adAccion==1">Activar </span>
-                                <span v-if="adAccion==2">Desactivar </span>
-                                el subitem {{ adNombre }}
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
-                                    Cancelar
-                                </v-btn>
-                                <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
-                                    Activar
-                                </v-btn>
-                                <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
-                                    Desactivar
-                                </v-btn>
-                            </v-card-actions>
+                <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+                    right
+                    color="error"
+                    >
+                    {{ snacktext }}
+                    <v-btn 
+                        color="error"
+                        dark
+                        vertical
+                        text
+                        @click="snackbar = false"
+                    >
+                        Cerrar
+                    </v-btn>
+                </v-snackbar>                    
+                <v-divider
+                class="mx-2"
+                inset
+                vertical
+                ></v-divider>
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="1000px">
+                    <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                            <v-flex xs2 sm2 md2>
+                                <v-text-field v-model="orden" label="Orden">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs10 sm10 md10>
+                                <v-select v-model="iditem"
+                                :items="items" label="Item">
+                                </v-select>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12>
+                                <v-text-field v-model="subitemes" label="Subitem(ES)"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12>
+                                <v-text-field v-model="subitemen" label="Subitem(EN)"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12 v-show="valida">
+                                <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                                </div>
+                            </v-flex>
+                            </v-layout>
+                        </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="adModal" max-width="290">
+                    <v-card>
+                        <v-card-title class="headline" v-if="adAccion==1">¿Activar Subitem?</v-card-title>
+                        <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Subitem?</v-card-title>
+                        <v-card-text>
+                            Estás a punto de 
+                            <span v-if="adAccion==1">Activar </span>
+                            <span v-if="adAccion==2">Desactivar </span>
+                            el subitem {{ adNombre }}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
+                                Cancelar
+                            </v-btn>
+                            <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
+                                Activar
+                            </v-btn>
+                            <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
+                                Desactivar
+                            </v-btn>
+                        </v-card-actions>
 
-                        </v-card>
-                    </v-dialog>
-                </v-toolbar>
+                    </v-card>
+                </v-dialog>
+            </v-toolbar>
             <v-data-table
                 :headers="headers"
                 :items="subitems"
@@ -109,10 +126,9 @@
                         </template>
                     </td>
                     <td>{{ props.item.orden }}</td>
-                    <td>{{ props.item.itemes }}</td>
                     <td>{{ props.item.subitemes }}</td>
-                    <td>{{ props.item.itemen }}</td>
-                    <td>{{ props.item.subitemen }}</td>
+                    <td>{{ props.item.itemorden }}</td>
+                    <td>{{ props.item.itemes }}</td>
                     <td>
                         <div v-if="props.item.activo">
                             <span class="blue--text">Activo</span>
@@ -136,16 +152,18 @@
     export default {
         data(){
             return {
+                snackbar:false,
+                snacktext: 'Hola',
+                timeout: 4000,                
                 subitems:[],
                 items:[],                
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
                     { text: 'Orden', value: 'orden' },
-                    { text: 'Item (ES)', value: 'itemes' },
                     { text: 'Subitem (ES)', value: 'subitemes' },
-                    { text: 'Item (EN)', value: 'itemen' },
-                    { text: 'Subitem (EN)', value: 'subitemen' },
+                    { text: '#Item', value: 'itemorden' },
+                    { text: 'Item (ES)', value: 'itemes' },
                     { text: 'Estado', value: 'activo', sortable: false  }                
                 ],
                 search: '',
@@ -166,7 +184,7 @@
         },
         computed: {
             formTitle () {
-                return this.editedIndex === -1 ? 'Nuevo Subitem' : 'Actualizar Subitem'
+                return this.editedIndex === -1 ? 'Nuevo subitem' : 'Actualizar subitem'
             }
         },
 
@@ -208,11 +226,13 @@
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                console.log(configuracion);
+                // console.log(configuracion);
                 axios.get('api/Subitems/Listar',configuracion).then(function(response){
-                    console.log(response);
+                    // console.log(response);
                     me.subitems=response.data;
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -224,9 +244,11 @@
                 axios.get('api/Subitems/SelectItems',configuracion).then(function(response){
                     itemsArray=response.data;
                     itemsArray.map(function(x){
-                        me.items.push({text: x.itemes+' / '+ x.itemen, value: x.iditem });
+                        me.items.push({text: x.orden + ': ' + x.itemes, value: x.iditem });
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -272,6 +294,8 @@
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 } else {
@@ -287,6 +311,8 @@
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 }
@@ -337,6 +363,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -351,6 +379,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             }

@@ -3,91 +3,114 @@
         <v-flex>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Usuarios</v-toolbar-title>
-                    <v-divider
-                    class="mx-2"
-                    inset
-                    vertical
-                    ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="500px">
-                        <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
-                        <v-card>
-                            <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                            </v-card-title>
-                
-                            <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
-                                <v-flex xs12 sm6 md6>
-                                    <v-text-field v-model="userid" label="Userid">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm6 md6>
-                                    <v-select v-model="idrol"
-                                    :items="roles" label="Rol">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs12 sm6 md6>
-                                    <v-select v-model="idpersona"
-                                    :items="personas" label="Persona">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs12 sm6 md6>
-                                    <v-text-field v-model="telefono" label="Teléfono">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm6 md6>
-                                    <v-text-field v-model="email" label="Email">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm6 md6>
-                                    <v-text-field type="password" v-model="password" label="Password">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12 v-show="valida">
-                                    <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
-                                    </div>
-                                </v-flex>
-                                </v-layout>
-                            </v-container>
-                            </v-card-text>
-                
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
-                                <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog v-model="adModal" max-width="290">
-                        <v-card>
-                            <v-card-title class="headline" v-if="adAccion==1">¿Activar Item?</v-card-title>
-                            <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Item?</v-card-title>
-                            <v-card-text>
-                                Estás a punto de 
-                                <span v-if="adAccion==1">Activar </span>
-                                <span v-if="adAccion==2">Desactivar </span>
-                                el ítem {{ adNombre }}
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
-                                    Cancelar
-                                </v-btn>
-                                <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
-                                    Activar
-                                </v-btn>
-                                <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
-                                    Desactivar
-                                </v-btn>
-                            </v-card-actions>
+                <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+                    right
+                    color="error"
+                    >
+                    {{ snacktext }}
+                    <v-btn 
+                        color="error"
+                        dark
+                        vertical
+                        text
+                        @click="snackbar = false"
+                    >
+                        Cerrar
+                    </v-btn>
+                </v-snackbar>                    
+                <v-divider
+                class="mx-2"
+                inset
+                vertical
+                ></v-divider>
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="500px">
+                    <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>
+            
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                            <v-flex xs12 sm6 md6>
+                                <v-text-field v-model="userid" label="Userid">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm6 md6>
+                                <v-select v-model="idrol"
+                                :items="roles" label="Rol">
+                                </v-select>
+                            </v-flex>
+                            <v-flex xs12 sm6 md6>
+                                <v-autocomplete 
+                                    v-model="idpersona" 
+                                    clearable 
+                                    :items="personas"
+                                    :search-input.sync="searchp" 
+                                    label="Persona">
+                                </v-autocomplete>
+                            </v-flex>
+                            <v-flex xs12 sm6 md6>
+                                <v-text-field v-model="telefono" label="Teléfono">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm6 md6>
+                                <v-text-field v-model="email" label="Email">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm6 md6>
+                                <v-text-field type="password" 
+                                v-model="password" 
+                                label="Password">
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm12 md12 v-show="valida">
+                                <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                                </div>
+                            </v-flex>
+                            </v-layout>
+                        </v-container>
+                        </v-card-text>
+            
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="adModal" max-width="290">
+                    <v-card>
+                        <v-card-title class="headline" v-if="adAccion==1">¿Activar Item?</v-card-title>
+                        <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Item?</v-card-title>
+                        <v-card-text>
+                            Estás a punto de 
+                            <span v-if="adAccion==1">Activar </span>
+                            <span v-if="adAccion==2">Desactivar </span>
+                            el ítem {{ adNombre }}
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
+                                Cancelar
+                            </v-btn>
+                            <v-btn v-if="adAccion==1" color="orange darken-4" flat="flat" @click="activar">
+                                Activar
+                            </v-btn>
+                            <v-btn v-if="adAccion==2" color="orange darken-4" flat="flat" @click="desactivar">
+                                Desactivar
+                            </v-btn>
+                        </v-card-actions>
 
-                        </v-card>
-                    </v-dialog>
-                </v-toolbar>
+                    </v-card>
+                </v-dialog>
+            </v-toolbar>
             <v-data-table
                 :headers="headers"
                 :items="usuarios"
@@ -146,7 +169,11 @@
     export default {
         data(){
             return {
-                usuarios:[],                
+                snackbar:false,
+                snacktext: 'Hola',
+                timeout: 4000,
+                usuarios:[],
+                personas:[],                
                 dialog: false,
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
@@ -158,6 +185,7 @@
                     { text: 'Estado', value: 'condicion', sortable: false  }                
                 ],
                 search: '',
+                searchp: '',
                 editedIndex: -1,
                 id: '',
                 idrol:'',
@@ -195,6 +223,13 @@
             this.select();
         },
         methods:{
+            genpasswd(n) {
+                // 36 ** 11 > Number.MAX_SAFE_INTEGER
+                if (n > 10)
+                    throw new Error('Too big n for this function');
+                var x = "0000000000" + Math.floor(Number.MAX_SAFE_INTEGER * Math.random()).toString(36);
+                return x.slice(-n);
+            },            
             listar(){
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
@@ -203,22 +238,38 @@
                     //console.log(response);
                     me.usuarios=response.data;
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
             select(){
                 let me=this;
                 var rolesArray=[];
+                var personasArray=[];
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
+                
                 axios.get('api/Roles/Select',configuracion).then(function(response){
                     rolesArray=response.data;
                     rolesArray.map(function(x){
                         me.roles.push({text: x.nombre,value:x.idrol});
                     });
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
+                axios.get('api/Personas/Select',configuracion).then(function(response){
+                    personasArray=response.data;
+                    personasArray.map(function(x){
+                        me.personas.push({text: x.nombre,value:x.idpersona});
+                    });
+                }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
+                    console.log(error);
+                });                
             },
             editItem (item) {
                 this.id=item.idusuario;
@@ -275,6 +326,8 @@
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 } else {
@@ -292,6 +345,8 @@
                         me.listar();
                         me.limpiar();                        
                     }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
                         console.log(error);
                     });
                 }
@@ -345,6 +400,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             },
@@ -359,6 +416,8 @@
                     me.adId="";
                     me.listar();                       
                 }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
                     console.log(error);
                 });
             }
