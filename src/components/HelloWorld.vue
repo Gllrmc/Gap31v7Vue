@@ -32,66 +32,150 @@
               </p>
             </v-card-text>
           </v-card>
-
+          <v-dialog v-model="dialog" max-width="600px" persistent>
+            <v-toolbar
+              color="indigo"
+              dark
+            >
+              <v-toolbar-title>Cambio de Password Requerido</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-btn icon>
+                <v-icon>verified_user</v-icon>
+              </v-btn>
+            </v-toolbar>
+              <v-card>
+              <v-card-title>
+                  <span class="headline"></span>
+              </v-card-title>
+              <v-card-text>
+                  <v-container grid-list-md>
+                      <v-flex xs12 sm12 md12>
+                          <v-text-field type="password" v-model="actualpassword" label="Password Actual">
+                          </v-text-field>
+                      </v-flex>
+                      <v-flex xs12 sm12 md12>
+                          <v-text-field
+                            :append-icon="value ? 'visibility' : 'visibility_off'"
+                            @click:append="() => (value = !value)"
+                            :type="value ? 'password' : 'text'" 
+                            v-model="password" 
+                            label="Nueva Password"
+                            :rules="[rules.password]"
+                            required>
+                          </v-text-field>
+                      </v-flex>
+                      <v-flex xs12 sm12 md12>
+                          <v-text-field 
+                            :append-icon="password===retypepassword ? 'done_outline' : ''"
+                            type="password" 
+                            v-model="retypepassword" 
+                            label="Confirmar Password" 
+                            required>
+                          </v-text-field>
+                      </v-flex>
+                      <v-flex xs12 sm12 md12 v-show="valida">
+                          <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                          </div>
+                      </v-flex> 
+                  </v-container>
+              </v-card-text>
+              <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="salir">Cancelar</v-btn>
+                  <v-btn color="blue darken-1" text @click="guardar">Guardar</v-btn>
+              </v-card-actions>
+              </v-card>
+          </v-dialog>
       </v-layout>
   </v-container>
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
-    data: () => ({
-      ecosystem: [
-        {
-          text: 'vuetify-loader',
-          href: 'https://github.com/vuetifyjs/vuetify-loader'
-        },
-        {
-          text: 'github',
-          href: 'https://github.com/vuetifyjs/vuetify'
-        },
-        {
-          text: 'awesome-vuetify',
-          href: 'https://github.com/vuetifyjs/awesome-vuetify'
-        }
-      ],
-      importantLinks: [
-        {
-          text: 'Documentation',
-          href: 'https://vuetifyjs.com'
-        },
-        {
-          text: 'Chat',
-          href: 'https://community.vuetifyjs.com'
-        },
-        {
-          text: 'Made with Vuetify',
-          href: 'https://madewithvuetifyjs.com'
-        },
-        {
-          text: 'Twitter',
-          href: 'https://twitter.com/vuetifyjs'
-        },
-        {
-          text: 'Articles',
-          href: 'https://medium.com/vuetify'
-        }
-      ],
-      whatsNext: [
-        {
-          text: 'Explore components',
-          href: 'https://vuetifyjs.com/components/api-explorer'
-        },
-        {
-          text: 'Select a layout',
-          href: 'https://vuetifyjs.com/layout/pre-defined'
-        },
-        {
-          text: 'Frequently Asked Questions',
-          href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions'
-        }
+    name: 'HelloWorld',
 
-      ]
-    })
+    data: () => {
+      return {
+        actualpassword: '',
+        password: '',
+        retypepassword: '',
+        dialog: false,
+        validaMensaje: [],
+        valida: 0,
+        valid: true,
+        value: true,
+        rules: {
+        required: value => !!value || "Requerido.",
+        password: value => {
+          const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+          return (
+            pattern.test(value) ||
+            "Min. 8 caracteres con al menos una mayúscula, un número y un caracter especial."
+          );
+        }
+      }
+     }
+    },
+    watch: {
+      dialog (val) {
+      val || this.closeForm()
+        },
+      },
+      created () {
+        this.inicializar();
+      },
+    methods:{
+      inicializar(){
+        let me=this;
+        me.dialog=me.$store.state.usuario.pxch=="SI"?true:false;
+        me.actualpassword="";
+        me.password="";
+        me.retypepassword="";
+      },
+      salir(){
+        this.$store.dispatch("salir");
+      },
+      closeForm(){
+        this.dialog=false;
+      },
+      guardar(){
+        let me=this;
+        if (this.validar()){
+            return;
+        }
+        var date = new Date();                
+        let header={"Authorization" : "Bearer " + this.$store.state.token};
+        let configuracion= {headers : header};
+        axios.put('api/Usuarios/Pxch',{
+            'idusuario':me.$store.state.usuario.idusuario,
+            'oldpassword':me.actualpassword,
+            'newpassword':me.password,
+        },configuracion).then(function(response){
+            me.salir();
+        }).catch(function(error){
+            me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+            me.snackbar = true;
+            console.log(error);
+        });
+      },
+      validar(){
+        this.valida=0;
+        this.validaMensaje=[];
+
+        if (this.password !== this.retypepassword){
+            this.validaMensaje.push("No hay coincidenciaq en la verificacacón de Passwords.");
+        }
+        if (this.password.length<6){
+            this.validaMensaje.push("El password debe poseer al menos 6 caracteres alfanumericos y/o especiales.");
+        }
+        if (this.validaMensaje.length){
+            this.valida=1;
+        }
+        return this.valida;
+
+      },
+    },
   }
 </script>
 

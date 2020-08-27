@@ -70,6 +70,9 @@
                                 label="Password">
                                 </v-text-field>
                             </v-flex>
+                            <v-flex xs5 sm5 md5>
+                                <v-switch v-model="pxch" class="mx-2" label="Solicitar Password"></v-switch>
+                            </v-flex>
                             <v-flex xs12 sm12 md12 v-show="valida">
                                 <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
                                 </div>
@@ -173,6 +176,7 @@
                 snacktext: 'Hola',
                 timeout: 4000,
                 usuarios:[],
+                roles:[],
                 personas:[],                
                 dialog: false,
                 headers: [
@@ -189,13 +193,12 @@
                 editedIndex: -1,
                 id: '',
                 idrol:'',
-                roles:[                   
-                ],
                 idpersona:'',
                 userid:'',
                 telefono: '',
                 email: '',
                 password:'',
+                pxch:false,
                 actPassword:false,
                 passwordAnt:'',
                 valida: 0,
@@ -280,6 +283,7 @@
                 this.email=item.email;
                 this.password=item.password_hash;
                 this.passwordAnt=item.password_hash;
+                this.pxch=item.pxch;
                 this.editedIndex=1;
                 this.dialog = true
             },
@@ -296,6 +300,7 @@
                 this.email="";
                 this.password="";
                 this.passwordAnt="";
+                this.pxch=false;
                 this.actPassword=false;
                 this.editedIndex=-1;
             },
@@ -320,7 +325,8 @@
                         'telefono': me.telefono,
                         'email':me.email,
                         'password':me.password,
-                        'act_password':me.actPassword                        
+                        'act_password':me.actPassword,
+                        'pxch':me.pxch
                     },configuracion).then(function(response){
                         me.close();
                         me.listar();
@@ -339,7 +345,8 @@
                         'userid':me.userid,
                         'telefono': me.telefono,
                         'email':me.email,
-                        'password':me.password
+                        'password':me.password,
+                        'pxch':me.pxch
                     },configuracion).then(function(response){
                         me.close();
                         me.listar();
