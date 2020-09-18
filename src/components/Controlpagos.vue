@@ -35,7 +35,7 @@
                     <v-card-title>
                     <span class="headline">Control de OPs del Proyecto #{{orden}}: {{proyecto}} </span>
                     </v-card-title>            
-                    <v-card-text>                                      
+                    <v-card-text>
                 <export-excel
                     :data   = "json_data"
                     :fields = "json_fields"

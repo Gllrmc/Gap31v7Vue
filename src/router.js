@@ -43,6 +43,7 @@ import Rendicionfondo from './components/Rendicionfondo.vue';
 import Devolucionfondo from './components/Devolucionfondo.vue';
 import Ordenpago from './components/Ordenpago.vue';
 import Registropago from './components/Registropago.vue';
+import Admregistropago from './components/Admregistropago.vue';
 import Solcheque from './components/Solcheque.vue';
 import Entcheque from './components/Entcheque.vue';
 import Reccheque from './components/Reccheque.vue';
@@ -335,6 +336,21 @@ var router = new Router({
                 administrador: true,
                 jefeadministracion: true,
                 asistadministracion: true,
+                executiveproducer: false,
+                lineproducer: false,
+                chiefproducer: false,
+                asistproduccion: false,
+                asistgeneral: false
+            }
+        },
+        {
+            path: '/admregistropagos',
+            name: 'admregistropagos',
+            component: Admregistropago,
+            meta: {
+                administrador: true,
+                jefeadministracion: true,
+                asistadministracion: false,
                 executiveproducer: false,
                 lineproducer: false,
                 chiefproducer: false,

@@ -25,31 +25,31 @@
                     inset
                     vertical
                     ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="450px">
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="450px">
                     <v-card>
                         <v-card-title>
                         <span class="headline">Activar {{pad(orden, 5)}} - {{proyecto}}</span>
                         </v-card-title>
                         <v-card-text>
-                        <v-container grid-list-md>
-                            <v-layout wrap>
-                                <v-flex xs12 sm12 md12>
-                                    <input type="checkbox" id="visita" v-model="activapitch">
-                                    <label for = "visita"> Pitch ? ({{pad(orden, 5)}}A)</label>
-                                </v-flex>                                
-                                <v-flex xs12 sm12 md12>
-                                    <input type="checkbox" id="postih" v-model="activaproy">
-                                    <label for = "postih"> Proyecto? ({{pad(orden, 5)}})</label>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12 v-show="valida">
-                                    <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
-                                    </div>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
+                            <v-container grid-list-md>
+                                <v-layout wrap>
+                                    <v-flex xs12 sm12 md12>
+                                        <input type="checkbox" id="visita" v-model="activapitch">
+                                        <label for = "visita"> Pitch ? ({{pad(orden, 5)}}A)</label>
+                                    </v-flex>                                
+                                    <v-flex xs12 sm12 md12>
+                                        <input type="checkbox" id="postih" v-model="activaproy">
+                                        <label for = "postih"> Proyecto? ({{pad(orden, 5)}})</label>
+                                    </v-flex>
+                                    <v-flex xs12 sm12 md12 v-show="valida">
+                                        <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
+                                        </div>
+                                    </v-flex>
+                                </v-layout>
+                            </v-container>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>

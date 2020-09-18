@@ -26,10 +26,10 @@
                     inset
                     vertical
                     ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="1200px">
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="1200px">
                     <v-btn slot="activator" color="primary" dark class="mb-2">Nueva</v-btn>
                     <v-card>
                         <v-card-title>
@@ -427,6 +427,28 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
+                <v-dialog v-model="dialogpitch" max-width="450px">
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">Activar Pitch {{pad(orden, 5)}} - {{proyecto}}</span>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-container grid-list-md>
+                                <v-layout wrap>
+                                    <v-flex xs12 sm12 md12>
+                                        <input type="checkbox" id="visita" v-model="activapitch">
+                                        <label for = "visita"> Pitch ? ({{pad(orden, 5)}}A)</label>
+                                    </v-flex>
+                                </v-layout>
+                            </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="guardarPitch">Guardar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
                 <v-dialog v-model="adModal" max-width="290">
                     <v-card>
                         <v-card-title class="headline" v-if="adAccion==1">¿Activar Prospecto?</v-card-title>
@@ -465,6 +487,18 @@
                         @click="editItem(props.item)"
                         >
                         edit
+                        </v-icon>
+                        <v-icon v-if="$store.state.usuario.rol =='Administrador' || $store.state.usuario.rol =='JefeAdministracion'"
+                        small
+                        @click="activarPitch(props.item)"
+                        >
+                        archive
+                        </v-icon>
+                        <v-icon v-if="$store.state.usuario.rol =='Administrador' || $store.state.usuario.rol =='JefeAdministracion'"
+                        small
+                        @click="deleteItem(props.item)"
+                        >
+                        delete
                         </v-icon>
                         <template v-if="props.item.activo">
                             <v-icon small
@@ -740,6 +774,8 @@
                 valida: 0,
                 validaMensaje:[],
                 adModal: 0,
+                activapitch: false,
+                dialogpitch: false,
                 adAccion: 0,
                 adNombre: '',
                 adId: ''             
@@ -762,6 +798,58 @@
             this.listar();
         },
         methods:{
+            pad(n, width, z) {
+                z = z || '0';
+                n = n + '';
+                return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+            },
+            activarPitch(item){
+                this.idlimbo=item.idlimbo;
+                this.orden=item.orden;
+                this.proyecto=item.proyecto;
+                this.idcliente=item.idcliente;
+                this.idep=item.idep;
+                this.idorigen=item.idorigen;
+                this.idagencia=item.idagencia;
+                this.idpitch=item.idpitch;
+                this.iddirector=item.iddirector;
+                this.idcodirector=item.idcodirector;
+                this.idproductora=item.idproductora;
+                this.idtipoprod=item.idtipoprod;
+                this.impcosto=item.impcosto;
+                this.porcontingencia=item.porcontingencia;
+                this.porgastosfijo=item.porgastosfijo;
+                this.porganancia=item.porganancia;
+                this.porfeedireccion=item.porfeedireccion;
+                this.porotrosgastos=item.porotrosgastos;
+                this.porcostofinanciero=item.porcostofinanciero;
+                this.porimpuestoycomision=item.porimpuestoycomision;
+                this.impventa=item.impventa.toFixed(0);
+                this.impcontribucion=item.impcontribucion.toFixed(0);
+                this.porcontribucion=item.porcontribucion.toFixed(2);
+                this.idtipoproy=item.idtipoproy;
+                this.idestado=item.idestado;
+                this.fecingreso=item.fecingreso.substr(0, 10);
+                this.fecadjudicacion=item.fecadjudicacion?item.fecadjudicacion.substr(0, 10):item.fecadjudicacion;
+                this.fecpitch=item.fecpitch?item.fecpitch.substr(0, 10):item.fecpitch;
+                this.fecrodaje=item.fecrodaje?item.fecrodaje.substr(0, 10):item.fecrodaje;
+                this.fecentrega=item.fecentrega?item.fecentrega.substr(0, 10):item.fecentrega;
+                this.aprobacion=item.aprobacion;
+                this.fecaprobacion=item.fecaprobacion?item.fecaprobacion.substr(0, 16):item.fecaprobacion;
+                this.idresultado=item.idresultado;
+                this.comentario=item.comentario;
+                this.visitaforanea=item.visitaforanea;
+                this.postinhouse=item.postinhouse;
+                this.idposiciones=item.idposiciones;
+                this.editinhouse=item.editinhouse;
+                this.ars1usd=item.ars1usd;
+                this.iduseralta = item.iduseralta;
+                this.fecalta = item.fecalta;
+                this.iduserumod = item.iduserumod;
+                this.fecumod = item.fecumod;
+                this.activapitch = false;              
+                this.dialogpitch = true;
+            },
             calcularDerivados(){
                 this.impventa = (this.impcosto * ( 1 + this.porcontingencia / 100 ) * ( 1 + this.porgastosfijo / 100 + this.porganancia / 100) * ( 1 + this.porfeedireccion / 100) * ( 1 + this.porotrosgastos / 100 ) * ( 1 + this.porcostofinanciero / 100 ) * ( 1 + this.porimpuestoycomision / 100 ));
                 this.porcontribucion = (!(Number(this.impventa) === 0) ? ((this.porganancia / 100 + this.porgastosfijo / 100 ) * ( 1 + this.porcontingencia / 100 ) * this.impcosto / this.impventa) : 0) * 100;
@@ -1028,8 +1116,25 @@
                 this.editedIndex=1;
                 this.dialog = true
             },
+            deleteItem (item) {
+                var me=this;
+                var resulta = confirm('Esta seguro de querer borrar el registro?');
+                if (resulta) {
+                    let header={"Authorization" : "Bearer " + me.$store.state.token};
+                    let configuracion= {headers : header};
+                    axios.delete('api/Limbos/Eliminar/'+item.idlimbo,configuracion).then(function(response){
+                        me.close();
+                        me.listar();
+                    }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
+                    });
+                }
+            },
             close () {
                 this.dialog = false;
+                this.dialogpitch = false;
                 this.limpiar();
             },
             limpiar(){
@@ -1185,6 +1290,51 @@
                         me.snackbar = true;                     
                         console.log(error);
 
+                    });
+                }
+            },
+            guardarPitch () {
+                let me=this;
+                var date = new Date();
+                var fechapitch = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().substr(0,10);
+                let header={"Authorization" : "Bearer " + this.$store.state.token};
+                let configuracion= {headers : header};
+                if (this.activapitch) {
+                    //Código para guardar
+                    //console.log(me);`
+                    axios.post('api/Proyectos/Crear',{
+                        'idraiz': '',
+                        'orden': me.pad(me.orden, 5)+'A',
+                        'proyecto': '[Pitch] ' + me.proyecto,
+                        'idtipoprod': me.idtipoprod,
+                        'idempresa': '',
+                        'idorigen': me.idorigen,
+                        'idagencia': me.idagencia,
+                        'idproductora': me.idproductora,
+                        'idcliente': me.idcliente,
+                        'iddirector': me.iddirector,
+                        'idcodirector': me.idcodirector,
+                        'idep': me.idep,
+                        'idlp': '',
+                        'idcp': '',
+                        'ars1usd': me.as1usd,
+                        'fecadjudicacion': fechapitch,
+                        'fecdesdxd': '',
+                        'fechasdxd': '',
+                        'fecdescf': '',
+                        'fechascf': '',
+                        'fecrodaje': '',
+                        'fecoffline': '',
+                        'feconline': '',
+                        'iduseralta': me.$store.state.usuario.idusuario,
+                    },configuracion).then(function(response){
+                        me.close();
+                        me.listar();
+                        me.limpiar();                        
+                    }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
                     });
                 }
             },

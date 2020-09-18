@@ -923,6 +923,9 @@
                 if (!this.cbu && !this.alias){
                     this.validaMensaje.push("Ingrese un CBU o un Alias para hacer eTransfers.");
                 }
+                if (this.cbu.length > 22){
+                    this.validaMensaje.push("El CBU no puede exceder las 22 posiciones.");
+                }
                 if (this.validaMensaje.length){
                     this.valida=1;
                 }

@@ -66,7 +66,7 @@
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" flat @click.native="closeForm">Cancelar</v-btn>
                         <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
-                        <v-btn color="success" flat @click.native="registrar = true">Registrar</v-btn>
+                        <v-btn disabled color="success" flat @click.native="registrar = true">Registrar</v-btn>
                     </v-card-actions>
                     <v-card-text>
                         <v-container grid-list-md>
@@ -220,11 +220,11 @@
                                     ></v-overflow-btn>
                                 </v-flex>
                                 <v-spacer></v-spacer>                             
-                                <v-btn v-if="pagado==false" @click="$refs.Pago.click()">PDf Pago</v-btn>
-                                <v-btn v-if="pagado==false" @click="$refs.Cert1.click()">PDF Cer1</v-btn>
-                                <v-btn v-if="pagado==false" @click="$refs.Cert2.click()">PDF Cer2</v-btn>
-                                <v-btn v-if="pagado==false" @click="$refs.Cert3.click()">PDF Cer3</v-btn>
-                                <v-btn v-if="pagado==false" @click="$refs.Cert4.click()">PDF Cer4</v-btn>
+                                <v-btn @click="$refs.Pago.click()">PDf Pago</v-btn>
+                                <v-btn @click="$refs.Cert1.click()">PDF Cer1</v-btn>
+                                <v-btn @click="$refs.Cert2.click()">PDF Cer2</v-btn>
+                                <v-btn @click="$refs.Cert3.click()">PDF Cer3</v-btn>
+                                <v-btn @click="$refs.Cert4.click()">PDF Cer4</v-btn>
                                 <v-flex xs12>
                                     <div>       
                                     <canvas id="the-canvas" style="border:1px  solid black"></canvas>
@@ -242,16 +242,7 @@
                         </v-container>
                     </v-card-text>
                 </v-card>
-            </v-dialog>
-            <export-excel
-                :data   = "json_data"
-                :fields = "json_fields"
-                worksheet = "Pendientes"
-                type    = "xls"
-                name    = "GAPdata.xls"      
-                >
-                <v-btn color="primary" dark class="mb-2" @click="crearXLS()">Exportar XLS</v-btn>
-            </export-excel>
+            </v-dialog>                              
             <v-data-table
                 :headers="headers"
                 :items="ordenpagos"
@@ -260,7 +251,7 @@
                 >
                 <template slot="items" slot-scope="props">
                     <td class="justify-center layout px-20">
-                        <v-icon v-if="props.item.pagado===false"
+                        <v-icon
                         small
                         class="mr-2"
                         @click="edit(props.item)"
@@ -287,6 +278,15 @@
                     <td>{{ props.item.pdfcertificado2 }}</td>
                     <td>{{ props.item.pdfcertificado3 }}</td>
                     <td>{{ props.item.pdfcertificado4 }}</td>
+                    <td>{{ props.item.idordenpago }}</td>
+                    <td class="justify-center ">
+                        <div v-if="props.item.pagado">
+                            <span class="blue--text">SI</span>
+                        </div>
+                        <div v-else>
+                            <span class="red--text">NO</span>
+                        </div>
+                    </td>
                     <td class="justify-center ">
                         <div v-if="props.item.activo">
                             <span class="blue--text">Activo</span>
@@ -295,7 +295,6 @@
                             <span class="red--text">Inactivo</span>
                         </div>
                     </td>
-                    <td>{{ props.item.idordenpago }}</td>
                     <td class="text-xs-center">{{ props.item.iduseralta }}</td>
                     <td>{{ props.item.fecalta.substr(0, 16) }}</td>
                     <td class="text-xs-center">{{ props.item.iduserumod }}</td>
@@ -322,16 +321,6 @@
     export default {
         data: () => {
             return {
-                json_fields: {},
-                json_data: [],
-                json_meta: [
-                [
-                    {
-                            'key': 'charset',
-                            'value': 'utf-8'
-                        }
-                    ]
-                ],                    
                 snackbar:false,
                 snacktext: 'Hola',
                 timeout: 4000,
@@ -370,7 +359,6 @@
                 idproveedor: '',
                 proveeedor: '',
                 idalternativapago: '',
-                cuentagcom: '',
                 feccomprobante: '',
                 tipocomprobantes: [
                     {value: '01', text: 'Fc A'},
@@ -428,8 +416,9 @@
                     { text: 'Cer2 guid', value: 'pdfcertificado2', sortable: false },
                     { text: 'Cer3 guid', value: 'pdfcertificado3', sortable: false },
                     { text: 'Cer4 guid', value: 'pdfcertificado4', sortable: false },
-                    { text: 'Estado', value: 'activo', sortable: true  },                                    
                     { text: '#Id', value: 'idordenpago', sortable: true },
+                    { text: 'Pagado', value: 'pagado', sortable: true },
+                    { text: 'Estado', value: 'activo', sortable: true  },                                    
                     { text: 'Creado', value: 'iduseralta', sortable: true },
                     { text: 'Fec.Creación', value: 'fecalta', sortable: true },
                     { text: 'UltMod', value: 'iduserumod', sortable: true },
@@ -467,33 +456,7 @@
                 this.listar();
                 this.select();
             },
-        methods:{
-            crearXLS(){
-                this.json_fields = {
-                    'Fecha Pago': 'fecpago',
-                    'Proveedor': 'proveedor',
-                    'Cbte' : 'tipocomprobante',
-                    '#Cbte' : 'numcomprobante',
-                    'Fecha Cbte' : 'feccomprobante',
-                    'Imp.Total': 'imptotal',
-                    '#Proyecto': 'proyectoorden',
-                    'Proyecto': 'proyecto',
-                    '#Item' : 'itemorden',
-                    'Item' : 'itemes',
-                    '#Subitem': 'subitemorden',
-                    'Subitem': 'subitemes'
-                },
-                this.json_data = this.ordenpagos;
-                // this.json_data = [];
-                // for (var x=0; x<this.ordenpagos.length; x++){
-                //     for (let i=0; i<this.items.length; i++){
-                //         if (this.items[i]["value"]===this.ordenpagos[x]["iditem"]){
-                //             this.json_data.push(this.ordenpagos[x]);
-                //             break
-                //         }
-                //     }
-                // }
-            },
+        methods:{                                                       
             formatPrice(value) {
                 let val = (value/1).toFixed(2).replace('.', ',')
                 return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -503,8 +466,8 @@
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
                 //console.log(configuracion);
-                if (this.$store.state.usuario.rol =='Administrador' || this.$store.state.usuario.rol =='JefeAdministracion' ){
-                    axios.get('api/Ordenpagos/ListarPendientes',configuracion).then(function(response){
+                //if (this.$store.state.usuario.rol =='Administrador' || this.$store.state.usuario.rol =='JefeAdministracion' ){
+                    axios.get('api/Ordenpagos/Listar',configuracion).then(function(response){
                         // console.log(response);
                         me.ordenpagos=response.data;
                     }).catch(function(error){
@@ -512,16 +475,8 @@
                         me.snackbar = true;
                         console.log(error);
                     });
-                }else{
-                    axios.get('api/Ordenpagos/ListarPendientesUsuario/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
-                        // console.log(response);
-                        me.ordenpagos=response.data;
-                    }).catch(function(error){
-                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                        me.snackbar = true;
-                        console.log(error);
-                    });
-                }
+                //}else{
+                //}
             },
             select(){
                 let me=this;
@@ -565,7 +520,7 @@
                     //console.log(me.idproveedor, response.data);
                     allalternativapagosArray=response.data;
                     allalternativapagosArray.map(function(x){
-                    me.allalternativapagos.push({text: x.orden + ': '+ (( x.cbu ) ? (x.banco + ' ' + x.cbu + ' ' + x.alias  ) : (x.beneficiario + ' ' + x.cuitcuil)), value: x.idalternativapago, id: x.idproveedor });
+                    me.allalternativapagos.push({text: x.orden + ': '+ x.beneficiario + ' | ' + x.cuitcuil, value: x.idalternativapago, id: x.idproveedor });
                 });
                 }).catch(function(error){
                     me.snacktext = 'Se detectó un error. Código: '+ error.response.status;

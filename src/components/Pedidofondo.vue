@@ -574,13 +574,13 @@
                 if (this.validar()){
                     return;
                 }
+                let me=this;
                 var date = new Date();
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
                 if (this.editedIndex > -1) {
                     //Código para editar
                     //Código para guardar
-                    let me=this;
                     // console.log(me);
                     axios.put('api/Pedidofondos/Actualizar',{
                         'idpedidofondo': me.idpedidofondo,
@@ -607,7 +607,6 @@
                     });
                 } else {
                     //Código para guardar
-                    let me=this;
                     // console.log(me);
                     axios.post('api/Pedidofondos/Crear',{
                         'idproyecto': me.idproyecto,

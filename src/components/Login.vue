@@ -47,7 +47,7 @@ export default {
                 this.$router.push({ name: 'home' })
             })
             .catch(err => {
-                console.log(err.response);
+                //console.log(err.response);
                 if (err.response.status==400){
                     this.error="No es un email válido";
                 } else if (err.response.status==404){

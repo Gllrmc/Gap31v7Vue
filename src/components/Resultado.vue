@@ -213,7 +213,9 @@
                     //console.log(response);
                     me.origenes=response.data;
                 }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     me.snackbar = true;                     console.log(error);
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
+                    me.snackbar = true;                     
+                    console.log(error);
                 });
             },
             editItem (item) {

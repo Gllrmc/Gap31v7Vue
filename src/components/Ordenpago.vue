@@ -193,7 +193,7 @@
                                                         @change="onFileSelected($event.target.files)"
                                                         ref="fileInput"/>
                                                     </div>
-                                                        <v-btn v-if="pagado==false" @click="$refs.fileInput.click()">Buscar</v-btn>
+                                                        <v-btn v-if="pagado==false || $store.state.usuario.rol =='Administrador' || $store.state.usuario.rol =='JefeAdministracion'" @click="$refs.fileInput.click()">Buscar</v-btn>
                                                         <v-btn v-if="pdfcomprobantefac" @click="onSaveAs(pdfcomprobantefac)">Desc Fac</v-btn>
                                                         <v-btn v-if="pdfcomprobantepago" @click="onSaveAs(pdfcomprobantepago)">Desc Pago</v-btn>
                                                         <v-btn v-if="pdfcertificado1" @click="onSaveAs(pdfcertificado1)">Desc Cer#1</v-btn>

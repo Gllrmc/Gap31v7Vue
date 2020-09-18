@@ -230,6 +230,16 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile :to="{ name: 'admregistropagos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Revision de Pagos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
             <v-list-tile :to="{ name: 'proveedores'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
