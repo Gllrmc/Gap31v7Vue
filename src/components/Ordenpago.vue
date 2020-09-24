@@ -19,21 +19,28 @@
                     >
                         Cerrar
                     </v-btn>
-                </v-snackbar>                     
+                </v-snackbar>
                 <v-divider
                 class="mx-2"
                 inset 
                 vertical
                 ></v-divider>
                 <v-spacer></v-spacer>
-                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-text-field class="text-xs-center" v-model="search" clearable append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
                 <v-spacer></v-spacer>
             </v-toolbar>
             <v-dialog v-model="dialog" max-width="1500px" persistent>
                 <v-card>
                     <v-card-title>
                     <span class="headline">Orden de Pago para Proyecto #{{orden}}: {{proyecto}} </span>
-                    </v-card-title>            
+                    </v-card-title>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-text-field class="text-xs-center" v-model="searchd" clearable append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" dark class="mb-2" @click.native="createDetail">Nuevo</v-btn>
+                        <v-btn color="success" dark class="mb-2" @click.native="closeDetail">Salir</v-btn>
+                    </v-card-actions>
                     <v-card-text>
                         <v-dialog v-model="dialogForm" max-width="1200px" persistent>
                             <v-card>
@@ -43,7 +50,7 @@
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn color="blue darken-1" flat @click.native="closeForm">Cancelar</v-btn>
-                                    <v-btn color="blue darken-1" v-if="pagado==false" flat @click.native="guardar">Guardar</v-btn>
+                                    <v-btn color="blue darken-1" v-if="pagado==false || $store.state.usuario.rol =='Administrador' || $store.state.usuario.rol =='JefeAdministracion'" flat @click.native="guardar">Guardar</v-btn>
                                 </v-card-actions>
                                 <v-card-text>
                                     <v-container grid-list-md>
@@ -247,6 +254,7 @@
                         <v-data-table
                             :headers="headersDetalle"
                             :items="ordenpagos"
+                            :search="searchd"
                             class="elevation-1"
                             >
                             <template v-if="validateAccess(props.item.iditem)" slot="items" slot-scope="props">
@@ -257,6 +265,12 @@
                                     @click="editDetailItem(props.item)"
                                     >
                                     edit
+                                    </v-icon>
+                                    <v-icon v-if="props.item.pagado===false && ($store.state.usuario.rol =='Administrador' || $store.state.usuario.rol =='JefeAdministracion')"
+                                    small
+                                    @click="deleteItem(props.item)"
+                                    >
+                                    delete
                                     </v-icon>
                                     <template v-if="props.item.pagado===false">
                                         <template v-if="props.item.activo">
@@ -326,11 +340,6 @@
                             <strong>Total Ordenes: </strong>$ {{totalPagado=(calcularTotal).toFixed(2)}}
                         </v-flex>
                     </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" dark class="mb-2" @click.native="createDetail">Nuevo</v-btn>
-                        <v-btn color="success" dark class="mb-2" @click.native="closeDetail">Salir</v-btn>
-                    </v-card-actions>
                 </v-card>
             </v-dialog>
             <v-data-table
@@ -375,7 +384,7 @@
                 snacktext: 'Hola',
                 timeout: 4000,
                 fd: new FormData,
-                originalguid: '',
+                originalfacguid: '',
                 guid: '',                
                 page: 1,
                 // Arrays
@@ -476,6 +485,7 @@
                 ],
                 totalPagado: 0,                 
                 search: '',
+                searchd: '',
                 searchi: '',
                 searchp: '',
                 editedIndex: -1,
@@ -705,6 +715,23 @@
                 this.editedIndex=1;
                 this.dialogForm = true
             },
+            deleteItem (item) {
+                var me=this;
+                var resulta = confirm('Esta seguro de querer borrar el registro?');
+                if (resulta) {
+                    let header={"Authorization" : "Bearer " + me.$store.state.token};
+                    let configuracion= {headers : header};
+                    axios.delete('api/Ordenpagos/Eliminar/'+item.idordenpago,configuracion).then(function(response){
+                        me.closeForm();
+                        me.limpiarDetail();
+                        me.listarDetail();
+                    }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
+                    });
+                }
+            },
             createDetail(){
                 this.limpiarDetail();
                 this.editIndex=-1;
@@ -727,6 +754,8 @@
                 this.fecadjudicacion = '';
                 this.ars1usd = '',               
                 this.totalPagado = 0;
+                this.search = '';
+                this.searchd = '';
             },
             limpiarDetail() {
                 this.idordenpago = '';
@@ -758,7 +787,8 @@
                 this.editedIndex=-1;
                 this.alternativapagos=[];
                 this.searchp = '';                
-                this.searchi = '';                
+                this.searchi = '';
+                this.searchd = '';
                 this.onClear();
             },            
             guardar () {
@@ -771,7 +801,7 @@
                 if (this.editedIndex > -1) {
                     if (this.pdfcomprobantefac && this.originalfacguid != this.pdfcomprobantefac ){
                         this.onDelete(this.originalfacguid);
-                        this.originalguid='';
+                        this.originalfacguid='';
                         this.onUpload();
                     }
                     //Código para editar

@@ -37,6 +37,26 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile :to="{ name: 'overs'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Overs
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'factus'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Facturaciones
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
             <v-list-tile :to="{ name: 'hlimbos'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
@@ -424,7 +444,7 @@
               </v-list-tile-content>
             </v-list-tile>
           </v-list-group>  
-        </template>        
+        </template>
         <template v-if="esAdministrador || esJefeAdministracion || esExecutiveProducer || esLineProducer || esAsistProduccion || esChiefProducer ">
           <v-list-group>
             <v-list-tile slot="activator">
@@ -471,6 +491,37 @@
               <v-list-tile-content>
                 <v-list-tile-title>
                   Personas
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>  
+        </template>
+        <template v-if="esAdministrador || esJefeAdministracion || esAsistAdministracion">
+          <v-list-group>
+            <v-list-tile slot="activator">
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Gestionar Gastos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'registrogastos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Registro de Gastos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'calendario'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Calendario de Gastos
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -695,6 +746,16 @@
               <v-list-tile-content>
                 <v-list-tile-title>
                   Bancos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'conceptos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Conceptos
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>

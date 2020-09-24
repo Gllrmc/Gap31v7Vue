@@ -17,6 +17,7 @@ import Tipoprod from './components/Tipoprod.vue';
 import Tipoproy from './components/Tipoproy.vue';
 import Agencia from './components/Agencia.vue';
 import Banco from './components/Banco.vue';
+import Concepto from './components/Concepto.vue';
 import Empresa from './components/Empresa.vue';
 import Estado from './components/Estado.vue';
 import Origen from './components/Origen.vue';
@@ -64,6 +65,10 @@ import Controlgarantia from './components/Controlgarantia.vue';
 import Controlrendicion from './components/Controlrendicion.vue';
 import Controlpost from './components/Controlpost.vue';
 import Controlmotion from './components/Controlmotion.vue';
+import Over from './components/Over.vue';
+import Factu from './components/Factu.vue';
+import Registrogasto from './components/Registrogasto.vue';
+import Calendario from './components/Calendario.vue';
 import Prueba from './components/Prueba.vue';
 import Prueba2 from './components/Prueba2.vue'
 import store from './store';
@@ -97,6 +102,36 @@ var router = new Router({
                 jefeadministracion: true,
                 asistadministracion: false,
                 executiveproducer: true,
+                lineproducer: false,
+                chiefproducer: false,
+                asistproduccion: false,
+                asistgeneral: false
+            }
+        },
+        {
+            path: '/overs',
+            name: 'overs',
+            component: Over,
+            meta: {
+                administrador: true,
+                jefeadministracion: false,
+                asistadministracion: false,
+                executiveproducer: true,
+                lineproducer: false,
+                chiefproducer: false,
+                asistproduccion: false,
+                asistgeneral: false
+            }
+        },
+        {
+            path: '/factus',
+            name: 'factus',
+            component: Factu,
+            meta: {
+                administrador: true,
+                jefeadministracion: true,
+                asistadministracion: false,
+                executiveproducer: false,
                 lineproducer: false,
                 chiefproducer: false,
                 asistproduccion: false,
@@ -524,6 +559,36 @@ var router = new Router({
             }
         },
         {
+            path: '/registrogastos',
+            name: 'registrogastos',
+            component: Registrogasto,
+            meta: {
+                administrador: true,
+                jefeadministracion: true,
+                asistadministracion: true,
+                executiveproducer: false,
+                lineproducer: false,
+                chiefproducer: false,
+                asistproduccion: false,
+                asistgeneral: false
+            }
+        },
+        {
+            path: '/calendario',
+            name: 'calendario',
+            component: Calendario,
+            meta: {
+                administrador: true,
+                jefeadministracion: true,
+                asistadministracion: true,
+                executiveproducer: false,
+                lineproducer: false,
+                chiefproducer: false,
+                asistproduccion: false,
+                asistgeneral: false
+            }
+        },
+        {
             path: '/controlpptodate',
             name: 'controlpptodate',
             component: Controlpptodate,
@@ -745,6 +810,21 @@ var router = new Router({
                 lineproducer: true,
                 chiefproducer: true,
                 asistproduccion: true,
+                asistgeneral: false
+            }
+        },
+        {
+            path: '/conceptos',
+            name: 'conceptos',
+            component: Concepto,
+            meta: {
+                administrador: true,
+                jefeadministracion: true,
+                asistadministracion: false,
+                executiveproducer: false,
+                lineproducer: false,
+                chiefproducer: false,
+                asistproduccion: false,
                 asistgeneral: false
             }
         },
