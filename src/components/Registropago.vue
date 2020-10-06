@@ -270,10 +270,17 @@
                     </td>
                     <td>{{ props.item.fecpago.substr(0, 10) }}</td>
                     <td>{{ props.item.proveedor }}</td>
+                    <td>{{ props.item.telefono }}</td>
+                    <td>{{ props.item.email }}</td>
                     <td>{{ tipocomprobantes.find(x => x.value===props.item.tipocomprobante ).text }}</td>
                     <td>{{ props.item.numcomprobante }}</td>
                     <td>{{ props.item.feccomprobante.substr(0, 10) }}</td>
                     <td class="text-xs-right">{{ formatPrice(props.item.imptotal) }}</td>
+                    <td>{{ props.item.alternativapago }}</td>
+                    <td>{{ props.item.banco }}</td>
+                    <td>{{ props.item.numcuenta }}</td>
+                    <td>{{ props.item.cbu }}</td>
+                    <td>{{ props.item.alias }}</td>
                     <td>{{ props.item.proyectoorden }}</td>
                     <td>{{ props.item.proyecto }}</td>
                     <td>{{ props.item.itemorden }}</td>
@@ -411,10 +418,17 @@
                     { text: 'Opciones', value: 'opciones', sortable: false },
                     { text: 'Fecha Pago', value: 'fecpago', sortable: true },
                     { text: 'Proveedor', value: 'proveedor', sortable: true },
+                    { text: 'Telefono', value: 'telefono', sortable: true },
+                    { text: 'email', value: 'email', sortable: true },
                     { text: 'Cbte', value: 'tipocomprobante', sortable: true },
                     { text: '#Cbte', value: 'numcomprobante', sortable: true },
                     { text: 'Fecha Cbte', value: 'feccomprobante', sortable: true },
                     { text: 'Imp.Total', value: 'imptotal', sortable: true },
+                    { text: 'Beneficiario', value: 'alternativapago', sortable: true },
+                    { text: 'Banco', value: 'banco', sortable: true },
+                    { text: '#Cuenta', value: 'numcuenta', sortable: true },
+                    { text: 'CBU', value: 'cbu', sortable: true },
+                    { text: 'Alias', value: 'alias', sortable: true },
                     { text: '#Proyecto', value: 'proyectoorden', sortable: true },
                     { text: 'Proyecto', value: 'proyecto', sortable: true },
                     { text: '#Item', value: 'itemorden', sortable: true },
@@ -472,10 +486,17 @@
                 this.json_fields = {
                     'Fecha Pago': 'fecpago',
                     'Proveedor': 'proveedor',
+                    'Telefono': 'telefono',
+                    'eMail': 'email',
                     'Cbte' : 'tipocomprobante',
                     '#Cbte' : 'numcomprobante',
                     'Fecha Cbte' : 'feccomprobante',
                     'Imp.Total': 'imptotal',
+                    'Beneficiario': 'alternativapago',
+                    'Banco': 'banco',
+                    'Nro.Cuenta': 'numcuenta',
+                    'CBU': 'cbu',
+                    'Alias': 'alias', 
                     '#Proyecto': 'proyectoorden',
                     'Proyecto': 'proyecto',
                     '#Item' : 'itemorden',

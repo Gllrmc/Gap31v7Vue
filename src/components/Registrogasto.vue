@@ -137,6 +137,12 @@
                         >
                         edit
                         </v-icon>
+                        <v-icon v-if="$store.state.usuario.rol =='Administrador' || $store.state.usuario.rol =='JefeAdministracion'"
+                        small
+                        @click="deleteItem(props.item)"
+                        >
+                        delete
+                        </v-icon>
                         <template v-if="props.item.activo">
                             <v-icon small
                             @click="activarDesactivarMostrar(2,props.item)"
@@ -346,6 +352,23 @@
                 this.fecumod = item.fecumod;              
                 this.editedIndex=1;
                 this.dialog = true
+            },
+            deleteItem (item) {
+                var me=this;
+                var resulta = confirm('Esta seguro de querer borrar el registro?');
+                if (resulta) {
+                    let header={"Authorization" : "Bearer " + me.$store.state.token};
+                    let configuracion= {headers : header};
+                    axios.delete('api/Gastos/Eliminar/'+item.idgasto,configuracion).then(function(response){
+                        me.close();
+                        me.limpiar();
+                        me.listar();
+                    }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
+                    });
+                }
             },
             close () {
                 this.dialog = false;

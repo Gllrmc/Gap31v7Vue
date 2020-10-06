@@ -643,7 +643,7 @@
                     //console.log(me.idproveedor, response.data);
                     allalternativapagosArray=response.data;
                     allalternativapagosArray.map(function(x){
-                    me.allalternativapagos.push({text: x.orden + ': '+ x.beneficiario + ' | ' + x.cuitcuil, value: x.idalternativapago, id: x.idproveedor });
+                    me.allalternativapagos.push({text: x.orden + ': '+ (( x.cbu ) ? (x.banco + ' ' + x.cbu + ' ' + x.alias  ) : (x.beneficiario + ' ' + x.cuitcuil)), value: x.idalternativapago, id: x.idproveedor });
                 });
                 }).catch(function(error){
                     me.snacktext = 'Se detectó un error. Código: '+ error.response.status;

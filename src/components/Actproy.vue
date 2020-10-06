@@ -36,10 +36,10 @@
                         <v-card-text>
                             <v-container grid-list-md>
                                 <v-layout wrap>
-                                    <v-flex xs12 sm12 md12>
+                                    <!-- <v-flex xs12 sm12 md12>
                                         <input type="checkbox" id="visita" v-model="activapitch">
                                         <label for = "visita"> Pitch ? ({{pad(orden, 5)}}A)</label>
-                                    </v-flex>                                
+                                    </v-flex>                                 -->
                                     <v-flex xs12 sm12 md12>
                                         <input type="checkbox" id="postih" v-model="activaproy">
                                         <label for = "postih"> Proyecto? ({{pad(orden, 5)}})</label>

@@ -264,11 +264,8 @@
                 tipocomprobantes: [
                     {value: '01', text: 'Fc A'},
                     {value: '02', text: 'Fc B'},
-                    {value: '03', text: 'Tk A'},
-                    {value: '04', text: 'Tk B'},                    
-                    {value: '05', text: 'Fc C'},
-                    {value: '06', text: 'Fc M'},
-                    {value: '07', text: 'Otro'}
+                    {value: '07', text: 'Otro'},
+                    {value: '08', text: 'Fc E'}
                 ],
                 tipocomprobante: '',
                 numcomprobante: '',
