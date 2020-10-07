@@ -3,7 +3,7 @@
         <v-flex>
             <v-toolbar flat color="white">
                 <v-btn @click="crearPDF()"><v-icon>print</v-icon></v-btn>
-                <v-toolbar-title>Registro de Gastos Recurrentes</v-toolbar-title>
+                <v-toolbar-title>Formas de Pago</v-toolbar-title>
                 <v-snackbar
                     v-model="snackbar"
                     :timeout="timeout"
@@ -22,14 +22,14 @@
                     </v-btn>
                 </v-snackbar>    
                 <v-divider
-                    class="mx-2"
-                    inset
-                    vertical
-                    ></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
-                    <v-spacer></v-spacer>
-                    <v-dialog v-model="dialog" max-width="650px">
+                class="mx-2"
+                inset
+                vertical
+                ></v-divider>
+                <v-spacer></v-spacer>
+                <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="450px">
                     <v-btn slot="activator" color="primary" dark class="mb-2">Nuevo</v-btn>
                     <v-card>
                         <v-card-title>
@@ -38,54 +38,8 @@
                         <v-card-text>
                         <v-container grid-list-md>
                             <v-layout wrap>
-                                <v-flex xs4 sm4 md4>
-                                    <v-select v-model="idconcepto" :items="conceptos" label="Concepto"></v-select>
-                                </v-flex>
-                                <template>
-                                    <v-flex xs4 sm4 md4>
-                                        <v-menu
-                                            v-model="menu1"
-                                            :close-on-content-click="false"
-                                            :nudge-right="40"
-                                            lazy
-                                            transition="scale-transition"
-                                            offset-y
-                                            full-width
-                                            min-width="290px"
-                                        >
-                                            <template v-slot:activator="{ on }">
-                                                <v-text-field
-                                                    v-model="fecgasto"
-                                                    label="Vencimiento"
-                                                    prepend-icon="event"
-                                                    readonly
-                                                    v-on="on"
-                                                ></v-text-field>
-                                            </template>
-                                            <v-date-picker 
-                                                v-model="fecgasto"
-                                                @input="menu1 = false">
-                                            </v-date-picker>
-                                        </v-menu>
-                                    </v-flex>
-                                </template> 
-                                <v-flex xs4 sm4 md4>
-                                    <v-text-field 
-                                        type="number" 
-                                        v-model="importe" 
-                                        prefix="$"
-                                        label="Importe"
-                                        >
-                                    </v-text-field>
-                                </v-flex>
                                 <v-flex xs12 sm12 md12>
-                                    <v-select v-model="idforpago" :items="forpagos" label="Forma de Pago"></v-select>
-                                </v-flex>
-                                <v-flex xs12 sm12 md12>
-                                    <v-text-field v-model="nota" clearable label="Nota"></v-text-field>
-                                </v-flex>
-                                <v-flex xs3 sm3 md3>
-                                    <v-switch v-model="pendiente" class="mx-2" label="Pendiente?"></v-switch>
+                                    <v-text-field v-model="forpago" clearable label="Forma de Pago"></v-text-field>
                                 </v-flex>
                                 <v-flex xs12 sm12 md12 v-show="valida">
                                     <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
@@ -109,7 +63,7 @@
                             Estás a punto de 
                             <span v-if="adAccion==1">Activar </span>
                             <span v-if="adAccion==2">Desactivar </span>
-                            el concepto {{ adNombre }}
+                            la Forma de Pago {{ adNombre }}
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
@@ -129,7 +83,7 @@
             </v-toolbar>
             <v-data-table
                 :headers="headers"
-                :items="gastos"
+                :items="forpagos"
                 :search="search"
                 class="elevation-1"
             >
@@ -139,12 +93,6 @@
                         @click="editItem(props.item)"
                         >
                         edit
-                        </v-icon>
-                        <v-icon v-if="$store.state.usuario.rol =='Administrador' || $store.state.usuario.rol =='JefeAdministracion'"
-                        small
-                        @click="deleteItem(props.item)"
-                        >
-                        delete
                         </v-icon>
                         <template v-if="props.item.activo">
                             <v-icon small
@@ -161,23 +109,8 @@
                             </v-icon>
                         </template>
                     </td>
-                    <td>{{ props.item.idgasto }}</td>
-                    <td>
-                        <v-chip v-if="props.item.pendiente" class="ma-2" :color="props.item.color" :text-color="props.item.texto" >{{ props.item.concepto }}</v-chip>
-                        <v-chip v-else class="ma-2" >{{ props.item.concepto }}</v-chip>
-                    </td>
-                    <td>{{ (props.item.fecgasto)?props.item.fecgasto.substr(0,10):"" }}</td>
-                    <td>
-                        <div v-if="props.item.pendiente">
-                            <span class="red--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="blue--text">No</span>
-                        </div>
-                    </td>
-                    <td>{{ props.item.importe }}</td>
+                    <td>{{ props.item.idforpago }}</td>
                     <td>{{ props.item.forpago }}</td>
-                    <td>{{ (props.item.nota)?props.item.nota.substr(0,20):"" }}</td>
                     <td>
                         <div v-if="props.item.activo">
                             <span class="blue--text">Activo</span>
@@ -205,67 +138,28 @@
     export default {
         data(){
             return {
-                colores: [
-                    {value: '#F44336', text: 'Rojo'},
-                    {value: '#E91E63', text: 'Rosa'},
-                    {value: '#9C27B0', text: 'Violeta'},
-                    {value: '#673AB7', text: 'Violeta oscuro'},                    
-                    {value: '#3F51B5', text: 'Indigo'},
-                    {value: '#2196F3', text: 'Azul'},
-                    {value: '#03A9F4', text: 'Celeste'},
-                    {value: '#00BCD4', text: 'Cianico'},
-                    {value: '#009688', text: 'Turquesa'},
-                    {value: '#4CAF50', text: 'Verde'},
-                    {value: '#8BC34A', text: 'Verde claro'},                    
-                    {value: '#CDDC39', text: 'Lima'},
-                    {value: '#FFEB3B', text: 'Amarillo'},
-                    {value: '#FFC107', text: 'Ambar'},
-                    {value: '#FF9800', text: 'Naranja'},
-                    {value: '#FF5722', text: 'Naranja oscuro'},
-                    {value: '#795548', text: 'Marron'},
-                    {value: '#607D8B', text: 'Lívido'},                    
-                    {value: '#9E9E9E', text: 'Gris'}
-                ],
-                textos: [
-                    {value: 'white', text: 'Blanco'},
-                    {value: 'black', text: 'Negro'},
-                ],
                 snackbar:false,
                 snacktext: 'Hola',
                 timeout: 4000,
                 dialog: false,
-                conceptos:[],
-                forpagos:[],
                 headers: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
-                    { text: 'Id', value: 'idgasto' },
-                    { text: 'Concepto de Gastos', value: 'concepto' },
-                    { text: 'Vencimiento', value: 'fecgasto' },
-                    { text: 'Pendiente', value: 'pendiente' },
-                    { text: 'Importe', value: 'importe' },
+                    { text: 'Id', value: 'idforpago' },
                     { text: 'Forma de Pago', value: 'forpago' },
-                    { text: 'Observaciones/Notas', value: 'nota' },
-                    { text: 'Estado', value: 'activo', sortable: true  },
+                    { text: 'Estado', value: 'activo', sortable: false  },
                     { text: 'Creado', value: 'iduseralta', sortable: true },
                     { text: 'Fec.Creación', value: 'fecalta', sortable: true },
                     { text: 'UltMod', value: 'iduserumod', sortable: true },
                     { text: 'Fec.UltMod', value: 'fecumod', sortable: true }                   ],
                 search: '',
                 editedIndex: -1,
-                idgasto:'',
-                idconcepto:'',
-                fecgasto:'',
-                importe: 0.00,
                 idforpago:'',
-                nota:'',
-                pendiente: true,
+                forpago:'',
                 iduseralta:'',
                 fecalta:'',
                 iduserumod:'',
                 fecumod:'',                
-                gastos:[                   
-                ],
-                menu1: false,
+                forpagos:[],
                 valida: 0,
                 validaMensaje:[],
                 adModal: 0,
@@ -276,7 +170,7 @@
         },
         computed: {
             formTitle () {
-                return this.editedIndex === -1 ? 'Nuevo Gasto' : 'Actualizar Gasto'
+                return this.editedIndex === -1 ? 'Nueva Forma de Pago' : 'Actualizar Forma de Pago'
             },
         },
 
@@ -288,23 +182,18 @@
 
         created () {
             this.listar();
-            this.select();
         },
         methods:{
             crearPDF(){
                 var columns = [
-                    {title: "Id", dataKey: "idgasto"},
-                    {title: "Concepto", dataKey: "concepto"},
-                    {title: "Vencimiento", dataKey: "fecgasto"},
-                    {title: "Importe", dataKey: "importe"},
-                    {title: "Forma de pago", dataKey: "forpago"},
-                    {title: "Pendiente", dataKey: "pendiente"},
+                    {title: "Id", dataKey: "idforpago"},
+                    {title: "Forpago", dataKey: "forpago"},
                     {title: "Estado", dataKey: "activo"},
                 ];
                 var rows = [];
 
-                this.gastos.map(function(x){
-                    rows.push({idgasto:x.idgasto,concepto:x.concepto,fexgasto:x.fecgasto,importe:x.importe,forpago:x.forpago,activo:x.pendiente ? "Si" : "No",activo:x.activo ? "Activo" : "Inactivo"});
+                this.forpagos.map(function(x){
+                    rows.push({idforpago:x.idforpago,forpago:x.forpago,activo:x.activo ? "Activo" : "Inactivo"});
                 });
 
                 // Only pt supported (not mm or in)
@@ -312,61 +201,27 @@
                 doc.autoTable(columns, rows, {
                     margin: {top: 60},
                     addPageContent: function(data) {
-                        doc.text("Listado de Gastos", 40, 30);
+                        doc.text("Listado de Forpagos", 40, 30);
                     }
                 });
-                doc.save('Gastos.pdf');
+                doc.save('Forpagos.pdf');
             },
             listar(){
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                axios.get('api/Gastos/Listar',configuracion).then(function(response){
+                axios.get('api/Forpagos/Listar',configuracion).then(function(response){
                     //console.log(response);
-                    me.gastos=response.data;
+                    me.forpagos=response.data;
                 }).catch(function(error){
                     me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
                     me.snackbar = true;                     
                     console.log(error);
                 });
             },
-            select(){
-                let me=this;
-                var conceptosArray=[];
-                var forpagosArray=[];
-                let header={"Authorization" : "Bearer " + this.$store.state.token};
-                let configuracion= {headers : header};
-                axios.get('api/Conceptos/Select',configuracion).then(function(response){
-                    //console.log(response);
-                    conceptosArray=response.data.sort((a, b) => (a.concepto > b.concepto) ? 1 : -1);
-                    conceptosArray.map(function(x){
-                        me.conceptos.push({text: x.concepto,value:x.idconcepto});
-                    });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
-                axios.get('api/Forpagos/Select',configuracion).then(function(response){
-                    //console.log(response);
-                    forpagosArray=response.data.sort((a, b) => (a.forpago > b.forpago) ? 1 : -1);
-                    forpagosArray.map(function(x){
-                        me.forpagos.push({text: x.forpago,value:x.idforpago});
-                    });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
-            },
             editItem (item) {
-                this.idgasto=item.idgasto;
-                this.idconcepto=item.idconcepto;
-                this.fecgasto=item.fecgasto.substr(0,10);
-                this.importe=item.importe;
                 this.idforpago=item.idforpago;
-                this.pendiente=item.pendiente;
-                this.nota=item.nota;
+                this.forpago=item.forpago;
                 this.iduseralta = item.iduseralta;
                 this.fecalta = item.fecalta;
                 this.iduserumod = item.iduserumod;
@@ -374,35 +229,13 @@
                 this.editedIndex=1;
                 this.dialog = true
             },
-            deleteItem (item) {
-                var me=this;
-                var resulta = confirm('Esta seguro de querer borrar el registro?');
-                if (resulta) {
-                    let header={"Authorization" : "Bearer " + me.$store.state.token};
-                    let configuracion= {headers : header};
-                    axios.delete('api/Gastos/Eliminar/'+item.idgasto,configuracion).then(function(response){
-                        me.close();
-                        me.limpiar();
-                        me.listar();
-                    }).catch(function(error){
-                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                        me.snackbar = true;
-                        console.log(error);
-                    });
-                }
-            },
             close () {
                 this.dialog = false;
                 this.limpiar();
             },
             limpiar(){
-                this.idgasto="";
-                this.idconcepto="";
-                this.fecgasto="";
-                this.importe=0;
                 this.idforpago="";
-                this.pendiente=true;
-                this.nota="";
+                this.forpago="";
                 this.iduseralta = "";
                 this.fecalta = "";
                 this.iduserumod = "";
@@ -413,21 +246,16 @@
                 if (this.validar()){
                     return;
                 }
-                let me=this;
                 var date = new Date();
-                let header={"Authorization" : "Bearer " + me.$store.state.token};
+                let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
                 if (this.editedIndex > -1) {
                     //Código para editar
                     //Código para guardar
-                    axios.put('api/Gastos/Actualizar',{
-                        'idgasto': me.idgasto,
-                        'idconcepto':me.idconcepto,
-                        'fecgasto': me.fecgasto,
-                        'importe': me.importe,
-                        'idforpago': me.idforpago,
-                        'nota': me.nota,
-                        'pendiente': me.pendiente,
+                    let me=this;
+                    axios.put('api/Forpagos/Actualizar',{
+                        'idforpago':me.idforpago,
+                        'forpago': me.forpago,
                         'iduserumod': me.$store.state.usuario.idusuario,
                         },configuracion).then(function(response){
                         me.close();
@@ -440,14 +268,9 @@
                     });
                 } else {
                     //Código para guardar
-                    debugger;
-                    axios.post('api/Gastos/Crear',{
-                        'idconcepto':me.idconcepto,
-                        'fecgasto': me.fecgasto,
-                        'importe': me.importe,
-                        'idforpago': me.idforpago,
-                        'nota': me.nota,
-                        'pendiente': me.pendiente,
+                    let me=this;
+                    axios.post('api/Forpagos/Crear',{
+                        'forpago': me.forpago,
                         'iduseralta': me.$store.state.usuario.idusuario
                     },configuracion).then(function(response){
                         me.close();
@@ -465,14 +288,8 @@
                 this.valida=0;
                 this.validaMensaje=[];
 
-                if (!this.idconcepto){
-                    this.validaMensaje.push("Debe elegir un concepto.");
-                }
-                if (!this.importe || this.importe<0 ){
-                    this.validaMensaje.push("Debe ingresar un importe positivo.");
-                }
-                if (!this.idforpago){
-                    this.validaMensaje.push("Debe elegir una Forma de Pago.");
+                if (this.forpago.length<3 || this.forpago.length>50){
+                    this.validaMensaje.push("El nombre de la Forma de Pago no debe tener menos de 3 caracteres y mas de 50 caracteres.");
                 }
                 if (this.validaMensaje.length){
                     this.valida=1;
@@ -481,8 +298,8 @@
             },
             activarDesactivarMostrar(accion,item){
                 this.adModal=1;
-                this.adNombre=item.concepto;
-                this.adId=item.idconcepto;                
+                this.adNombre=item.forpago;
+                this.adId=item.idforpago;                
                 if (accion==1){
                     this.adAccion=1;
                 }
@@ -500,7 +317,7 @@
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                axios.put('api/Gastos/Activar/'+this.adId,{},configuracion).then(function(response){
+                axios.put('api/Forpagos/Activar/'+this.adId,{},configuracion).then(function(response){
                     me.adModal=0;
                     me.adAccion=0;
                     me.adNombre="";
@@ -517,7 +334,7 @@
                 let me=this;
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                axios.put('api/Gastos/Desactivar/'+this.adId,{},configuracion).then(function(response){
+                axios.put('api/Forpagos/Desactivar/'+this.adId,{},configuracion).then(function(response){
                     me.adModal=0;
                     me.adAccion=0;
                     me.adNombre="";

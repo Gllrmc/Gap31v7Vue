@@ -71,9 +71,10 @@
                       </v-btn> -->
                   </v-toolbar>
                   <v-card-title primary-title>
-                      <div>AR$ {{formatPrice(event.importe)}}</div>
+                      <div>$ {{formatPrice(event.importe)}}</div>
                   </v-card-title>
                   <v-card-text>
+                      <div>{{event.forpago}}</div>
                       <div>{{event.detalle}}</div>
                   </v-card-text>
                   <v-card-actions>
@@ -135,6 +136,9 @@
 
   export default {
     data: () => ({
+      snackbar:false,
+      snacktext: 'Hola',
+      timeout: 4000,
       type: 'month',
       start: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().substr(0,10),
       end: '2019-01-06',
@@ -168,7 +172,7 @@
             //console.log(response);
             gastosArray=response.data;
             gastosArray.map(function(x){
-              me.events.push({id:x.idgasto, title: x.concepto, detalle:x.nota, fecha: x.fecgasto.substr(0,10), importe: x.importe, open:false, 
+              me.events.push({id:x.idgasto, title: x.concepto, forpago: x.forpago, detalle:x.nota, fecha: x.fecgasto.substr(0,10), importe: x.importe, open:false, 
               texto:x.texto, color:x.color, pendiente: x.pendiente});
             })
         }).catch(function(error){
@@ -190,7 +194,6 @@
           });
       },
       desactivar(id){
-        debugger;
           let me=this;
           let header={"Authorization" : "Bearer " + this.$store.state.token};
           let configuracion= {headers : header};

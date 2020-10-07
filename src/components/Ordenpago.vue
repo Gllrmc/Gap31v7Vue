@@ -55,10 +55,11 @@
                                 <v-card-text>
                                     <v-container grid-list-md>
                                         <v-layout wrap>
-                                            <v-flex xs4 sm4 md4>
+                                            <v-flex xs5 sm5 md5>
                                                 <v-autocomplete 
                                                     v-model="iditem"
                                                     clearable 
+                                                    :disabled="pagado"
                                                     :items = "items" 
                                                     label = "Item"
                                                     :search-input.sync="searchi" 
@@ -73,7 +74,7 @@
                                                 label = "Subitems">
                                                 </v-select>
                                             </v-flex>
-                                            <v-flex xs3 sm3 md3>
+                                            <v-flex xs5 sm5 md5>
                                                 <v-autocomplete 
                                                     v-model="idproveedor" 
                                                     :disabled="pagado"
@@ -83,13 +84,6 @@
                                                     :search-input.sync="searchp" 
                                                     label="Proveedor">
                                                 </v-autocomplete>
-                                            </v-flex>
-                                            <v-flex xs3 sm3 md3>
-                                                <v-select v-model="idalternativapago"
-                                                :disabled="pagado"
-                                                :items = "alternativapagos" 
-                                                label = "Beneficiario">
-                                                </v-select>
                                             </v-flex>
                                             <v-flex xs2 sm2 md2>
                                                 <v-select v-model="tipocomprobante"
@@ -180,8 +174,21 @@
                                                         </v-date-picker>
                                                     </v-menu>
                                                 </v-flex>
-                                            </template> 
-                                            <v-flex xs2 sm2 md2>
+                                            </template>
+                                            <v-flex xs6 sm6 md6>
+                                                <v-select v-model="idforpago"
+                                                :disabled="pagado"
+                                                :items = "forpagos" label = "Forma de Pago">
+                                                </v-select>
+                                            </v-flex>
+                                            <v-flex xs5 sm5 md5>
+                                                <v-select v-model="idalternativapago"
+                                                :disabled="pagado"
+                                                :items = "alternativapagos" 
+                                                label = "Beneficiario">
+                                                </v-select>
+                                            </v-flex>
+                                            <v-flex xs1 sm1 md1>
                                                 <v-text-field 
                                                     v-model="cuentagcom" 
                                                     disabled 
@@ -301,7 +308,13 @@
                                 <td>{{ tipocomprobantes.find(x => x.value===props.item.tipocomprobante ).text }}</td>
                                 <td>{{ props.item.numcomprobante }}</td>
                                 <td class="text-xs-right">{{ formatPrice(props.item.imptotal) }}</td>
+                                <td>{{ props.item.forpago }}</td>
                                 <td>{{ props.item.fecpago.substr(0, 10) }}</td>
+                                <td>{{ props.item.alternativapago }}</td>
+                                <td>{{ props.item.banco }}</td>
+                                <td>{{ props.item.numcuenta }}</td>
+                                <td>{{ props.item.cbu }}</td>
+                                <td>{{ props.item.alias }}</td>
                                 <td class="justify-center">
                                     <div v-if="props.item.pagado">
                                         <span class="blue--text">Si</span>
@@ -399,6 +412,7 @@
                 // allordenpagos:[],
                 alternativapagos:[],
                 allalternativapagos:[],
+                forpagos:[],
                 usuarioproyectos:[],
                 // Detail
                 idordenpago: '',
@@ -422,6 +436,7 @@
                 impsiniva: 0,
                 imptotal: 0,
                 fecpago: '',
+                idforpago: '',
                 cuentagcom: '',
                 pdfcomprobantefac:'',                   
                 pagado: false,
@@ -468,7 +483,13 @@
                     { text: 'Cbte', value: 'tipocomprobante', sortable: true },
                     { text: '#Cbte', value: 'numcomprobante', sortable: true },
                     { text: 'Imp.Total', value: 'imptotal', sortable: true },
+                    { text: 'Forma de pago', value: 'forpago', sortable: true },
                     { text: 'Fecha Pago', value: 'fecpago', sortable: true },
+                    { text: 'Beneficiario', value: 'alternativapago', sortable: true },
+                    { text: 'Banco', value: 'banco', sortable: true },
+                    { text: '#Cuenta', value: 'numcuenta', sortable: true },
+                    { text: 'CBU', value: 'cbu', sortable: true },
+                    { text: 'Alias', value: 'alias', sortable: true },
                     { text: 'Pagado', value: 'pagado', sortable: true },
                     { text: 'Notas', value: 'notas', sortable: true },
                     { text: 'Fac guid', value: 'pdfcomprobantefac', sortable: true },
@@ -598,6 +619,7 @@
                 var proveedoresArray=[];
                 var usuarioproyectosArray=[];
                 var allalternativapagosArray=[];
+                var forpagosArray=[];
                 axios.get('api/Items/Select',configuracion).then(function(response){
                     allitemsArray=response.data;
                     allitemsArray.map(function(x){
@@ -650,6 +672,17 @@
                     me.snackbar = true;
                     console.log(error);
                 });
+                axios.get('api/Forpagos/Select',configuracion).then(function(response){
+                    //console.log(response);
+                    forpagosArray=response.data.sort((a, b) => (a.forpago > b.forpago) ? 1 : -1);
+                    forpagosArray.map(function(x){
+                        me.forpagos.push({text: x.forpago,value:x.idforpago});
+                    });
+                }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                    me.snackbar = true;
+                    console.log(error);
+                });
             },
             cambioItem(){
                 this.cuentagcom = this.iditem?this.allitems.find(c => c.value === this.iditem).cuenta:"";
@@ -696,6 +729,7 @@
                 this.impsiniva = item.impsiniva;
                 this.imptotal = item.imptotal;
                 this.fecpago = item.fecpago.substr(0, 10);
+                this.idforpago = item.idforpago;
                 this.cuentagcom = item.iditem?this.allitems.find(c => c.value === item.iditem).cuenta:"";
                 this.pdfcomprobantefac = item.pdfcomprobantefac;
                 this.originalfacguid = item.pdfcomprobantefac;
@@ -769,6 +803,7 @@
                 this.impsiniva = '';
                 this.imptotal = '';
                 this.fecpago = '';
+                this.idforpago = '';
                 this.cuentagcom = '';
                 this.pdfcomprobantefac = '';
                 this.pagado = false;
@@ -821,6 +856,7 @@
                         'impsiniva': me.impsiniva,
                         'imptotal': me.imptotal,
                         'fecpago': me.fecpago,
+                        'idforpago': me.idforpago,
                         'pdfcomprobantefac': me.pdfcomprobantefac,
                         'pagado': me.pagado,
                         'fecpagado': me.fecpagado,
@@ -860,6 +896,7 @@
                         'impsiniva': me.impsiniva,
                         'imptotal': me.imptotal,
                         'fecpago': me.fecpago,
+                        'idforpago': me.idforpago,
                         'pdfcomprobantefac': me.pdfcomprobantefac,
                         'pagado': false,
                         'fecpagado': me.fecpagado,
@@ -907,9 +944,12 @@
                 }
                 if (this.numcomprobante.length>12){
                     this.validaMensaje.push("El Numero de Comprobante no puede ser mayor a 12 posiciones.");
-                }                
+                }
                 if (!this.fecpago){
                     this.validaMensaje.push("Ingrese una fecha de pago.");
+                }
+                if (!this.idforpago){
+                    this.validaMensaje.push("Ingrese una Forma de pago.");
                 }
                 if (!this.impsiniva || Number(this.impsiniva) <= 0 ){
                     this.validaMensaje.push("Ingrese un importe neto de impuesto positivo.");

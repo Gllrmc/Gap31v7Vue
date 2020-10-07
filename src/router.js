@@ -69,6 +69,7 @@ import Over from './components/Over.vue';
 import Factu from './components/Factu.vue';
 import Registrogasto from './components/Registrogasto.vue';
 import Calendario from './components/Calendario.vue';
+import Forpago from './components/Forpago.vue';
 import Prueba from './components/Prueba.vue';
 import Prueba2 from './components/Prueba2.vue'
 import store from './store';
@@ -847,6 +848,21 @@ var router = new Router({
             path: '/estados',
             name: 'estados',
             component: Estado,
+            meta: {
+                administrador: true,
+                jefeadministracion: true,
+                asistadministracion: false,
+                executiveproducer: false,
+                lineproducer: false,
+                chiefproducer: false,
+                asistproduccion: false,
+                asistgeneral: false
+            }
+        },
+        {
+            path: '/forpagos',
+            name: 'forpagos',
+            component: Forpago,
             meta: {
                 administrador: true,
                 jefeadministracion: true,
