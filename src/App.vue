@@ -1006,7 +1006,7 @@
         <v-flex text-xs-center>
           <v-card flat tile color="primary" class="white--text">
             <v-card-text class="white--text pt-0">
-              Akiel &copy;2019 - Version 6.R31
+              Akiel &copy;2019 - Version 7.R31
             </v-card-text>
           </v-card>
         </v-flex>

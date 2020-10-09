@@ -440,7 +440,6 @@
                     });
                 } else {
                     //Código para guardar
-                    debugger;
                     axios.post('api/Gastos/Crear',{
                         'idconcepto':me.idconcepto,
                         'fecgasto': me.fecgasto,
