@@ -98,6 +98,7 @@
                             <v-spacer></v-spacer>
                             <v-btn color="blue darken-1" flat @click.native="close">Cancelar</v-btn>
                             <v-btn color="blue darken-1" flat @click.native="guardar">Guardar</v-btn>
+                            <v-btn v-if="editedIndex===-1" color="blue darken-1" flat @click.native="repetir">Guardar+Nuevo</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
@@ -262,9 +263,13 @@
                 iduseralta:'',
                 fecalta:'',
                 iduserumod:'',
-                fecumod:'',                
-                gastos:[                   
-                ],
+                fecumod:'',
+                ridgasto:'',
+                ridconcepto:'',
+                rfecgasto:'',
+                ridforpago:'',
+                rnota:'',
+                gastos:[],
                 menu1: false,
                 valida: 0,
                 validaMensaje:[],
@@ -406,8 +411,47 @@
                 this.iduseralta = "";
                 this.fecalta = "";
                 this.iduserumod = "";
-                this.fecumod = "";                
+                this.fecumod = "";
                 this.editedIndex=-1;
+            },
+            repetir() {
+                let me=this;
+                me.ridgasto=me.idgasto;
+                me.ridconcepto=me.idconcepto;
+                me.rfecgasto=me.fecgasto;
+                me.ridforpago=me.idforpago;
+                me.rnota=me.nota;
+                if (this.validar()){
+                    return;
+                }
+                var date = new Date();
+                let header={"Authorization" : "Bearer " + me.$store.state.token};
+                let configuracion= {headers : header};
+                //Código para guardar
+                axios.post('api/Gastos/Crear',{
+                    'idconcepto':me.idconcepto,
+                    'fecgasto': me.fecgasto,
+                    'importe': me.importe,
+                    'idforpago': me.idforpago,
+                    'nota': me.nota,
+                    'pendiente': me.pendiente,
+                    'iduseralta': me.$store.state.usuario.idusuario
+                },configuracion).then(function(response){
+                    me.listar();
+                    me.idgasto=me.ridgasto;
+                    me.idconcepto=me.ridconcepto;
+                    me.fecgasto=me.rfecgasto;
+                    me.importe=0;
+                    me.idforpago=me.ridforpago;
+                    me.pendiente=true;
+                    me.nota=me.rnota;
+                    me.dialog = true;
+                    me.editedIndex=-1;
+                }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
+                    me.snackbar = true;                     
+                    console.log(error);
+                });
             },
             guardar () {
                 if (this.validar()){
