@@ -242,13 +242,13 @@
                             </template>
                         </v-data-table>
                         <v-flex class="text-xs-right">
-                            <strong>Solicitado: </strong>$ {{totalSolicitado.toFixed(2)}}
+                            <strong>Solicitado: </strong>$ {{pad(formatPrice(totalSolicitado),20,'*')}}
                         </v-flex>
                         <v-flex class="text-xs-right">
-                            <strong> Entregado: </strong>$ {{totalEntregado=(calcularTotal).toFixed(2)}}
+                            <strong> Entregado: </strong>$ {{pad(formatPrice(totalEntregado=(calcularTotal)),20,'*')}}
                         </v-flex>
                         <v-flex class="text-xs-right">
-                            <strong> Disponile: </strong>$ {{totalDisponible=(totalSolicitado-totalEntregado).toFixed(2)}}
+                            <strong> Disponile: </strong>$ {{pad(formatPrice(totalDisponible=(totalSolicitado-totalEntregado)),20,'*')}}
                         </v-flex>                        
                     </v-card-text>
                     <v-card-actions>
@@ -384,6 +384,11 @@
                 this.select();
             },
             methods:{
+            pad(n, width, z) {
+                z = z || '0';
+                n = n + '';
+                return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+            },
             formatPrice(value) {
                 let val = (value/1).toFixed(2).replace('.', ',')
                 return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")

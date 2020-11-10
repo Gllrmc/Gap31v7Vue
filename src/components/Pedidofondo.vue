@@ -29,7 +29,7 @@
                 <v-text-field class="text-xs-center" v-model="search" append-icon="search" label="Búsqueda" single-line hide-details></v-text-field>
                 <v-spacer></v-spacer>
             </v-toolbar>
-            <v-dialog v-model="dialog" max-width="1500px" persistent>
+            <v-dialog v-model="dialog" max-width="1500px" >
                 <v-card>
                     <v-card-title>
                     <span class="headline">Pedido de Fondos para Proyecto #{{orden}}: {{proyecto}} </span>
@@ -128,8 +128,8 @@
                                     </v-container>
                                 </v-card-text>
                             </v-card>
-                        </v-dialog>                            
-                        <v-dialog v-model="adModal" max-width="290">
+                        </v-dialog>
+                        <v-dialog v-model="adModal" max-width="390">
                             <v-card>
                                 <v-card-title class="headline" v-if="adAccion==1">¿Activar Pedido de Fondo?</v-card-title>
                                 <v-card-title class="headline" v-if="adAccion==2">¿Desactivar Pedido de Fondo?</v-card-title>
@@ -153,6 +153,30 @@
                                 </v-card-actions> 
                             </v-card>
                         </v-dialog>                                         
+                        <v-dialog v-model="enModal" max-width="390">
+                            <v-card>
+                                <v-card-title class="headline" v-if="enAccion==1">¿Entregar Fondos Solicitados?</v-card-title>
+                                <v-card-title class="headline" v-if="enAccion==2">¿Recuperar Fondos de Pedido?</v-card-title>
+                                <v-card-text>
+                                    Estás a punto de 
+                                    <span v-if="enAccion==1">Registrar Entrega </span>
+                                    <span v-if="enAccion==2">Registrar Recupero </span>
+                                    de los fondos del Pedido de Fondo de {{ enNombre }}
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="green darken-1" flat="flat" @click="activarDesactivarCerrar">
+                                        Cancelar
+                                    </v-btn>
+                                    <v-btn v-if="enAccion==1" color="orange darken-4" flat="flat" @click="activarEntrega">
+                                        Entregar
+                                    </v-btn>
+                                    <v-btn v-if="enAccion==2" color="orange darken-4" flat="flat" @click="desactivarEntrega">
+                                        Recuperar
+                                    </v-btn>
+                                </v-card-actions> 
+                            </v-card>
+                        </v-dialog>                                         
                         <v-data-table
                             :headers="headersDetalle"
                             :items="pedidofondos"
@@ -161,29 +185,49 @@
                             >
                             <template v-if="validateAccess(props.item.idsubrubro)" slot="items" slot-scope="props">
                                 <td class="justify-center layout px-0">
-                                    <v-icon
-                                    small
-                                    class="mr-2"
-                                    @click="editDetailItem(props.item)"
-                                    >
-                                    edit
-                                    </v-icon>
-                                    <template v-if="props.item.activo">
+                                    <template v-if="!props.item.entregado">
                                         <v-icon
                                         small
-                                        @click="activarDesactivarMostrar(2,props.item)"
+                                        class="mr-2"
+                                        @click="editDetailItem(props.item)"
                                         >
-                                        block
+                                        edit
                                         </v-icon>
+                                        <template v-if="props.item.activo">
+                                            <v-icon
+                                            small
+                                            @click="activarDesactivarMostrar(2,props.item)"
+                                            >
+                                            block
+                                            </v-icon>
+                                        </template>
+                                        <template v-else>
+                                            <v-icon
+                                            small
+                                            @click="activarDesactivarMostrar(1,props.item)"
+                                            >
+                                            check
+                                            </v-icon>
+                                        </template>
                                     </template>
-                                    <template v-else>
-                                        <v-icon
-                                        small
-                                        @click="activarDesactivarMostrar(1,props.item)"
-                                        >
-                                        check
-                                        </v-icon>
-                                    </template>                    
+                                    <template v-if="props.item.activo">
+                                        <template v-if="props.item.entregado">
+                                            <v-icon
+                                            small
+                                            @click="activarDesactivarEntrega(2,props.item)"
+                                            >
+                                            money_off
+                                            </v-icon>
+                                        </template>
+                                        <template v-else>
+                                            <v-icon
+                                            small
+                                            @click="activarDesactivarEntrega(1,props.item)"
+                                            >
+                                            attach_money
+                                            </v-icon>
+                                        </template>
+                                    </template>
                                 </td>
                                 <td class="text-xs-center"> {{ props.item.orden }}</td>
                                 <td>{{ props.item.proyecto }}</td>
@@ -192,7 +236,14 @@
                                 <td>{{ props.item.responsable }}</td>
                                 <td>{{ props.item.fecpedido.substr(0, 10) }}</td>
                                 <td class="text-xs-right">{{ formatPrice(props.item.importe) }}</td>
-                                <td>{{ props.item.notas ? props.item.notas.substr(0, 50) : props.item.notas }}</td>
+                                <td class="text-xs-center">
+                                    <div v-if="props.item.entregado">
+                                        <span class="green--text">Si</span>
+                                    </div>
+                                    <div v-else>
+                                        <span class="blue--text">No</span>
+                                    </div>
+                                </td>  
                                 <td class="text-xs-center">
                                     <div v-if="props.item.rendido">
                                         <span class="green--text">Si</span>
@@ -201,6 +252,7 @@
                                         <span class="blue--text">No</span>
                                     </div>
                                 </td>  
+                                <td>{{ props.item.notas ? props.item.notas.substr(0, 50) : props.item.notas }}</td>
                                 <td class="text-xs-center">{{ props.item.iduseralta }}</td>
                                 <td>{{ props.item.fecalta.substr(0, 16) }}</td>
                                 <td class="text-xs-center">{{ props.item.iduserumod }}</td>
@@ -219,7 +271,10 @@
                             </template>
                         </v-data-table>
                         <v-flex class="text-xs-right">
-                            <strong>Total Pedidos: </strong>$ {{totalPagado=(calcularTotal).toFixed(2)}}
+                            <strong>Fondo Entregados: </strong>$ {{pad(formatPrice(totalPagado=(calcularEntregado)),20,'*')}}
+                        </v-flex>
+                        <v-flex class="text-xs-right">
+                            <strong>Solicitudes Pendientes: </strong>$ {{pad(formatPrice(totalSolicitado=(calcularPendiente)),20,'*')}}
                         </v-flex>
                     </v-card-text>
                     <v-card-actions>
@@ -268,7 +323,9 @@
             return {
                 snackbar:false,
                 snacktext: 'Hola',
-                timeout: 4000,            
+                timeout: 4000,
+                totalPagado:0,
+                totalSolicitado:0,
                 pedidofondos:[],
                 proyectos:[],
                 allsubrubros:[],
@@ -283,6 +340,7 @@
                 fecpedido: new Date().toISOString().substr(0, 10),
                 importe: 0,
                 notas: '',
+                entregado: false,
                 rendido: false,
                 iduseralta: '',
                 fecalata: '',
@@ -316,8 +374,9 @@
                     { text: 'Nombre del Responsable', value: 'responsable', sortable: true },
                     { text: 'Fecha Pedido', value: 'fecpedido', sortable: true },
                     { text: 'Importe', value: 'importe', sortable: true },
-                    { text: 'Notas / Observaciones', value: 'notas', sortable: true },
+                    { text: 'Entregado?', value: 'entregado', sortable: true },
                     { text: 'Rendido?', value: 'rendido', sortable: true },
+                    { text: 'Notas / Observaciones', value: 'notas', sortable: true },
                     { text: 'Creado', value: 'iduseralta', sortable: true },
                     { text: 'Fec.Creación', value: 'fecalta', sortable: true },
                     { text: 'UltMod', value: 'iduserumod', sortable: true },
@@ -334,16 +393,32 @@
                 adModal: 0,
                 adAccion: 0,
                 adNombre: '',
-                adId: ''                         }
+                adId: '',
+                enModal: 0,
+                enAccion: 0,
+                enNombre: '',
+                enId: ''
+            }
         },
         computed: {
             formTitle () {
                 return this.editedIndex === -1 ? 'Nuevo pedido' : 'Actualizar pedido'
             },
-            calcularTotal:function(){
+            calcularEntregado:function(){
                     var subtotal=0.0;
                     for(var i=0;i<this.pedidofondos.length;i++){
-                        subtotal+=(this.pedidofondos[i].activo?this.pedidofondos[i].importe:0);
+                        if (this.pedidofondos[i].entregado) {
+                            subtotal+=(this.pedidofondos[i].activo?this.pedidofondos[i].importe:0);
+                        }
+                    }
+                    return subtotal;
+                },
+            calcularPendiente:function(){
+                    var subtotal=0.0;
+                    for(var i=0;i<this.pedidofondos.length;i++){
+                        if (!this.pedidofondos[i].entregado) {
+                            subtotal+=(this.pedidofondos[i].activo?this.pedidofondos[i].importe:0);
+                        }
                     }
                     return subtotal;
                 }
@@ -367,6 +442,11 @@
                     }
                 }
                 return(q)
+            },
+            pad(n, width, z) {
+                z = z || '0';
+                n = n + '';
+                return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
             },
             formatPrice(value) {
                 let val = (value/1).toFixed(2).replace('.', ',')
@@ -521,6 +601,7 @@
                 this.fecpedido = item.fecpedido.substr(0, 10);
                 this.importe = item.importe;
                 this.notas = item.notas;
+                this.entregado = item.entregado;
                 this.rendido = item.rendido;
                 this.iduseralta = item.iduseralta;
                 this.fecalta = item.fecalta;
@@ -549,8 +630,9 @@
                 this.proyecto = '';
                 this.producto = '';
                 this.fecadjudicacion = '';
-                this.ars1usd = '',               
+                this.ars1usd = '',
                 this.totalPagado = 0;
+                this.totalSolicitado = 0;
             },
             limpiarDetail(){
                 var date = new Date();
@@ -561,6 +643,7 @@
                 this.fecpedido = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().substr(0, 10);
                 this.importe = '';
                 this.notas = '';
+                this.entregado = '';
                 this.rendido = '';
                 this.iduseralta = '';
                 this.fecalta = '';
@@ -591,6 +674,7 @@
                         'fecpedido': me.fecpedido,
                         'importe': me.importe,
                         'notas': me.notas,
+                        'entregado': me.entregado,
                         'rendido': me.rendido,
                         'iduseralta': me.iduseralta,
                         'fecalta': me.fecalta,
@@ -615,6 +699,7 @@
                         'fecpedido': me.fecpedido,
                         'importe': me.importe,
                         'notas': me.notas,
+                        'entregado': false,
                         'rendido': false,
                         'iduseralta': me.$store.state.usuario.idusuario,
                     },configuracion).then(function(response){
@@ -664,6 +749,7 @@
             },
             activarDesactivarCerrar(){
                 this.adModal=0;
+                this.enModal=0;
             },
             activar(){
                 let me=this;
@@ -696,6 +782,71 @@
                     me.snackbar = true;
                     console.log(error);
                 });
+            },
+            activarDesactivarEntrega(accion,item){
+                this.enModal=1;
+                this.enNombre=item.proyecto + '/' + item.numpedido;
+                this.enId=item.idpedidofondo;                
+                if (accion==1){
+                    this.enAccion=1;
+                }
+                else if (accion==2){
+                    this.enAccion=2;
+                }
+                else{
+                    this.enModal=0;
+                }
+            },
+            activarEntrega(){
+                let me=this;
+                if (me.$store.state.usuario.rol =='Administrador' || me.$store.state.usuario.rol =='JefeAdministracion' ){
+                    let header={"Authorization" : "Bearer " + me.$store.state.token};
+                    let configuracion= {headers : header};
+                    axios.put('api/Pedidofondos/ActivarEntrega/'+me.enId,{},configuracion).then(function(response){
+                        me.enModal=0;
+                        me.enAccion=0;
+                        me.enNombre="";
+                        me.enId="";
+                        me.listarDetail();
+                    }).catch(function(error){
+                        me.enModal=0;
+                        me.enAccion=0;
+                        me.enNombre="";
+                        me.enId="";
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
+                    });
+                }
+                else {
+                    me.enModal=0;
+                    me.enAccion=0;
+                    me.enNombre="";
+                    me.enId="";
+                    me.snacktext = 'No Autorizado';
+                    me.snackbar = true;
+                }
+            },
+            desactivarEntrega(){
+                let me=this;
+                let header={"Authorization" : "Bearer " + this.$store.state.token};
+                let configuracion= {headers : header};
+                axios.put('api/Pedidofondos/DesactivarEntrega/'+this.enId,{},configuracion).then(function(response){
+                    me.enModal=0;
+                    me.enAccion=0;
+                    me.enNombre="";
+                    me.enId="";
+                    me.listarDetail();
+                }).catch(function(error){
+                    me.enModal=0;
+                    me.enAccion=0;
+                    me.enNombre="";
+                    me.enId="";
+                    me.snacktext = 'Imposible recuperar. Código: '+ error.response.status;
+                    me.snackbar = true;
+                    console.log(error);
+                });
+
             }
         }        
     }

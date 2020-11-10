@@ -243,13 +243,13 @@
                             </template>
                         </v-data-table>
                         <v-flex class="text-xs-right">
-                            <strong>Distribuido: </strong>$ {{totalDistribucion=(CalcularTotalDist).toFixed(2)}}
+                            <strong>Distribuido: </strong>$ {{pad(formatPrice(totalDistribucion=(CalcularTotalDist)),20,'*')}}
                         </v-flex>
                         <v-flex class="text-xs-right">
-                            <strong>Rendido: </strong>$ {{totalRendicion=(calcularTotal).toFixed(2)}}
+                            <strong>Pedido: </strong>$ {{pad(formatPrice(totalPedido=(calcularTotal)),20,'*')}}
                         </v-flex>
                         <v-flex class="text-xs-right">
-                            <strong>Pendiente: </strong>$ {{totalPendiente=(totalDistribucion-totalRendicion).toFixed(2)}}
+                            <strong>Pendiente: </strong>$ {{pad(formatPrice(totalPendiente=(totalDistribucion-totalPedido)),20,'*')}}
                         </v-flex>                        
                     </v-card-text>
                     <v-card-actions>
@@ -299,7 +299,7 @@
             data: () => {
                 return {
                 totalPendiente:0,
-                totalRendicion:0,
+                totalPedido:0,
                 totalDistribucion:0,
                 snackbar:false,
                 snacktext: 'Hola',
@@ -371,8 +371,10 @@
                 },
             calcularTotal:function(){
                     var resultado=0.0;
-                    for(var i=0;i<this.distribucionfondos.length;i++){
-                        resultado=resultado+(this.distribucionfondos[i].activo?this.distribucionfondos[i].importe:0);
+                    for(var i=0;i<this.pedidofondos.length;i++){
+                        if(this.pedidofondos[i].idpedidofondo == this.idpedidofondo ){
+                            resultado=resultado+(this.pedidofondos[i].activo?this.pedidofondos[i].importe:0);
+                        }
                     }
                     return resultado;
                 },
@@ -396,6 +398,11 @@
                 this.select();
             },
             methods:{
+            pad(n, width, z) {
+                z = z || '0';
+                n = n + '';
+                return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+            },
             formatPrice(value) {
                 let val = (value/1).toFixed(2).replace('.', ',')
                 return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")

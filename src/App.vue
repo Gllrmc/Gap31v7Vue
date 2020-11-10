@@ -199,7 +199,17 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile :to="{ name: 'rendicionfondos'}">
+            <!-- <v-list-tile :to="{ name: 'rendicionfondos'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Rendicion x Distribucion
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile> -->
+            <v-list-tile :to="{ name: 'rendicionpfondos'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
@@ -1006,7 +1016,7 @@
         <v-flex text-xs-center>
           <v-card flat tile color="primary" class="white--text">
             <v-card-text class="white--text pt-0">
-              Akiel &copy;2019 - Version 7.R31
+              Akiel &copy;2019 - Version 7.R31.2
             </v-card-text>
           </v-card>
         </v-flex>

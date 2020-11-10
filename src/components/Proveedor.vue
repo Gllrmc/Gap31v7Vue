@@ -43,7 +43,7 @@
                                 </v-text-field>
                             </v-flex>
                             <v-flex xs2 sm2 md2>
-                                <input type="checkbox" id="generico" v-model="generico">
+                                <input type="checkbox" id="generico" v-model="generico" @change="armaGenerico()">
                                 <label for = "generico"> Generico?</label>
                             </v-flex>                            
                             <v-flex xs5 sm5 md5>
@@ -65,7 +65,7 @@
                             <v-flex xs6 sm6 md6>
                                 <v-select v-model="situacioniibb"
                                 :items = "situacionesiibb" @change="validarJurisdiccion()"  label = "IIBB"
-                                :disabled="generico">
+                                >
                                 </v-select>
                             </v-flex>
                             <v-flex xs6 sm6 md6>
@@ -375,6 +375,7 @@
                         </div>
 
                     </td>
+                    <td>{{ props.tipocomprobantegenerico}}</td>
                     <td>
                         <div v-if="props.item.activo">
                             <span class="blue--text">Activo</span>
@@ -797,6 +798,12 @@
                     });
                 }
             },
+            armaGenerico(){
+                this.situacioniibb='5';
+                this.idprovincia=3;
+                this.idpais=1;
+                this.formadepago="CONTADO"
+            },
             validarJurisdiccion(){
                 if (this.situacioniibb == '3'){
                     this.esMl = true;
@@ -827,6 +834,9 @@
                 }
                 if (!this.situacioniva){
                     this.validaMensaje.push("Seleccione una situacion IVA.");
+                }
+                if (!this.situacioniibb){
+                    this.validaMensaje.push("Seleccione una situacion IIBB.");
                 }
                 if ((!this.situacioniva=='05'&&!this.situacioniva=='07')||!this.cuit && !this.generico){
                     this.validaMensaje.push("Ingrese un CUIT.");

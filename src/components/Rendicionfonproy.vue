@@ -2,7 +2,7 @@
     <v-layout align-start>
         <v-flex>
             <v-toolbar flat color="white">
-                <v-toolbar-title>Rendición de Fondos - Distribuciones //DISCONTINUADO //</v-toolbar-title>
+                <v-toolbar-title>Rendición de Fondos - Distribuciones</v-toolbar-title>
                 <v-snackbar
                     v-model="snackbar"
                     :timeout="timeout"
@@ -248,13 +248,19 @@
                             </template>
                         </v-data-table>
                         <v-flex class="text-xs-right">
-                            <strong>Distribuido: </strong>$ {{totalDistribucion=(CalcularTotalDist).toFixed(2)}}
+                            <strong>Proyecto: </strong>$ {{pad(formatPrice(totalProyecto=(CalcularTotalProy)),20,'*')}}
                         </v-flex>
                         <v-flex class="text-xs-right">
-                            <strong>Rendido: </strong>$ {{totalRendicion=(calcularTotal).toFixed(2)}}
+                            <strong>Distribución: </strong>$ {{pad(formatPrice(totalDistribucion=(CalcularTotalDist)),20,'*')}}
                         </v-flex>
                         <v-flex class="text-xs-right">
-                            <strong>Pendiente: </strong>$ {{totalPendiente=(totalDistribucion-totalRendicion).toFixed(2)}}
+                            <strong>Rendido distribución: </strong>$ {{pad(formatPrice(totalRendicion=(calcularTotal)),20,'*')}}
+                        </v-flex>
+                        <v-flex class="text-xs-right">
+                            <strong>Pendiente distribución: </strong>$ {{pad(formatPrice(totalPendienteDist=(totalDistribucion-totalRendicion)),20,'*')}}
+                        </v-flex>                        
+                        <v-flex class="text-xs-right">
+                            <strong>Pendiente Proyecto: </strong>$ {{pad(formatPrice(totalPendienteProy=(totalProyecto-calcularRendicionUsuario)),20,'*')}}
                         </v-flex>                        
                     </v-card-text>
                     <v-card-actions>
@@ -305,9 +311,11 @@
     export default {
         data: () => {
             return {
-                totalPendiente:0,
+                totalPendienteDist:0,
+                totalPendienteProy:0,
                 totalRendicion:0,
                 totalDistribucion:0,
+                totalProyecto:0,
                 snackbar:false,
                 snacktext: 'Hola',
                 timeout: 4000,
@@ -324,6 +332,7 @@
                 proveedores: [],
                 distribucionfondos:[],
                 rendicionfondos:[],
+                rendicionproy:[],
                 usuarioproyectos:[],
                 // Detail
                 idrendicionfondo: '',
@@ -428,6 +437,24 @@
                         }
                     }
                     return resultado;
+                },
+            CalcularTotalProy:function(){
+                    var resultado=0.0;
+                    for(var i=0;i<this.distribucionfondos.length;i++){
+                        if(this.distribucionfondos[i].idusuario == this.idusuario ){
+                            resultado=resultado+(this.distribucionfondos[i].activo?this.distribucionfondos[i].importe:0);
+                        }
+                    }
+                    return resultado;
+                },
+            calcularRendicionUsuario:function(){
+                    var resultado=0.0;
+                    for(var i=0;i<this.rendicionproy.length;i++){
+                        if(this.rendicionproy[i].idresponsable == this.idusuario ){
+                            resultado=resultado+(this.rendicionproy[i].activo?this.rendicionproy[i].imptotal:0);
+                        }
+                    }
+                    return resultado;
                 }
             },
             watch: {
@@ -449,6 +476,11 @@
                         }
                     }
                     return(q)
+                },
+                pad(n, width, z) {
+                    z = z || '0';
+                    n = n + '';
+                    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
                 },
                 formatPrice(value) {
                     let val = (value/1).toFixed(2).replace('.', ',')
@@ -504,6 +536,14 @@
                     axios.get('api/Rendicionfondos/ListarDistribucionfondo/'+this.iddistribucionfondo,configuracion).then(function(response){
                         // console.log(response);
                         me.rendicionfondos=response.data;
+                    }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
+                    });
+                    axios.get('api/Rendicionfondos/ListarRendicionProy/'+this.idproyecto,configuracion).then(function(response){
+                        // console.log(response);
+                        me.rendicionproy=response.data;
                     }).catch(function(error){
                         me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
                         me.snackbar = true;
@@ -641,7 +681,8 @@
                     this.importe = 0;
                     this.totalDistribucion = 0;                
                     this.totalRendicion = 0;
-                    this.totalPendiente = 0;  
+                    this.totalPendienteDist = 0;
+                    this.totalPendienteProy = 0;
                 },
                 limpiarDetail() {
                     this.idrendicionfondo = '';
@@ -661,7 +702,8 @@
                     this.iduserumod = '';
                     this.fecumod = '';
                     this.totalRendicion=0;
-                    this.totalPendiente = 0;  
+                    this.totalPendienteDist = 0;
+                    this.totalPendienteProy = 0;
                     this.editedIndex=-1;
                     this.searchi = "";
                     //this.onClear();                    
@@ -766,9 +808,6 @@
                     }
                     if (Number(this.imptotal) < Number(this.impsiniva) ){
                         this.validaMensaje.push("El importe sin IVA debe ser menor o igual que el importe total.");
-                    }
-                    if (Number(this.totalPendiente)-Number(this.imptotal) < 0 && this.editedIndex == -1 ){
-                        this.validaMensaje.push("Valide importe total ingresados vs pendiente a rendir.");
                     }
                     if (this.validaMensaje.length){
                         this.valida=1;
