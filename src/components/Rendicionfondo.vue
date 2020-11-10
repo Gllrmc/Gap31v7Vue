@@ -106,7 +106,7 @@
                                                 </v-text-field>
                                             </v-flex> -->
                                             <v-flex xs2 sm2 md2>
-                                                <v-text-field v-model="indiceinterno" label="# Pag">
+                                                <v-text-field v-model="indiceinterno" label="# Cbte">
                                                 </v-text-field>
                                             </v-flex>                                            
                                             <v-flex xs3 sm3 md3>
