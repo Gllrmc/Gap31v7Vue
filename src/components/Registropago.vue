@@ -566,7 +566,7 @@
                 axios.get('api/Items/Select',configuracion).then(function(response){
                     itemsArray=response.data;
                     itemsArray.map(function(x){
-                        me.items.push({text: x.item, value: x.iditem, vivo: x.vivo, post: x.post, conf: x.conf });
+                        me.items.push({text: x.item, value: x.iditem, vivo: x.vivo, post: x.post, conf: x.conf, cuenta:x.cuentagcom });
                     });
                 }).catch(function(error){
                     me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
@@ -648,6 +648,7 @@
                 this.feccomprobante = item.feccomprobante.substr(0, 10);
                 this.impsiniva = item.impsiniva;
                 this.imptotal = item.imptotal;
+                this.cuentagcom = item.iditem?this.items.find(c => c.value === item.iditem).cuenta:"";
                 this.idforpago = item.idforpago;
                 this.fecpago = item.fecpago.substr(0, 10);
                 this.pagado = item.pagado;
@@ -687,6 +688,7 @@
                 this.feccomprobante = '';
                 this.impsiniva = '';
                 this.imptotal = '';
+                this.cuentagcom = '';
                 this.idforpago = '';
                 this.fecpago = '';
                 this.pagado = false;

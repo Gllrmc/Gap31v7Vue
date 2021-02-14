@@ -500,8 +500,17 @@
                             me.snackbar = true;
                             console.log(error);
                         });
+                    }else if (this.$store.state.usuario.rol =='ExecutiveProducer' || this.$store.state.usuario.rol =='LineProducer' || this.$store.state.usuario.rol =='ChiefProducer' ){
+                        axios.get('api/Distribucionfondos/ListarActivosResponsable/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
+                            //console.log(response);
+                            me.distribucionfondos=response.data;
+                        }).catch(function(error){
+                            me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                            me.snackbar = true;
+                            console.log(error);
+                        });
                     }else{
-                        axios.get('api/Distribucionfondos/Listaractivosusuario/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
+                        axios.get('api/Distribucionfondos/ListarActivosUsuario/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
                             //console.log(response);
                             me.distribucionfondos=response.data;
                         }).catch(function(error){

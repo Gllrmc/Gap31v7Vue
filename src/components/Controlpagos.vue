@@ -71,6 +71,7 @@
                                         <span class="red--text">No</span>
                                     </div>
                                 </td>
+                                <td>{{ props.item.forpago }}</td>
                                 <td>{{ props.item.notas.substr(0, 20) }}</td>
                             </template>
                             <template v-slot:no-data>
@@ -193,6 +194,7 @@
                     { text: 'Imp.Total', value: 'imptotal', sortable: true },
                     { text: 'Fecha Pago', value: 'fecpago', sortable: true },
                     { text: 'Pagado', value: 'pagado', sortable: true },
+                    { text: 'Forma Pago', value: 'forpago', sortable: true },
                     { text: 'Notas', value: 'notas', sortable: true },
                 ],
                 totalPagado: 0,                 
@@ -248,6 +250,7 @@
                     'Imp.Total': 'imptotal',
                     'Fecha Pago': 'fecpago',
                     'Pagado?': 'pagado',
+                    'Forma de Pago': 'forpago',
                     'Fecha Pagado': 'fecpagado'
                 },
                 // this.json_data = this.controlpagos;

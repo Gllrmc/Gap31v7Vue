@@ -96,19 +96,20 @@
                                                         offset-y
                                                         full-width
                                                         min-width="290px"
-                                                        readonly
                                                     >
                                                         <template v-slot:activator="{ on }">
                                                             <v-text-field
                                                                 v-model="fecpedido"
                                                                 label="Fecha Pedido"
                                                                 prepend-icon="event"
-                                                                disabled
                                                                 readonly
                                                                 v-on="on"
                                                             ></v-text-field>
                                                         </template>
-                                                        <v-date-picker v-model="fecpedido" @input="menu1 = false"></v-date-picker>
+                                                        <v-date-picker v-model="fecpedido" 
+                                                        :min = "fecpedmin"
+                                                        :max = "fecpedmax" 
+                                                        @input="menu1 = false"></v-date-picker>
                                                     </v-menu>
                                                 </v-flex>
                                             </template>
@@ -337,6 +338,7 @@
                 idsubrubro: '',
                 idresponsable: '',
                 numpedido: '',
+                fecpedmin : new Date().toISOString().substr(0, 10),
                 fecpedido: new Date().toISOString().substr(0, 10),
                 importe: 0,
                 notas: '',

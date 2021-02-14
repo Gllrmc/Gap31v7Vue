@@ -40,7 +40,7 @@ import Proyectocerrado from './components/Proyectocerrado.vue';
 import Flujocaja from './components/Flujocaja.vue';
 import Pedidofondo from './components/Pedidofondo.vue';
 import Distribucionfondo from './components/Distribucionfondo.vue';
-import Rendicionpfondo from './components/Rendicionfonproy.vue';
+import Rendicionpfondo from './components/Rendicionfondo.vue';
 import Devolucionfondo from './components/Devolucionfondo.vue';
 import Ordenpago from './components/Ordenpago.vue';
 import Registropago from './components/Registropago.vue';
