@@ -73,6 +73,7 @@
                                 </td>
                                 <td>{{ props.item.forpago }}</td>
                                 <td>{{ props.item.notas.substr(0, 20) }}</td>
+                                <td>{{ props.item.cuentagcom }}</td>
                             </template>
                             <template v-slot:no-data>
                                 <v-alert :value="true" color="warning" icon="warning">
@@ -196,6 +197,7 @@
                     { text: 'Pagado', value: 'pagado', sortable: true },
                     { text: 'Forma Pago', value: 'forpago', sortable: true },
                     { text: 'Notas', value: 'notas', sortable: true },
+                    { text: 'CtaGcom', value: 'cuentagcom', soteable: true }
                 ],
                 totalPagado: 0,                 
                 search: '',
@@ -251,7 +253,8 @@
                     'Fecha Pago': 'fecpago',
                     'Pagado?': 'pagado',
                     'Forma de Pago': 'forpago',
-                    'Fecha Pagado': 'fecpagado'
+                    'Fecha Pagado': 'fecpagado',
+                    'Cta Gcom': 'cuentagcom' 
                 },
                 // this.json_data = this.controlpagos;
                 this.json_data = [];
