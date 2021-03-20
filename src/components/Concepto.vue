@@ -169,8 +169,10 @@
                     {value: '#FF9800', text: 'Naranja'},
                     {value: '#FF5722', text: 'Naranja oscuro'},
                     {value: '#795548', text: 'Marron'},
-                    {value: '#607D8B', text: 'Lívido'},                    
-                    {value: '#9E9E9E', text: 'Gris'}
+                    {value: '#607D8B', text: 'Lívido'},
+                    {value: '#9E9E9E', text: 'Gris'},
+                    {value: '#000000', text: 'Negro'},
+                    {value: '#FFFFFF', text: 'Blanco'}
                 ],
                 textos: [
                     {value: 'white', text: 'Blanco'},
