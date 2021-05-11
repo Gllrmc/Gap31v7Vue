@@ -57,6 +57,26 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile :to="{ name: 'dirfees'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Director's fees
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile :to="{ name: 'regpitchs'}">
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Pitches
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
             <v-list-tile :to="{ name: 'hlimbos'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
@@ -835,7 +855,7 @@
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  Pitch
+                  tipos de Pitch
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -1016,7 +1036,7 @@
         <v-flex text-xs-center>
           <v-card flat tile color="primary" class="white--text">
             <v-card-text class="white--text pt-0">
-              Akiel &copy;2019 - Version 7.R31.6
+              Akiel &copy;2019 - Version 7.R31.8
             </v-card-text>
           </v-card>
         </v-flex>

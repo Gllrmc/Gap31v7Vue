@@ -66,6 +66,8 @@ import Controlrendicion from './components/Controlrendicion.vue';
 import Controlpost from './components/Controlpost.vue';
 import Controlmotion from './components/Controlmotion.vue';
 import Over from './components/Over.vue';
+import Dirfee from './components/Dirfee.vue';
+import Regpitch from './components/Regpitch.vue';
 import Factu from './components/Factu.vue';
 import Registrogasto from './components/Registrogasto.vue';
 import Calendario from './components/Calendario.vue';
@@ -128,6 +130,36 @@ var router = new Router({
             path: '/factus',
             name: 'factus',
             component: Factu,
+            meta: {
+                administrador: true,
+                jefeadministracion: true,
+                asistadministracion: false,
+                executiveproducer: false,
+                lineproducer: false,
+                chiefproducer: false,
+                asistproduccion: false,
+                asistgeneral: false
+            }
+        },
+        {
+            path: '/dirfees',
+            name: 'dirfees',
+            component: Dirfee,
+            meta: {
+                administrador: true,
+                jefeadministracion: false,
+                asistadministracion: false,
+                executiveproducer: true,
+                lineproducer: false,
+                chiefproducer: false,
+                asistproduccion: false,
+                asistgeneral: false
+            }
+        },
+        {
+            path: '/regpitchs',
+            name: 'regpitchs',
+            component: Regpitch,
             meta: {
                 administrador: true,
                 jefeadministracion: true,

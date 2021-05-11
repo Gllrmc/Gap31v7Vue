@@ -61,6 +61,7 @@
                                 <td>{{ props.item.feccomprobante.substr(0, 10) }}</td>
                                 <td>{{ tipocomprobantes.find(x => x.value===props.item.tipocomprobante ).text }}</td>
                                 <td>{{ props.item.numcomprobante }}</td>
+                                <td class="text-xs-right">{{ formatPrice(props.item.impneto) }}</td>
                                 <td class="text-xs-right">{{ formatPrice(props.item.imptotal) }}</td>
                                 <td>{{ props.item.fecpago.substr(0, 10) }}</td>
                                 <td class="justify-center">
@@ -192,6 +193,7 @@
                     { text: 'Fecha Cbte', value: 'feccomprobante', sortable: true },
                     { text: 'Cbte', value: 'tipocomprobante', sortable: true },
                     { text: '#Cbte', value: 'numcomprobante', sortable: true },
+                    { text: 'Imp.Neto', value: 'impneto', sortable: true },
                     { text: 'Imp.Total', value: 'imptotal', sortable: true },
                     { text: 'Fecha Pago', value: 'fecpago', sortable: true },
                     { text: 'Pagado', value: 'pagado', sortable: true },
@@ -249,6 +251,7 @@
                     'Fecha Cbte': 'feccomprobante',
                     'Tipo Cbte': 'tipocomprobante',
                     'Nro Cbte': 'numcomprobante',
+                    'Imp.Neto': 'impneto',
                     'Imp.Total': 'imptotal',
                     'Fecha Pago': 'fecpago',
                     'Pagado?': 'pagado',
