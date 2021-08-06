@@ -108,7 +108,6 @@
                                                         </template>
                                                         <v-date-picker v-model="fecpedido" 
                                                         :min = "fecpedmin"
-                                                        :max = "fecpedmax" 
                                                         @input="menu1 = false"></v-date-picker>
                                                     </v-menu>
                                                 </v-flex>

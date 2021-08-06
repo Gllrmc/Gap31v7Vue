@@ -2,7 +2,7 @@
     <v-layout align-start>
         <v-flex>
             <v-toolbar flat color="white">
-                <v-toolbar-title>Rendición - Distribuciones por Proyecto/Responsable</v-toolbar-title>
+                <v-toolbar-title>Rendición de Fondos - Distribuciones</v-toolbar-title>
                 <v-snackbar
                     v-model="snackbar"
                     :timeout="timeout"
@@ -32,7 +32,7 @@
             <v-dialog v-model="dialog" max-width="1500px" persistent>
                 <v-card>
                     <v-card-title>
-                        <span class="headline">Rendicion Fondos Proyecto #{{orden}}: {{proyecto}} | Responsable:{{usuario}}</span>
+                        <span class="headline">Rendicion Fondos Proyecto #{{orden}}: {{proyecto}} | #Pedido: {{numpedido}} | Responsable:{{usuario}}</span>
                     </v-card-title>            
                     <v-card-text>
                         <v-dialog v-model="dialogForm" max-width="1200px" persistent>
@@ -248,25 +248,16 @@
                             </template>
                         </v-data-table>
                         <v-flex class="text-xs-right">
-                            <strong>Distribución: </strong>$ {{pad(formatPrice(totalDistribucion),20,'*')}}
+                            <strong>Distribución: </strong>$ {{pad(formatPrice(totalDistribucion=(CalcularTotalDist)),20,'*')}}
                         </v-flex>
                         <v-flex class="text-xs-right">
-                            <strong>Rendido: </strong>$ {{pad(formatPrice(totalRendicion=(calcularTotal)),20,'*')}}
+                            <strong>Rendido distribución: </strong>$ {{pad(formatPrice(totalRendicion=(calcularTotal)),20,'*')}}
                         </v-flex>
                         <v-flex class="text-xs-right">
-                            <strong>Pendiente: </strong>$ {{pad(formatPrice(totalPendienteDist=(totalDistribucion-totalRendicion)),20,'*')}}
+                            <strong>Pendiente distribución: </strong>$ {{pad(formatPrice(totalPendienteDist=(totalDistribucion-totalRendicion)),20,'*')}}
                         </v-flex>                        
                     </v-card-text>
                     <v-card-actions>
-                        <export-excel
-                            :data   = "json_data"
-                            :fields = "json_fields"
-                            worksheet = "Rendiciones"
-                            type    = "xls"
-                            name    = "GAPdata.xls"      
-                            >
-                            <v-btn color="primary" dark class="mb-2" @click="crearXLS()">Exportar XLS</v-btn>
-                        </export-excel>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" dark class="mb-2" @click.native="createDetail">Nuevo</v-btn>
                         <v-btn color="success" dark class="mb-2" @click.native="closeDetail">Salir</v-btn>
@@ -293,8 +284,9 @@
                     </td>
                     <td class="text-xs-center"> {{ props.item.orden }}</td>
                     <td>{{ props.item.proyecto }}</td>
+                    <td>{{ props.item.numpedido }}</td>
                     <td>{{ props.item.usuario }}</td>
-                    <td>{{ props.item.cantidad }}</td>
+                    <td>{{ props.item.fecdistribucion.substr(0, 10) }}</td>
                     <td class="text-xs-right">{{ formatPrice(props.item.importe) }}</td>
                 </template>
                 <template slot="no-data">
@@ -313,16 +305,6 @@
     export default {
         data: () => {
             return {
-                json_fields: {},
-                json_data: [],
-                json_meta: [
-                [
-                    {
-                            'key': 'charset',
-                            'value': 'utf-8'
-                        }
-                    ]
-                ],                    
                 totalPendienteDist:0,
                 totalPendienteProy:0,
                 totalRendicion:0,
@@ -344,6 +326,7 @@
                 proveedores: [],
                 distribucionfondos:[],
                 rendicionfondos:[],
+                rendicionproy:[],
                 usuarioproyectos:[],
                 // Detail
                 idrendicionfondo: '',
@@ -375,14 +358,16 @@
                 fecumod: '',
                 activo: '',
                 // Master
-                idultdistribucion: '',
+                iddistribucionfondo: '',
+                idpedidofondo: '',
                 idproyecto: '',
                 orden: '',
                 proyecto: '',
+                numpedido: '',
                 idusuario: '',
                 usuario: '',
-                cantidad: '',
-                importe: '',
+                fecdistribucion: '',
+                importedistribucion: '',
                 menu1: false,
                 dialog: false,
                 dialogForm: false,
@@ -390,9 +375,10 @@
                     { text: 'Opciones', value: 'opciones', sortable: false },
                     { text: '#Proyecto', value: 'orden', sortable: true },
                     { text: 'Nombre del Proyecto', value: 'proyecto', sortable: true },
+                    { text: '#Pedido', value: 'numpedido', sortable: true },                        
                     { text: 'Responsable Distribucion', value: 'usuario', sortable: true },
-                    { text: 'Cantidad', value: 'cantidad', sortable: true },
-                    { text: 'Importe', value: 'importe', sortable: true }
+                    { text: 'Fecha Distribución', value: 'fecdistribucion', sortable: true },
+                    { text: 'Importe', value: 'importedistribucion', sortable: true }
                 ],
                 headersDetalle: [
                     { text: 'Opciones', value: 'opciones', sortable: false },
@@ -440,19 +426,30 @@
             CalcularTotalDist:function(){
                     var resultado=0.0;
                     for(var i=0;i<this.distribucionfondos.length;i++){
-                        resultado=resultado+(this.distribucionfondos[i].activo?this.distribucionfondos[i].importe:0);
+                        if(this.distribucionfondos[i].idpedidofondo == this.idpedidofondo ){
+                            resultado=resultado+(this.distribucionfondos[i].activo?this.distribucionfondos[i].importe:0);
+                        }
                     }
                     return resultado;
                 },
             CalcularTotalProy:function(){
                     var resultado=0.0;
                     for(var i=0;i<this.distribucionfondos.length;i++){
-                        if(this.distribucionfondos[i].idproyecto == this.idproyecto ){
+                        if(this.distribucionfondos[i].idproyecto == this.idproyecto && this.distribucionfondos[i].idusuario == this.idusuario ){
                             resultado=resultado+(this.distribucionfondos[i].activo?this.distribucionfondos[i].importe:0);
                         }
                     }
                     return resultado;
                 },
+            calcularRendicionUsuario:function(){
+                    var resultado=0.0;
+                    for(var i=0;i<this.rendicionproy.length;i++){
+                        if(this.rendicionproy[i].idresponsable == this.idusuario ){
+                            resultado=resultado+(this.rendicionproy[i].activo?this.rendicionproy[i].imptotal:0);
+                        }
+                    }
+                    return resultado;
+                }
             },
             watch: {
                 dialogForm (val) {
@@ -464,30 +461,6 @@
                 this.select();
             },
             methods:{
-                crearXLS(){
-                    this.json_fields = {
-                        '#Id': 'idrendicionfondo',
-                        '#Item': 'itemorden',
-                        'Item descripción': 'itemes',
-                        '#Subitem': 'subitemorden',
-                        'Nombre Proveedor' : 'proveedor',
-                        'Fecha Comprobante' : 'feccomprobante',
-                        '#Hoja' : 'indiceinterno',
-                        'Imp.s/IVA': 'impsiniva',
-                        'Imp.Total': 'imptotal',
-                        'Notas': 'notas'
-                    },
-                    this.json_data = this.rendicionfondos;
-                    // this.json_data = [];
-                    // for (var x=0; x<this.ordenpagos.length; x++){
-                    //     for (let i=0; i<this.items.length; i++){
-                    //         if (this.items[i]["value"]===this.ordenpagos[x]["iditem"]){
-                    //             this.json_data.push(this.ordenpagos[x]);
-                    //             break
-                    //         }
-                    //     }
-                    // }
-                },
                 validateAccess(element){
                     var q = false;
                     for (let i=0; i<this.items.length; i++){
@@ -513,7 +486,7 @@
                     let configuracion= {headers : header};
                     //console.log(configuracion);
                     if (this.$store.state.usuario.rol =='Administrador' || this.$store.state.usuario.rol =='JefeAdministracion' ){
-                        axios.get('api/Distribucionfondos/ListarActivosH',configuracion).then(function(response){
+                        axios.get('api/Distribucionfondos/ListarActivos',configuracion).then(function(response){
                             //console.log(response);
                             me.distribucionfondos=response.data;
                         }).catch(function(error){
@@ -522,7 +495,7 @@
                             console.log(error);
                         });
                     }else if (this.$store.state.usuario.rol =='ExecutiveProducer' || this.$store.state.usuario.rol =='LineProducer' || this.$store.state.usuario.rol =='ChiefProducer' ){
-                        axios.get('api/Distribucionfondos/ListarActivosResponsableH/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
+                        axios.get('api/Distribucionfondos/ListarActivosResponsable/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
                             //console.log(response);
                             me.distribucionfondos=response.data;
                         }).catch(function(error){
@@ -531,7 +504,7 @@
                             console.log(error);
                         });
                     }else{
-                        axios.get('api/Distribucionfondos/ListarActivosUsuarioH/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
+                        axios.get('api/Distribucionfondos/ListarActivosUsuario/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
                             //console.log(response);
                             me.distribucionfondos=response.data;
                         }).catch(function(error){
@@ -563,9 +536,17 @@
                     let header={"Authorization" : "Bearer " + this.$store.state.token};
                     let configuracion= {headers : header};
                     //console.log(configuracion);
-                    axios.get('api/Rendicionfondos/ListarRendicionProyRes/'+this.idproyecto+'/'+this.idusuario,configuracion).then(function(response){
+                    axios.get('api/Rendicionfondos/ListarDistribucionfondo/'+this.iddistribucionfondo,configuracion).then(function(response){
                         // console.log(response);
                         me.rendicionfondos=response.data;
+                    }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
+                    });
+                    axios.get('api/Rendicionfondos/ListarRendicionProy/'+this.idproyecto,configuracion).then(function(response){
+                        // console.log(response);
+                        me.rendicionproy=response.data;
                     }).catch(function(error){
                         me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
                         me.snackbar = true;
@@ -638,13 +619,15 @@
                 }
                 },
                 editMasterItem (item) {
-                    this.idultdistribucion = item.idultdistribucion;
-                    this.iddistribucionfondo = item.idultdistribucion;
+                    this.iddistribucionfondo = item.iddistribucionfondo;
+                    this.idpedidofondo = item.idpedidofondo;
                     this.idusuario = item.idusuario;
                     this.idproyecto = item.idproyecto;
                     this.orden = item.orden,
                     this.proyecto = item.proyecto;
+                    this.numpedido = item.numpedido;
                     this.usuario = item.usuario;
+                    this.fecdistribucion = item.fecdistribucion.substr(0, 10);
                     this.importe = item.importe;
                     this.totalDistribucion = item.importe;
                     this.listarDetail();
@@ -690,12 +673,14 @@
                     this.limpiarDetail();
                 },
                 limpiarMaster(){
-                    this.idultdistribucion = '';                
+                    this.iddistribucionfondo = '';                
                     this.idproyecto = '';
                     this.orden = '';
                     this.proyecto = '';
+                    this.numpedido = '';
                     this.idusuario = '';
                     this.usuario = '';
+                    this.fecdistribucion = '';
                     this.importe = 0;
                     this.totalDistribucion = 0;                
                     this.totalRendicion = 0;
@@ -703,7 +688,6 @@
                     this.totalPendienteProy = 0;
                 },
                 limpiarDetail() {
-                    this.iddistribucionfondo = this.idultdistribucion;                
                     this.idrendicionfondo = '';
                     this.iditem = '';
                     this.idsubitem = '';
@@ -744,6 +728,7 @@
                         //Código para guardar
                         let me=this;
                         // console.log(me);
+                        debugger;
                         axios.put('api/Rendicionfondos/Actualizar',{
                             'idrendicionfondo': me.idrendicionfondo,
                             'iddistribucionfondo': me.iddistribucionfondo,
@@ -807,8 +792,8 @@
                     if (!this.idusuario){
                         this.validaMensaje.push("Ingrese un usuario.");
                     }
-                    if (!this.iddistribucionfondo){
-                        this.validaMensaje.push("No hay una distribucion de fondo.");
+                    if (!this.fecdistribucion){
+                        this.validaMensaje.push("Ingrese una fecha de distribución de fondo.");
                     }
                     if (!this.tipocomprobante){
                         this.validaMensaje.push("Seleccione un Tipo de Comprobante.");

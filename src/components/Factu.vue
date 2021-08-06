@@ -2,7 +2,7 @@
     <v-layout align-start>
         <v-flex>
             <v-toolbar flat color="white">
-                <v-toolbar-title>Facturacion - Prospectos Aprobados</v-toolbar-title>
+                <v-toolbar-title>Facturacion - Prospectos</v-toolbar-title>
                 <v-snackbar
                     v-model="snackbar"
                     :timeout="timeout"
@@ -231,7 +231,7 @@
                     <td>{{ props.item.proyecto }}</td>
                     <td>{{ props.item.cliente }}</td>
                     <td>{{ props.item.ep }}</td>
-                    <td>{{ props.item.fecaprobacion.substr(0, 10) }}</td>
+                    <td>{{ (props.item.fecaprobacion) ? props.item.fecaprobacion.substr(0, 10) : "" }}</td>
                     <td>{{ props.item.ars1usd }}</td>
                 </template>
                 <template slot="no-data">
@@ -353,7 +353,7 @@
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
                 if (this.$store.state.usuario.rol =='Administrador' || this.$store.state.usuario.rol =='JefeAdministracion' ){
-                    axios.get('api/Limbos/ListarAprobados',configuracion).then(function(response){
+                    axios.get('api/Limbos/ListarActivos',configuracion).then(function(response){
                         //console.log(response);
                         me.limbos=response.data;
                     }).catch(function(error){
@@ -362,7 +362,7 @@
                         console.log(error);
                     });
                 }else{
-                    axios.get('api/Limbos/ListarAprobadosusuario/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
+                    axios.get('api/Limbos/ListarActivosusuario/'+me.$store.state.usuario.idusuario,configuracion).then(function(response){
                         //console.log(response);
                         me.limbos=response.data;
                     }).catch(function(error){
@@ -397,7 +397,7 @@
                 this.proyecto = item.proyecto;
                 this.cliente = item.cliente;
                 this.ep = item.ep;
-                this.fecaprobacion = item.fecaprobacion.substr(0, 10);
+                this.fecaprobacion = (item.fecaprobacion) ? item.fecaprobacion.substr(0, 10) : "";
                 this.ars1usd = item.ars1usd;
                 this.listarDetail();
                 this.dialog = true

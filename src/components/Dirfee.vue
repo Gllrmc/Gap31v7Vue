@@ -2,7 +2,7 @@
     <v-layout align-start>
         <v-flex>
             <v-toolbar flat color="white">
-                <v-toolbar-title>Director's fees - Fees de Director</v-toolbar-title>
+                <v-toolbar-title>Director's fees - Prospectos Aprobados</v-toolbar-title>
                 <v-snackbar
                     v-model="snackbar"
                     :timeout="timeout"

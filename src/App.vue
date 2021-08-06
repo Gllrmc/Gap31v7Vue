@@ -22,8 +22,9 @@
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
-                <v-list-tile-title>
-                  Gestionar Limbo
+                <v-list-tile-title class="title">
+                  <v-icon>label_important</v-icon>
+                  Limbo
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -123,8 +124,9 @@
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-content>
-                <v-list-tile-title>
-                  Gestionar Proyectos
+                <v-list-tile-title class="title">
+                  <v-icon>label_important</v-icon>
+                  Proyectos
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -229,7 +231,7 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile> -->
-            <v-list-tile :to="{ name: 'rendicionpfondos'}">
+            <v-list-tile :to="{ name: 'rendicionfondos'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
               </v-list-tile-action>
@@ -1036,7 +1038,7 @@
         <v-flex text-xs-center>
           <v-card flat tile color="primary" class="white--text">
             <v-card-text class="white--text pt-0">
-              Akiel &copy;2019 - Version 7.R31.8
+              Akiel &copy;2019 - Version 7.R31.8.6
             </v-card-text>
           </v-card>
         </v-flex>

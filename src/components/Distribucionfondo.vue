@@ -280,6 +280,8 @@
                     <td>{{ props.item.responsable }}</td>
                     <td>{{ props.item.fecpedido.substr(0, 10) }}</td>
                     <td class="text-xs-right">{{ formatPrice(props.item.importe) }}</td>
+                    <td class="text-xs-right">{{ formatPrice(props.item.impdist) }}</td>
+                    <td class="text-xs-right">{{ formatPrice(props.item.imppend) }}</td>
                     <td>{{ props.item.notas ? props.item.notas.substr(0, 20) : props.item.notas }}</td>
                 </template>
                 <template slot="no-data">
@@ -331,6 +333,8 @@
                     { text: 'Responsable', value: 'responsable', sortable: true },
                     { text: 'Fecha Pedido', value: 'fecpedido', sortable: true },
                     { text: 'Importe', value: 'importe', sortable: true },
+                    { text: 'Imp.Distribucion.', value: 'impdist', sortable: true },
+                    { text: 'Imp.Sin Distribuir', value: 'imppend', sortable: true },
                     { text: 'Notas', value: 'notas', sortable: true }          
                 ],
                 headersDetalle: [
