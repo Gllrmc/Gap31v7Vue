@@ -493,14 +493,20 @@
         methods:{
             crearXLS(){
                 this.json_fields = {
-                    'Fecha Pago': 'fecpago',
+                    'Fecha Pago':   {field: 'fecpago',
+                                    callback: (value) => {return value.substr(0,10)}
+                                    },
                     'Proveedor': 'proveedor',
                     '#Proyecto': 'proyectoorden',
                     'Proyecto': 'proyecto',
                     'Cbte' : 'tipocomprobante',
                     '#Cbte' : 'numcomprobante',
-                    'Fecha Cbte' : 'feccomprobante',
-                    'Imp.Total': 'imptotal',
+                    'Fecha Cbte' :  {field: 'feccomprobante',
+                        callback: (value) => {return value.substr(0,10)}
+                    },
+                    'Imp.Total': {field: 'imptotal',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
                     'Forma de Pago': 'forpago',
                     'Telefono': 'telefono',
                     'eMail': 'email',
@@ -514,7 +520,7 @@
                     '#Subitem': 'subitemorden',
                     'Subitem': 'subitemes'
                 },
-                this.json_data = this.ordenpagos;
+                this.json_data = this.ordenpagos.filter(x => x.activo === true);
                 // this.json_data = [];
                 // for (var x=0; x<this.ordenpagos.length; x++){
                 //     for (let i=0; i<this.items.length; i++){

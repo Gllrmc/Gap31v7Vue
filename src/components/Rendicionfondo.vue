@@ -471,13 +471,19 @@
                         'Item descripción': 'itemes',
                         '#Subitem': 'subitemorden',
                         'Nombre Proveedor' : 'proveedor',
-                        'Fecha Comprobante' : 'feccomprobante',
+                        'Fecha Comprobante' : {field: 'feccomprobante',
+                            callback: (value) => {return value.substr(0,10)}
+                        },
                         '#Hoja' : 'indiceinterno',
-                        'Imp.s/IVA': 'impsiniva',
-                        'Imp.Total': 'imptotal',
+                        'Imp.s/IVA': {field: 'impsiniva',
+                            callback: (value) => {return value.toString().replace('.',',')}
+                        },
+                        'Imp.Total': {field: 'imptotal',
+                            callback: (value) => {return value.toString().replace('.',',')}
+                        },
                         'Notas': 'notas'
                     },
-                    this.json_data = this.rendicionfondos;
+                    this.json_data = this.rendicionfondos.filter(x => x.activo === true);
                     // this.json_data = [];
                     // for (var x=0; x<this.ordenpagos.length; x++){
                     //     for (let i=0; i<this.items.length; i++){

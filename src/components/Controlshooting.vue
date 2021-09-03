@@ -246,20 +246,38 @@
                     'Cargo': 'cargo',
                     'Nombre': 'nombre',
                     'CUIL': 'cuil',
-                    'Fecha': 'fecha',
+                    'Fecha': {field: 'fecha',
+                        callback: (value) => {return value.substr(0,10)}
+                        },
                     'Hs.Base': 'hsbase',
                     'Hs.Normal': 'horas',
                     'Hs.Extra': 'hsext',
                     'Hs.Enganche': 'hseng',
                     'Hs.Nocturna': 'hsnoc',
-                    'Imp.Bruto': 'impbruto',
-                    'Imp.Retencion': 'impret',
-                    'Imp.SAC': 'impsac',
-                    'Imp.Vac.': 'impvac',
-                    'Imp.S/Vac.': 'impsacv',
-                    'Imp.Neto': 'impneto',
-                    'Imp.Contr.': 'impcontr',
-                    'Imp.Total': 'imptotal'
+                    'Imp.Bruto': {field: 'impbruto',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.Retencion': {field: 'impret',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.SAC': {field: 'impsac',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.Vac.': {field: 'impvac',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.S/Vac.': {field: 'impsacv',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.Neto': {field: 'impneto',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.Contr.': {field: 'impcontr',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.Total': {field: 'imptotal',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
                 },
                 // this.json_data = this.controlproyectos;
                 this.json_data = [];

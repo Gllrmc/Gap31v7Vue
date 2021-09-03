@@ -702,23 +702,26 @@
                 doc.save('Proyectos.pdf');
             },
             selectProyectosDeCliente(){
-                let me=this;
-                var proyectoRaizArray = [];
-                this.idraiz = "";
-                let header={"Authorization" : "Bearer " + this.$store.state.token};
-                let configuracion= {headers : header};
-                axios.get('api/Proyectos/SelectProyectosDeCliente/'+this.idcliente,configuracion)
-                .then(function(response){
-                    //console.log(response);
-                    proyectoRaizArray=response.data;
-                    proyectoRaizArray.map(function(x){
-                        me.raices.push({text: x.orden + ' ' + x.proyecto,value: x.idproyecto});
+                if (this.idcliente){
+                    let me=this;
+                    var proyectoRaizArray = [];
+                    me.raices = [];
+                    this.idraiz = "";
+                    let header={"Authorization" : "Bearer " + this.$store.state.token};
+                    let configuracion= {headers : header};
+                    axios.get('api/Proyectos/SelectProyectosDeCliente/'+this.idcliente,configuracion)
+                    .then(function(response){
+                        //console.log(response);
+                        proyectoRaizArray=response.data;
+                        proyectoRaizArray.map(function(x){
+                            me.raices.push({text: x.orden + ' ' + x.proyecto,value: x.idproyecto});
+                        });
+                    }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me.snackbar = true;
+                        console.log(error);
                     });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
+                }
             },            
             listar(){
                 let me=this;

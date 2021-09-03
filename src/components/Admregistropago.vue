@@ -252,6 +252,7 @@
                 :headers="headers"
                 :items="ordenpagos"
                 :search="search"
+                :pagination.sync="pagination"
                 class="elevation-1"
                 >
                 <template slot="items" slot-scope="props">
@@ -319,9 +320,6 @@
                     </v-alert>
                 </template>
             </v-data-table>
-            <v-flex class="text-xs-right">
-                <strong>Total: </strong>$ {{totalPendiente=formatPrice(calcularTotal)}}
-            </v-flex>                 
         </v-flex>
     </v-layout>
 </template>
@@ -334,6 +332,10 @@
     export default {
         data: () => {
             return {
+                pagination:{
+                    sortBy: 'fecpago',
+                    descending: true
+                },
                 snackbar:false,
                 snacktext: 'Hola',
                 timeout: 4000,
@@ -450,7 +452,6 @@
                 ],
                 totalVencido: 0,                 
                 totalPagar: 0,                 
-                totalPendiente: 0,                 
                 search: '',
                 editedIndex: -1,
                 valida: 0,
@@ -463,13 +464,6 @@
             }
         },
         computed: {
-            calcularTotal:function(){
-                var resultado=0.0;
-                for(var i=0;i<this.ordenpagos.length;i++){
-                    resultado=resultado+(this.ordenpagos[i].activo?this.ordenpagos[i].imptotal:0);
-                }
-                return resultado;
-            }                           
         },
         watch: {
             dialogForm (val) {

@@ -248,15 +248,25 @@
                     'Item' : 'item',
                     'Subitem': 'subitem',
                     'Proveedor': 'proveedor',
-                    'Fecha Cbte': 'feccomprobante',
+                    'Fecha Cbte': {field: 'feccomprobante',
+                        callback: (value) => {return value.substr(0,10)}
+                        },
                     'Tipo Cbte': 'tipocomprobante',
                     'Nro Cbte': 'numcomprobante',
-                    'Imp.Neto': 'impneto',
-                    'Imp.Total': 'imptotal',
-                    'Fecha Pago': 'fecpago',
+                    'Imp.Neto': {field: 'impneto',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.Total': {field: 'imptotal',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Fecha Pago': {field: 'fecpago',
+                        callback: (value) => {return value.substr(0,10)}
+                        },
                     'Pagado?': 'pagado',
                     'Forma de Pago': 'forpago',
-                    'Fecha Pagado': 'fecpagado',
+                    'Fecha Pagado': {field: 'fecpagado',
+                        callback: (value) => {return value.substr(0,10)}
+                        },
                     'Cta Gcom': 'cuentagcom' 
                 },
                 // this.json_data = this.controlpagos;

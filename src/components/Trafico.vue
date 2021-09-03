@@ -46,15 +46,12 @@
                 <template slot="items" slot-scope="props">
                     <td>{{ props.item.orden }}</td>
                     <td>{{ props.item.proyecto }}</td>
-                    <td>{{ props.item.cliente }}</td>
                     <td>{{ props.item.ep }}</td>
                     <td>{{ props.item.origen }}</td>
                     <td>{{ props.item.territorio }}</td>
-                    <td>{{ props.item.agencia }}</td>
                     <td>{{ props.item.pitch }}</td>
                     <td>{{ props.item.director }}</td>
                     <td>{{ props.item.codirector }}</td>
-                    <td>{{ props.item.productora }}</td>
                     <td>{{ props.item.tipoprod }}</td>
                     <td>{{ props.item.tipoproy }}</td>
                     <td>{{ props.item.estado }}</td>
@@ -67,56 +64,7 @@
                             {{ props.item.fecadjudicacion }}
                         </div>
                     </td>
-                    <td>
-                        <div v-if="props.item.fecpitch">
-                            {{ props.item.fecpitch.substr(0, 10) }}
-                        </div>
-                        <div v-else>
-                            {{ props.item.fecpitch }}
-                        </div>
-                    </td>
-                    <td>
-                        <div v-if="props.item.fecrodaje">
-                            {{ props.item.fecrodaje.substr(0, 10) }}
-                        </div>
-                        <div v-else>
-                            {{ props.item.fecrodaje }}
-                        </div>
-                    </td>
-                    <td>
-                        <div v-if="props.item.fecentrega">
-                            {{ props.item.fecentrega.substr(0, 10) }}
-                        </div>
-                        <div v-else>
-                            {{ props.item.fecentrega }}
-                        </div>
-                    </td>
                     <td>{{ props.item.comentario?props.item.comentario.substr(0, 50):"" }}</td>
-                    <td>
-                        <div v-if="props.item.visitaforanea">
-                            <span class="blue--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="red--text">No</span>
-                        </div>
-                    </td>                    
-                    <td>
-                        <div v-if="props.item.postinhouse">
-                            <span class="blue--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="red--text">No</span>
-                        </div>
-                    </td>                    
-                    <td>{{ props.item.posiciones }}</td>
-                    <td>
-                        <div v-if="props.item.editinhouse">
-                            <span class="blue--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="red--text">No</span>
-                        </div>
-                    </td>
                 </template>
                 <template slot="no-data">
                 <v-btn color="primary" @click="listar">Resetear</v-btn>
@@ -142,18 +90,14 @@
                         }
                     ]
                 ],
-                clientes:[],
-                productoras:[],               
                 origenes:[],
                 eps:[],
-                agencias:[],
                 pitchs:[],
                 directores:[],
                 tipoprods:[],
                 tipoproys:[],
                 estados:[],
                 resultados:[],
-                posicions:[],
                 snackbar:false,
                 snacktext: 'Hola',
                 timeout: 4000,
@@ -161,28 +105,18 @@
                 headers: [
                     { text: 'Orden', value: 'orden' },
                     { text: 'Nombre del Proyecto', value: 'proyecto' },
-                    { text: 'Nombre del Cliente', value: 'cliente' },
                     { text: 'Executive Producer', value: 'ep' },
                     { text: 'Nombre del Origen', value: 'origen' },
                     { text: 'Territorio', value: 'territorio' },
-                    { text: 'Nombre de Agencia', value: 'agencia' },
                     { text: 'Tipo de Pitch', value: 'pitch' },
                     { text: 'Nombre Director', value: 'director' },
                     { text: 'Nombre Co-director', value: 'codirector' },
-                    { text: 'Productora', value: 'productora' },
                     { text: 'Tipo Produción', value: 'tipoprod' },
                     { text: 'Tipo de Proyecto', value: 'tipoproy' },
                     { text: 'Estado', value: 'estado' },
                     { text: 'Fecha Ingreso', value: 'fecingreso' },
                     { text: 'Fecha Adjudic', value: 'fecadjudicacion' },
-                    { text: 'Fecha Pitch', value: 'fecpitch' },
-                    { text: 'Fecha Rodaje', value: 'fecrodaje' },
-                    { text: 'Fecha Entrega', value: 'fecentrega' },
                     { text: 'Comentario', value: 'comentario' },
-                    { text: 'VisExt', value: 'visitaforanea' },
-                    { text: 'PostInHouse', value: 'postinhouse' },
-                    { text: '#Posiciones', value: 'posiciones' },
-                    { text: 'EditInHouse', value: 'editinhouse' }
                 ],
                 search: '',
                 editedIndex: -1,
@@ -193,8 +127,6 @@
                 ep:'',
                 idorigen:'',
                 origen:'',
-                idagencia:'',
-                agencia:'',
                 idpitch:'',
                 pitch:'',
                 iddirector:'',
@@ -219,19 +151,11 @@
                 estado:'',
                 fecingreso:new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().substr(0,10),
                 fecadjudicacion:'',
-                fecpitch:'',
-                fecrodaje:'',
-                fecentrega:'',
                 aprobacion:false,
                 fecaprobacion:'',
                 idresultado:'',
                 resultado:'',
                 comentario:'',
-                visitaforanea:false,
-                postinhouse:false,
-                idposiciones:'',
-                posiciones:'',
-                editinhouse:false,
                 ars1usd:0,
                 iduseralta:'',
                 fecalta:'',
@@ -266,29 +190,23 @@
                 this.json_fields = {
                     'Orden': 'orden',
                     'Proyecto': 'proyecto',
-                    'Cliente': 'cliente',
                     'ExecutiveProducer': 'ep',
                     'Origen': 'origen',
-                    'Agencia' : 'agencia',
                     'Pitch': 'pitch',
                     'Director': 'director',
                     'CoDirector': 'codirector',
-                    'Productora': 'productora',
                     'TipoProduccion': 'tipoprod',
                     'TipoProyecto': 'tipoproy',
-                    'Estado': 'estado',
-                    'FechaIngreso': 'fecingreso',
-                    'FechaAdjud.': 'fecadjudicacion',
-                    'FechaPitch': 'fecpitch',
-                    'FechaRodaje': 'fecrodaje',
-                    'FechaEntrega': 'fecentrega',
+                    'Estado': 'activo',
+                    'FechaIngreso': {field: 'fecingreso',
+                        callback: (value) => {return value.substr(0,10)}
+                        },
+                    'FechaAdjud.': {field: 'fecadjudicacion',
+                        callback: (value) => {return value.substr(0,10)}
+                        },
                     'Comentario': 'comentario',
-                    'Vis.Ext.': 'visitaforanea',
-                    'PostInHouse': 'postinhouse',
-                    'Posiciones': 'posiciones',
-                    'EditInHouse': 'editinhouse'
                 },
-                this.json_data = this.limbos;
+                this.json_data = this.limbos.filter(x => x.activo === true);
                 },          
             crearPDF(){
                 var columns = [
@@ -328,42 +246,16 @@
             },
             select(){
                 let me=this;
-                var clientesArray=[];
-                var productorasArray=[];
                 var origenesArray=[];
                 var epsArray=[];
-                var agenciasArray=[];
                 var pitchsArray=[];
                 var directoresArray=[];
                 var tipoprodsArray=[];
                 var tipoproysArray=[];
                 var estadosArray=[];
                 var resultadosArray=[];
-                var posicionesArray=[];
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                axios.get('api/Clientes/Select',configuracion).then(function(response){
-                    //console.log(response);
-                    clientesArray=response.data;
-                    clientesArray.map(function(x){
-                        me.clientes.push({text: x.razonsocial,value:x.idcliente});
-                    });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
-                axios.get('api/Productoras/Select',configuracion).then(function(response){
-                    //console.log(response);
-                    productorasArray=response.data;
-                    productorasArray.map(function(x){
-                        me.productoras.push({text: x.productora,value:x.idproductora});
-                    });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
                 axios.get('api/Origenes/Select',configuracion).then(function(response){
                     //console.log(response);
                     origenesArray=response.data;
@@ -380,17 +272,6 @@
                     epsArray=response.data;
                     epsArray.map(function(x){
                         me.eps.push({text: x.nombre,value:x.idpersona});
-                    });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
-				axios.get('api/Agencias/Select',configuracion).then(function(response){
-                    //console.log(response);
-                    agenciasArray=response.data;
-                    agenciasArray.map(function(x){
-                        me.agencias.push({text: x.agencia,value:x.idagencia});
                     });
                 }).catch(function(error){
                     me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
@@ -464,17 +345,6 @@
                     me.snackbar = true;
                     console.log(error);
                 });
-				axios.get('api/Posiciones/Select',configuracion).then(function(response){
-                    //console.log(response);
-                    posicionesArray=response.data;
-                    posicionesArray.map(function(x){
-                        me.posicions.push({text: x.posicion,value:x.idposicion});
-                    });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
             },
             editItem (item) {
                 this.idlimbo=item.idlimbo;
@@ -482,7 +352,6 @@
                 this.proyecto=item.proyecto;
                 this.idep=item.idep;
                 this.idorigen=item.idorigen;
-                this.idagencia=item.idagencia;
                 this.idpitch=item.idpitch;
                 this.iddirector=item.iddirector;
                 this.idcodirector=item.idcodirector;
@@ -501,17 +370,10 @@
                 this.idestado=item.idestado;
                 this.fecingreso=item.fecingreso.substr(0, 10);
                 this.fecadjudicacion=item.fecadjudicacion?item.fecadjudicacion.substr(0, 10):item.fecadjudicacion;
-                this.fecpitch=item.fecpitch?item.fecpitch.substr(0, 10):item.fecpitch;
-                this.fecrodaje=item.fecrodaje?item.fecrodaje.substr(0, 10):item.fecrodaje;
-                this.fecentrega=item.fecentrega?item.fecentrega.substr(0, 10):item.fecentrega;
                 this.aprobacion=item.aprobacion;
                 this.fecaprobacion=item.fecaprobacion?item.fecaprobacion.substr(0, 16):item.fecaprobacion;
                 this.idresultado=item.idresultado;
                 this.comentario=item.comentario;
-                this.visitaforanea=item.visitaforanea;
-                this.postinhouse=item.postinhouse;
-                this.idposiciones=item.idposiciones;
-                this.editinhouse=item.editinhouse;
                 this.ars1usd=item.ars1usd;
                 this.iduseralta = item.iduseralta;
                 this.fecalta = item.fecalta;
@@ -531,7 +393,6 @@
                 this.proyecto="";
                 this.idep="";
                 this.idorigen="";
-                this.idagencia="";
                 this.idpitch="";
                 this.iddirector="";
                 this.idcodirector="";
@@ -550,17 +411,10 @@
                 this.idestado="";
                 this.fecingreso=new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().substr(0,10);
                 this.fecadjudicacion="";
-                this.fecpitch="";
-                this.fecrodaje="";
-                this.fecentrega="";
                 this.aprobacion=false;
                 this.fecaprobacion="";
                 this.idresultado="";
                 this.comentario="";
-                this.visitaforanea=false;
-                this.postinhouse=false;
-                this.idposiciones="";
-                this.editinhouse=false;
                 this.ars1usd=ars1usd;
                 this.iduseralta="";
                 this.fecalta="";

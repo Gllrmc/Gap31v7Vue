@@ -1,4 +1,4 @@
-<template>
+<template> 
     <v-layout align-start>
         <v-flex>
             <v-toolbar flat color="white">
@@ -36,13 +36,9 @@
                         <v-card-text>
                             <v-container grid-list-md>
                                 <v-layout wrap>
-                                    <!-- <v-flex xs12 sm12 md12>
-                                        <input type="checkbox" id="visita" v-model="activapitch">
-                                        <label for = "visita"> Pitch ? ({{pad(orden, 5)}}A)</label>
-                                    </v-flex>                                 -->
                                     <v-flex xs12 sm12 md12>
-                                        <input type="checkbox" id="postih" v-model="activaproy">
-                                        <label for = "postih"> Proyecto? ({{pad(orden, 5)}})</label>
+                                        <input type="checkbox" id="activarpro" v-model="activaproy">
+                                        <label for = "activarpro"> Proyecto? ({{pad(orden, 5)}})</label>
                                     </v-flex>
                                     <v-flex xs12 sm12 md12 v-show="valida">
                                         <div class="red--text" v-for="v in validaMensaje" :key="v" v-text="v">
@@ -100,15 +96,12 @@
                     </td>
                     <td>{{ props.item.orden }}</td>
                     <td>{{ props.item.proyecto }}</td>
-                    <td>{{ props.item.cliente }}</td>
                     <td>{{ props.item.ep }}</td>
                     <td>{{ props.item.origen }}</td>
                     <td>{{ props.item.territorio }}</td>
-                    <td>{{ props.item.agencia }}</td>
                     <td>{{ props.item.pitch }}</td>
                     <td>{{ props.item.director }}</td>
                     <td>{{ props.item.codirector }}</td>
-                    <td>{{ props.item.productora }}</td>
                     <td>{{ props.item.tipoprod }}</td>
                     <td>{{ props.item.impcosto }}</td>
                     <td>{{ props.item.porcontingencia }}</td>
@@ -132,30 +125,6 @@
                             {{ props.item.fecadjudicacion }}
                         </div>
                     </td>
-                    <td>
-                        <div v-if="props.item.fecpitch">
-                            {{ props.item.fecpitch.substr(0, 10) }}
-                        </div>
-                        <div v-else>
-                            {{ props.item.fecpitch }}
-                        </div>
-                    </td>
-                    <td>
-                        <div v-if="props.item.fecrodaje">
-                            {{ props.item.fecrodaje.substr(0, 10) }}
-                        </div>
-                        <div v-else>
-                            {{ props.item.fecrodaje }}
-                        </div>
-                    </td>
-                    <td>
-                        <div v-if="props.item.fecentrega">
-                            {{ props.item.fecentrega.substr(0, 10) }}
-                        </div>
-                        <div v-else>
-                            {{ props.item.fecentrega }}
-                        </div>
-                    </td>
                     <td>{{ props.item.resultado }}</td>
                     <td>
                         <div v-if="props.item.aprobacion">
@@ -167,31 +136,6 @@
                     </td>                    
                     <td>{{ props.item.fecaprobacion }}</td>
                     <td>{{ props.item.comentario?props.item.comentario.substr(0, 50):"" }}</td>
-                    <td>
-                        <div v-if="props.item.visitaforanea">
-                            <span class="blue--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="red--text">No</span>
-                        </div>
-                    </td>                    
-                    <td>
-                        <div v-if="props.item.postinhouse">
-                            <span class="blue--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="red--text">No</span>
-                        </div>
-                    </td>                    
-                    <td>{{ props.item.posiciones }}</td>
-                    <td>
-                        <div v-if="props.item.editinhouse">
-                            <span class="blue--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="red--text">No</span>
-                        </div>
-                    </td>
                     <td>{{ props.item.ars1usd?props.item.ars1usd.toFixed(2):"" }}</td>
                     <td>
                         <div v-if="props.item.activo">
@@ -228,15 +172,12 @@
                     { text: 'Opciones', value: 'opciones', sortable: false },
                     { text: 'Orden', value: 'orden' },
                     { text: 'Nombre del Proyecto', value: 'proyecto' },
-                    { text: 'Nombre del Cliente', value: 'cliente' },
                     { text: 'Executive Producer', value: 'ep' },
                     { text: 'Nombre del Origen', value: 'origen' },
                     { text: 'Territorio', value: 'territorio' },
-                    { text: 'Nombre de Agencia', value: 'agencia' },
                     { text: 'Tipo de Pitch', value: 'pitch' },
                     { text: 'Nombre Director', value: 'director' },
                     { text: 'Nombre Co-director', value: 'codirector' },
-                    { text: 'Productora', value: 'productora' },
                     { text: 'Tipo Produción', value: 'tipoprod' },
                     { text: 'Costo', value: 'impcosto' },
                     { text: '%Cont', value: 'porcontingencia' },
@@ -253,17 +194,10 @@
                     { text: 'Estado', value: 'estado' },
                     { text: 'Fecha Ingreso', value: 'fecingreso' },
                     { text: 'Fecha Adjudic', value: 'fecadjudicacion' },
-                    { text: 'Fecha Pitch', value: 'fecpitch' },
-                    { text: 'Fecha Rodaje', value: 'fecrodaje' },
-                    { text: 'Fecha Entrega', value: 'fecentrega' },
                     { text: 'Resultado', value: 'resultado' },
                     { text: 'Aprobacion', value: 'aprobacion' },
                     { text: 'Fecha de Aprobación', value: 'fecaprobacion' },
                     { text: 'Comentario', value: 'comentario' },
-                    { text: 'VisExt', value: 'visitaforanea' },
-                    { text: 'PostInHouse', value: 'postinhouse' },
-                    { text: '#Posiciones', value: 'posiciones' },
-                    { text: 'EditInHouse', value: 'editinhouse' },
                     { text: 'ARS/USD', value: 'ars1usd', sortable: true },
                     { text: 'Estado', value: 'activo', sortable: false  },
                     { text: 'Creado', value: 'iduseralta', sortable: true },
@@ -276,16 +210,12 @@
                 idlimbo:'',
                 orden:'',
                 proyecto:'',
-                idcliente:'',
-                cliente:'',
                 idep:'',
                 ep:'',
                 idorigen:'',
-                idagencia:'',
                 idpitch:'',
                 iddirector:'',
                 idcodirector:'',
-                idproductora:'',
                 idtipoprod:'',
                 impcosto:'',
                 porcontingencia:'',
@@ -302,19 +232,11 @@
                 idestado:'',
                 fecingreso:'',
                 fecadjudicacion:'',
-                fecpitch:'',
-                fecrodaje:'',
-                fecentrega:'',
                 aprobacion:false,
                 fecaprobacion:'',
                 idresultado:'',
                 resultado:'',
                 comentario:'',
-                visitaforanea:false,
-                postinhouse:false,
-                idposiciones:'',
-                posiciones:'',
-                editinhouse:false,
                 iduseralta:'',
                 fecalta:'',
                 iduserumod:'',
@@ -374,14 +296,11 @@
                 this.idlimbo=item.idlimbo;
                 this.orden=item.orden;
                 this.proyecto=item.proyecto;
-                this.idcliente=item.idcliente;
                 this.idep=item.idep;
                 this.idorigen=item.idorigen;
-                this.idagencia=item.idagencia;
                 this.idpitch=item.idpitch;
                 this.iddirector=item.iddirector;
                 this.idcodirector=item.idcodirector;
-                this.idproductora=item.idproductora;
                 this.idtipoprod=item.idtipoprod;
                 this.impcosto=item.impcosto;
                 this.porcontingencia=item.porcontingencia;
@@ -398,17 +317,10 @@
                 this.idestado=item.idestado;
                 this.fecingreso=item.fecingreso.substr(0, 10);
                 this.fecadjudicacion=item.fecadjudicacion?item.fecadjudicacion.substr(0, 10):item.fecadjudicacion;
-                this.fecpitch=item.fecpitch?item.fecpitch.substr(0, 10):item.fecpitch;
-                this.fecrodaje=item.fecrodaje?item.fecrodaje.substr(0, 10):item.fecrodaje;
-                this.fecentrega=item.fecentrega?item.fecentrega.substr(0, 10):item.fecentrega;
                 this.aprobacion=item.aprobacion;
                 this.fecaprobacion=item.fecaprobacion?item.fecaprobacion.substr(0, 16):item.fecaprobacion;
                 this.idresultado=item.idresultado;
                 this.comentario=item.comentario;
-                this.visitaforanea=item.visitaforanea;
-                this.postinhouse=item.postinhouse;
-                this.idposiciones=item.idposiciones;
-                this.editinhouse=item.editinhouse;
                 this.ars1usd=item.ars1usd;
                 this.iduseralta = item.iduseralta;
                 this.fecalta = item.fecalta;
@@ -425,14 +337,11 @@
                 this.idlimbo="";
                 this.orden="";
                 this.proyecto="";
-                this.idcliente="";
                 this.idep="";
                 this.idorigen="";
-                this.idagencia="";
                 this.idpitch="";
                 this.iddirector="";
                 this.idcodirector="";
-                this.idproductora="";
                 this.idtipoprod="";
                 this.impcosto="";
                 this.porcontingencia="";
@@ -449,17 +358,10 @@
                 this.idestado="";
                 this.fecingreso=new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().substr(0,10);
                 this.fecadjudicacion="";
-                this.fecpitch="";
-                this.fecrodaje="";
-                this.fecentrega="";
                 this.aprobacion=false;
                 this.fecaprobacion="";
                 this.idresultado="";
                 this.comentario="";
-                this.visitaforanea=false;
-                this.postinhouse=false;
-                this.idposiciones="";
-                this.editinhouse=false;
                 this.ars1usd=0;
                 this.iduseralta="";
                 this.fecalta="";
@@ -484,9 +386,9 @@
                         'idtipoprod': me.idtipoprod,
                         'idempresa': '',
                         'idorigen': me.idorigen,
-                        'idagencia': me.idagencia,
-                        'idproductora': me.idproductora,
-                        'idcliente': me.idcliente,
+                        'idagencia': '',
+                        'idproductora': '',
+                        'idcliente': '',
                         'iddirector': me.iddirector,
                         'idcodirector': me.idcodirector,
                         'idep': me.idep,
@@ -522,9 +424,9 @@
                         'idtipoprod': me.idtipoprod,
                         'idempresa': '',
                         'idorigen': me.idorigen,
-                        'idagencia': me.idagencia,
-                        'idproductora': me.idproductora,
-                        'idcliente': me.idcliente,
+                        'idagencia': '',
+                        'idproductora': '',
+                        'idcliente': '',
                         'iddirector': me.iddirector,
                         'idcodirector': me.idcodirector,
                         'idep': me.idep,
@@ -557,26 +459,17 @@
                 if (this.proyecto.length<3 || this.proyecto.length>50){
                     this.validaMensaje.push("El nombre del proyecto no debe tener menos de 3 caracteres y mas de 50 caracteres.");
                 }
-                if (!this.idcliente){
-                    this.validaMensaje.push("Seleccione un Cliente.");
-                }
                 if (!this.idep){
                     this.validaMensaje.push("Seleccione un Executive Producer.");
                 }
                 if (!this.idorigen){
                     this.validaMensaje.push("Seleccione un Origen.");
                 }
-                if (!this.idagencia){
-                    this.validaMensaje.push("Seleccione una Agencia.");
-                }
                 if (!this.idpitch){
                     this.validaMensaje.push("Seleccione un Pitch.");
                 }
                 if (!this.iddirector){
                     this.validaMensaje.push("Seleccione un Director.");
-                }
-                if (!this.idproductora){
-                    this.validaMensaje.push("Seleccione una Productora.");
                 }
                 if (!this.idtipoprod){
                     this.validaMensaje.push("Seleccione un Tipo de Producción.");
@@ -595,9 +488,6 @@
                 }
                 if (!this.fecingreso){
                     this.validaMensaje.push("Ingrese una fecha de ingreso.");
-                }
-                if (!this.idposiciones){
-                    this.validaMensaje.push("Seleccione las posiciones requeridas.");
                 }
                 if (this.validaMensaje.length){
                     this.valida=1;

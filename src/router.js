@@ -45,6 +45,7 @@ import Devolucionfondo from './components/Devolucionfondo.vue';
 import Ordenpago from './components/Ordenpago.vue';
 import Registropago from './components/Registropago.vue';
 import Admregistropago from './components/Admregistropago.vue';
+import Reversionpago from './components/Reversionpago.vue';
 import Solcheque from './components/Solcheque.vue';
 import Entcheque from './components/Entcheque.vue';
 import Reccheque from './components/Reccheque.vue';
@@ -418,6 +419,21 @@ var router = new Router({
             meta: {
                 administrador: true,
                 jefeadministracion: true,
+                asistadministracion: false,
+                executiveproducer: false,
+                lineproducer: false,
+                chiefproducer: false,
+                asistproduccion: false,
+                asistgeneral: false
+            }
+        },
+        {
+            path: '/reversionpagos',
+            name: 'reversionpagos',
+            component: Reversionpago,
+            meta: {
+                administrador: true,
+                jefeadministracion: false,
                 asistadministracion: false,
                 executiveproducer: false,
                 lineproducer: false,

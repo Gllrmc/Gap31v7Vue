@@ -292,6 +292,16 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+            <v-list-tile :to="{ name: 'reversionpagos'}"> 
+              <v-list-tile-action>
+                <v-icon>table_chart</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>
+                  Reversion Registro Pagos
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
             <v-list-tile :to="{ name: 'proveedores'}">
               <v-list-tile-action>
                 <v-icon>table_chart</v-icon>
@@ -1038,7 +1048,7 @@
         <v-flex text-xs-center>
           <v-card flat tile color="primary" class="white--text">
             <v-card-text class="white--text pt-0">
-              Akiel &copy;2019 - Version 7.R31.8.6
+              Akiel &copy;2019 - Version 7.R31.8.8
             </v-card-text>
           </v-card>
         </v-flex>

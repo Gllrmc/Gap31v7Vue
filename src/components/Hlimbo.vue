@@ -1,5 +1,5 @@
 <template>
-    <v-layout align-start>
+    <v-layout align-start> 
         <v-flex>
             <v-toolbar flat color="white">
                 <v-btn @click="crearPDF()"><v-icon>print</v-icon></v-btn>
@@ -43,28 +43,14 @@
                                 <v-flex xs1 sm1 md1>
                                     <v-text-field v-model="orden" label="Nro Limbo" disabled></v-text-field>
                                 </v-flex>
-                                <v-flex xs7 sm7 md7>
+                                <v-flex xs8 sm8 md8>
                                     <v-text-field v-model="proyecto" label="Nombre del Proyecto" disabled></v-text-field>
                                 </v-flex>
-                                <v-flex xs4 sm4 md4>
-                                    <v-autocomplete 
-                                        v-model="idcliente"
-                                        clearable
-                                        disabled
-                                        :search-input.sync="searchcl" 
-                                        :items = "clientes" 
-                                        label = "Cliente">
-                                    </v-autocomplete>
-                                </v-flex>                               
                                 <v-flex xs3 sm3 md3>
-                                    <v-autocomplete 
-                                        v-model="idep" 
-                                        disabled
-                                        clearable
-                                        :search-input.sync="searchep" 
-                                        :items = "eps" 
-                                        label = "E.P.">
-                                    </v-autocomplete>
+                                    <v-select v-model="idestado"
+                                    disabled
+                                    :items = "estados" label = "Estado">
+                                    </v-select>
                                 </v-flex>
                                 <v-flex xs3 sm3 md3>
                                     <v-autocomplete 
@@ -77,16 +63,6 @@
                                     </v-autocomplete>
                                 </v-flex>
                                 <v-flex xs3 sm3 md3>
-                                    <v-autocomplete 
-                                        v-model="idagencia"
-                                        disabled
-                                        clearable
-                                        :search-input.sync="searchag" 
-                                        :items = "agencias" 
-                                        label = "Agencia">
-                                    </v-autocomplete>
-                                </v-flex>
-                                <v-flex xs3 sm3 md3>
                                     <v-select 
                                         v-model="idpitch"
                                         disabled
@@ -95,6 +71,29 @@
                                     </v-select>
                                 </v-flex>
                                 <v-flex xs3 sm3 md3>
+                                    <v-select v-model="idtipoprod"
+                                    disabled
+                                    :items = "tipoprods" label = "Tipo de Produccion">
+                                    </v-select>
+                                </v-flex>
+                                <v-flex xs3 sm3 md3>
+                                    <v-select v-model="idtipoproy"
+                                    disabled
+                                    :items = "tipoproys" 
+                                    label = "Tipo de Proyecto">
+                                    </v-select>
+                                </v-flex>
+                                <v-flex xs4 sm4 md4>
+                                    <v-autocomplete 
+                                        v-model="idep" 
+                                        disabled
+                                        clearable
+                                        :search-input.sync="searchep" 
+                                        :items = "eps" 
+                                        label = "E.P.">
+                                    </v-autocomplete>
+                                </v-flex>
+                                <v-flex xs4 sm4 md4>
                                     <v-autocomplete 
                                         v-model="iddirector"
                                         disabled
@@ -103,7 +102,7 @@
                                         label = "Director">
                                     </v-autocomplete>
                                 </v-flex>
-                                <v-flex xs3 sm3 md3>
+                                <v-flex xs4 sm4 md4>
                                     <v-autocomplete 
                                         v-model="idcodirector"
                                         disabled
@@ -112,25 +111,6 @@
                                         :items = "directores" 
                                         label = "Co-director">
                                     </v-autocomplete>
-                                </v-flex>
-                                <v-flex xs2 sm2 md2>
-                                    <v-select v-model="idtipoprod"
-                                    disabled
-                                    :items = "tipoprods" label = "Tipo de Produccion">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs2 sm2 md2>
-                                    <v-select v-model="idestado"
-                                    disabled
-                                    :items = "estados" label = "Estado">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs2 sm2 md2>
-                                    <v-select v-model="idtipoproy"
-                                    disabled
-                                    :items = "tipoproys" 
-                                    label = "Tipo de Proyecto">
-                                    </v-select>
                                 </v-flex>
                                 <v-flex xs5 sm5 md5>
                                     <v-text-field v-model="impcosto"
@@ -240,7 +220,7 @@
                                     </v-text-field>    
                                 </v-flex>
                                 <template>
-                                    <v-flex xs2 sm2 md2>
+                                    <v-flex xs3 sm3 md3>
                                         <v-menu
                                             v-model="menu1"
                                             :close-on-content-click="false"
@@ -266,7 +246,7 @@
                                     </v-flex>
                                 </template>
                                 <template>
-                                    <v-flex xs2 sm2 md2>
+                                    <v-flex xs3 sm3 md3>
                                         <v-menu
                                             v-model="menu2"
                                             :close-on-content-click="false"
@@ -296,124 +276,7 @@
                                         </v-menu>
                                     </v-flex>
                                 </template>
-                                <template>
-                                    <v-flex xs2 sm2 md2>
-                                        <v-menu
-                                            v-model="menu3"
-                                            :close-on-content-click="false"
-                                            :nudge-right="40"
-                                            lazy
-                                            transition="scale-transition"
-                                            offset-y
-                                            full-width
-                                            min-width="290px"
-                                        >
-                                            <template v-slot:activator="{ on }">
-                                                <v-text-field
-                                                    v-model="fecpitch"
-                                                    disabled
-                                                    label="Pitch"
-                                                    prepend-icon="event"
-                                                    readonly
-                                                    clearable 
-                                                    v-on="on"
-                                                ></v-text-field>
-                                            </template>
-                                            <v-date-picker 
-                                                v-model="fecpitch" 
-                                                :min = "fecingreso" 
-                                                @input="menu3 = false">
-                                            </v-date-picker>
-                                        </v-menu>
-                                    </v-flex>
-                                </template>
-                                <template>
-                                    <v-flex xs2 sm2 md2>
-                                        <v-menu
-                                            v-model="menu4"
-                                            :close-on-content-click="false"
-                                            :nudge-right="40"
-                                            lazy
-                                            transition="scale-transition"
-                                            offset-y
-                                            full-width
-                                            min-width="290px"
-                                        >
-                                            <template v-slot:activator="{ on }">
-                                                <v-text-field
-                                                    v-model="fecrodaje"
-                                                    disabled
-                                                    label="Rodaje"
-                                                    prepend-icon="event"
-                                                    readonly
-                                                    clearable 
-                                                    v-on="on"
-                                                ></v-text-field>
-                                            </template>
-                                            <v-date-picker 
-                                                v-model="fecrodaje"
-                                                disabled 
-                                                :min = "fecadjudicacion" 
-                                                @input="menu2 = false">
-                                            </v-date-picker>
-                                        </v-menu>
-                                    </v-flex>
-                                </template>
-                                <template>
-                                    <v-flex xs2 sm2 md2>
-                                        <v-menu
-                                            v-model="menu5"
-                                            :close-on-content-click="false"
-                                            :nudge-right="40"
-                                            lazy
-                                            transition="scale-transition"
-                                            offset-y
-                                            full-width
-                                            min-width="290px"
-                                        >
-                                            <template v-slot:activator="{ on }">
-                                                <v-text-field
-                                                    v-model="fecentrega"
-                                                    disabled
-                                                    label="Entrega"
-                                                    prepend-icon="event"
-                                                    clearable 
-                                                    readonly
-                                                    v-on="on"
-                                                ></v-text-field>
-                                            </template>
-                                            <v-date-picker 
-                                                v-model="fecentrega" 
-                                                :min = "fecadjudicacion" 
-                                                @input="menu2 = false">
-                                            </v-date-picker>
-                                        </v-menu>
-                                    </v-flex>
-                                </template>
-                                <v-flex xs2 sm2 md2>
-                                    <v-select v-model="idproductora"
-                                    :items = "productoras" clearable disabled label = "Productora">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs2 sm2 md2>
-                                    <input type="checkbox" id="visita" v-model="visitaforanea" disabled>
-                                    <label for = "visita"> Visita BUE?</label>
-                                </v-flex>                                
-                                <v-flex xs2 sm2 md2>
-                                    <input type="checkbox" id="postih" v-model="postinhouse" disabled>
-                                    <label for = "postih"> Post InHouse?</label>
-                                </v-flex>
-                                <v-flex xs2 sm2 md2>
-                                    <input type="checkbox" id="editih" v-model="editinhouse" disabled>
-                                    <label for = "editih"> Edit InHouse?</label>
-                                </v-flex>
-                                <v-flex xs2 sm2 md2>
-                                    <v-select v-model="idposiciones"
-                                    disabled
-                                    :items = "posicions" label = "Posiciones">
-                                    </v-select>
-                                </v-flex>
-                                <v-flex xs2 sm2 md2>
+                                <v-flex xs3 sm3 md3>
                                     <v-text-field v-model="ars1usd"
                                     disabled
                                     prefix="$"
@@ -422,7 +285,7 @@
                                     >
                                     </v-text-field>    
                                 </v-flex>
-                                <v-flex xs2 sm2 md2>
+                                <v-flex xs3 sm3 md3>
                                     <v-select v-model="idresultado"
                                     :items = "resultados" clearable label = "Resultado">
                                     </v-select>
@@ -506,15 +369,12 @@
                     </td>
                     <td>{{ props.item.orden }}</td>
                     <td>{{ props.item.proyecto }}</td>
-                    <td>{{ props.item.cliente }}</td>
                     <td>{{ props.item.ep }}</td>
                     <td>{{ props.item.origen }}</td>
                     <td>{{ props.item.territorio }}</td>
-                    <td>{{ props.item.agencia }}</td>
                     <td>{{ props.item.pitch }}</td>
                     <td>{{ props.item.director }}</td>
                     <td>{{ props.item.codirector }}</td>
-                    <td>{{ props.item.productora }}</td>
                     <td>{{ props.item.tipoprod }}</td>
                     <td>{{ props.item.impcosto }}</td>
                     <td>{{ props.item.porcontingencia }}</td>
@@ -538,30 +398,6 @@
                             {{ props.item.fecadjudicacion }}
                         </div>
                     </td>
-                    <td>
-                        <div v-if="props.item.fecpitch">
-                            {{ props.item.fecpitch.substr(0, 10) }}
-                        </div>
-                        <div v-else>
-                            {{ props.item.fecpitch }}
-                        </div>
-                    </td>
-                    <td>
-                        <div v-if="props.item.fecrodaje">
-                            {{ props.item.fecrodaje.substr(0, 10) }}
-                        </div>
-                        <div v-else>
-                            {{ props.item.fecrodaje }}
-                        </div>
-                    </td>
-                    <td>
-                        <div v-if="props.item.fecentrega">
-                            {{ props.item.fecentrega.substr(0, 10) }}
-                        </div>
-                        <div v-else>
-                            {{ props.item.fecentrega }}
-                        </div>
-                    </td>
                     <td>{{ props.item.resultado }}</td>
                     <td>
                         <div v-if="props.item.aprobacion">
@@ -573,31 +409,6 @@
                     </td>                    
                     <td>{{ props.item.fecaprobacion }}</td>
                     <td>{{ props.item.comentario?props.item.comentario.substr(0, 50):"" }}</td>
-                    <td>
-                        <div v-if="props.item.visitaforanea">
-                            <span class="blue--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="red--text">No</span>
-                        </div>
-                    </td>                    
-                    <td>
-                        <div v-if="props.item.postinhouse">
-                            <span class="blue--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="red--text">No</span>
-                        </div>
-                    </td>                    
-                    <td>{{ props.item.posiciones }}</td>
-                    <td>
-                        <div v-if="props.item.editinhouse">
-                            <span class="blue--text">Si</span>
-                        </div>
-                        <div v-else>
-                            <span class="red--text">No</span>
-                        </div>
-                    </td>                    
                     <td>{{ props.item.ars1usd?props.item.ars1usd.toFixed(2):"" }}</td>
                     <td>
                         <div v-if="props.item.activo">
@@ -637,18 +448,14 @@
                 searchdi:'',
                 searchco:'',
                 searchcl:'',
-                clientes:[],
-                productoras:[],               
                 origenes:[],
                 eps:[],
-                agencias:[],
                 pitchs:[],
                 directores:[],
                 tipoprods:[],
                 tipoproys:[],
                 estados:[],
                 resultados:[],
-                posicions:[],
                 snackbar:false,
                 snacktext: 'Hola',
                 timeout: 4000,
@@ -657,15 +464,12 @@
                     { text: 'Opciones', value: 'opciones', sortable: false },
                     { text: 'Orden', value: 'orden' },
                     { text: 'Nombre del Proyecto', value: 'proyecto' },
-                    { text: 'Nombre del Cliente', value: 'cliente' },
                     { text: 'Executive Producer', value: 'ep' },
                     { text: 'Nombre del Origen', value: 'origen' },
                     { text: 'Territorio', value: 'territorio' },
-                    { text: 'Nombre de Agencia', value: 'agencia' },
                     { text: 'Tipo de Pitch', value: 'pitch' },
                     { text: 'Nombre Director', value: 'director' },
                     { text: 'Nombre Co-director', value: 'codirector' },
-                    { text: 'Productora', value: 'productora' },
                     { text: 'Tipo Produción', value: 'tipoprod' },
                     { text: 'Costo', value: 'impcosto' },
                     { text: '%Cont', value: 'porcontingencia' },
@@ -682,17 +486,10 @@
                     { text: 'Estado', value: 'estado' },
                     { text: 'Fecha Ingreso', value: 'fecingreso' },
                     { text: 'Fecha Adjudic', value: 'fecadjudicacion' },
-                    { text: 'Fecha Pitch', value: 'fecpitch' },
-                    { text: 'Fecha Rodaje', value: 'fecrodaje' },
-                    { text: 'Fecha Entrega', value: 'fecentrega' },
                     { text: 'Resultado', value: 'resultado' },
                     { text: 'Aprobacion', value: 'aprobacion' },
                     { text: 'Fecha de Aprobacion', value: 'fecaprobacion' },
                     { text: 'Comentario', value: 'comentario' },
-                    { text: 'VisExt', value: 'visitaforanea' },
-                    { text: 'PostInHouse', value: 'postinhouse' },
-                    { text: '#Posiciones', value: 'posiciones' },
-                    { text: 'EditInHouse', value: 'editinhouse' },
                     { text: 'ARS/USD', value: 'ars1usd', sortable: true },
                     { text: 'Estado', value: 'activo', sortable: false  },
                     { text: 'Creado', value: 'iduseralta', sortable: true },
@@ -704,23 +501,17 @@
                 idlimbo:'',
                 orden:'',
                 proyecto:'',
-                idcliente:'',
-                cliente:'',
                 idep:'',
                 ep:'',
                 idorigen:'',
                 territorio:'',
                 origen:'',
-                idagencia:'',
-                agencia:'',
                 idpitch:'',
                 pitch:'',
                 iddirector:'',
                 director:'',
                 idcodirector:'',
                 codirector:'',
-                idproductora:'',
-                productora:'',
                 idtipoprod:'',
                 tipoprod:'',
                 impcosto: 0,
@@ -740,19 +531,11 @@
                 estado:'',
                 fecingreso:new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().substr(0,10),
                 fecadjudicacion:'',
-                fecpitch:'',
-                fecrodaje:'',
-                fecentrega:'',
                 aprobacion:false,
                 fecaprobacion:'',
                 idresultado:'',
                 resultado:'',
                 comentario:'',
-                visitaforanea:false,
-                postinhouse:false,
-                idposiciones:'',
-                posiciones:'',
-                editinhouse:false,
                 ars1usd: 0,
                 iduseralta:'',
                 fecalta:'',
@@ -842,42 +625,16 @@
             },
             select(){
                 let me=this;
-                var clientesArray=[];
-                var productorasArray=[];
                 var origenesArray=[];
                 var epsArray=[];
-                var agenciasArray=[];
                 var pitchsArray=[];
                 var directoresArray=[];
                 var tipoprodsArray=[];
                 var tipoproysArray=[];
                 var estadosArray=[];
                 var resultadosArray=[];
-                var posicionesArray=[];
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                axios.get('api/Clientes/Select',configuracion).then(function(response){
-                    //console.log(response);
-                    clientesArray=response.data;
-                    clientesArray.map(function(x){
-                        me.clientes.push({text: x.razonsocial,value:x.idcliente});
-                    });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
-                axios.get('api/Productoras/Select',configuracion).then(function(response){
-                    //console.log(response);
-                    productorasArray=response.data;
-                    productorasArray.map(function(x){
-                        me.productoras.push({text: x.productora,value:x.idproductora});
-                    });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
                 axios.get('api/Origenes/Select',configuracion).then(function(response){
                     //console.log(response);
                     origenesArray=response.data;
@@ -914,17 +671,6 @@
                         console.log(error);
                     });
                 }
-				axios.get('api/Agencias/Select',configuracion).then(function(response){
-                    //console.log(response);
-                    agenciasArray=response.data;
-                    agenciasArray.map(function(x){
-                        me.agencias.push({text: x.agencia,value:x.idagencia});
-                    });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
 				axios.get('api/Pitchs/Select',configuracion).then(function(response){
                     //console.log(response);
                     pitchsArray=response.data;
@@ -992,30 +738,16 @@
                     me.snackbar = true;
                     console.log(error);
                 });
-				axios.get('api/Posiciones/Select',configuracion).then(function(response){
-                    //console.log(response);
-                    posicionesArray=response.data;
-                    posicionesArray.map(function(x){
-                        me.posicions.push({text: x.posicion,value:x.idposicion});
-                    });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me.snackbar = true;
-                    console.log(error);
-                });
             },
             editItem (item) {
                 this.idlimbo=item.idlimbo;
                 this.orden=item.orden;
                 this.proyecto=item.proyecto;
-                this.idcliente=item.idcliente;
                 this.idep=item.idep;
                 this.idorigen=item.idorigen;
-                this.idagencia=item.idagencia;
                 this.idpitch=item.idpitch;
                 this.iddirector=item.iddirector;
                 this.idcodirector=item.idcodirector;
-                this.idproductora=item.idproductora;
                 this.idtipoprod=item.idtipoprod;
                 this.impcosto=item.impcosto;
                 this.porcontingencia=item.porcontingencia;
@@ -1032,17 +764,10 @@
                 this.idestado=item.idestado;
                 this.fecingreso=item.fecingreso.substr(0, 10);
                 this.fecadjudicacion=item.fecadjudicacion?item.fecadjudicacion.substr(0, 10):item.fecadjudicacion;
-                this.fecpitch=item.fecpitch?item.fecpitch.substr(0, 10):item.fecpitch;
-                this.fecrodaje=item.fecrodaje?item.fecrodaje.substr(0, 10):item.fecrodaje;
-                this.fecentrega=item.fecentrega?item.fecentrega.substr(0, 10):item.fecentrega;
                 this.aprobacion=item.aprobacion;
                 this.fecaprobacion=item.fecaprobacion?item.fecaprobacion.substr(0, 16):item.fecaprobacion;
                 this.idresultado=item.idresultado;
                 this.comentario=item.comentario;
-                this.visitaforanea=item.visitaforanea;
-                this.postinhouse=item.postinhouse;
-                this.idposiciones=item.idposiciones;
-                this.editinhouse=item.editinhouse;
                 this.ars1usd=item.ars1usd;
                 this.iduseralta = item.iduseralta;
                 this.fecalta = item.fecalta;
@@ -1060,14 +785,11 @@
                 this.idlimbo="";
                 this.orden="";
                 this.proyecto="";
-                this.idcliente="";
                 this.idep="";
                 this.idorigen="";
-                this.idagencia="";
                 this.idpitch="";
                 this.iddirector="";
                 this.idcodirector="";
-                this.idproductora="";
                 this.idtipoprod="";
                 this.impcosto= 0;
                 this.porcontingencia= 0;
@@ -1084,17 +806,10 @@
                 this.idestado="";
                 this.fecingreso=new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().substr(0,10);
                 this.fecadjudicacion="";
-                this.fecpitch="";
-                this.fecrodaje="";
-                this.fecentrega="";
                 this.aprobacion=false;
                 this.fecaprobacion="";
                 this.idresultado="";
                 this.comentario="";
-                this.visitaforanea=false;
-                this.postinhouse=false;
-                this.idposiciones="";
-                this.editinhouse=false;
                 this.ars1usd=0;
                 this.iduseralta="";
                 this.fecalta="";
@@ -1118,14 +833,11 @@
                         'idlimbo':me.idlimbo,
                         'orden': me.orden,
                         'proyecto': me.proyecto,
-                        'idcliente': me.idcliente,
                         'idep': me.idep,
                         'idorigen': me.idorigen,
-                        'idagencia': me.idagencia,
                         'idpitch': me.idpitch,
                         'iddirector': me.iddirector,
                         'idcodirector': me.idcodirector,
-                        'idproductora': me.idproductora,
                         'idtipoprod': me.idtipoprod,
                         'impcosto': me.impcosto,
                         'porcontingencia': me.porcontingencia,
@@ -1139,17 +851,10 @@
                         'idestado': me.idestado,
                         'fecingreso': me.fecingreso,
                         'fecadjudicacion': me.fecadjudicacion,
-                        'fecpitch': me.fecpitch,
-                        'fecrodaje': me.fecrodaje,
-                        'fecentrega': me.fecentrega,
                         'aprobacion': me.idresultado?me.aprobacion:false,
                         'fecaprobacion': me.idresultado?me.fecaprobacion:"",
                         'idresultado': me.idresultado,
                         'comentario': me.comentario,
-                        'visitaforanea': me.visitaforanea,
-                        'postinhouse': me.postinhouse,
-                        'idposiciones': me.idposiciones,
-                        'editinhouse': me.editinhouse,
                         'ars1usd': me.ars1usd,
                         'iduseralta': me.iduseralta,
                         'fecalta': me.fecalta,
@@ -1168,14 +873,11 @@
                     //Código para guardar
                     axios.post('api/Limbos/Crear',{
                         'proyecto': me.proyecto,
-                        'idcliente': me.idcliente,
                         'idep': me.idep,
                         'idorigen': me.idorigen,
-                        'idagencia': me.idagencia,
                         'idpitch': me.idpitch,
                         'iddirector': me.iddirector,
                         'idcodirector': me.idcodirector,
-                        'idproductora': me.idproductora,
                         'idtipoprod': me.idtipoprod,
                         'impcosto': me.impcosto,
                         'porcontingencia': me.porcontingencia,
@@ -1189,17 +891,10 @@
                         'idestado': me.idestado,
                         'fecingreso': me.fecingreso,
                         'fecadjudicacion': me.fecadjudicacion,
-                        'fecpitch': me.fecpitch,
-                        'fecrodaje': me.fecrodaje,
-                        'fecentrega': me.fecentrega,
                         'aprobacion': me.idresultado?me.aprobacion:false,
                         'fecaprobacion': me.idresultado?me.fecaprobacion:"",
                         'idresultado': me.idresultado,
                         'comentario': me.comentario,
-                        'visitaforanea': me.visitaforanea,
-                        'postinhouse': me.postinhouse,
-                        'idposiciones': me.idposiciones,
-                        'editinhouse': me.editinhouse,
                         'ars1usd': me.ars1usd,
                         'iduseralta': me.$store.state.usuario.idusuario
                     },configuracion).then(function(response){
@@ -1233,26 +928,17 @@
                 if (this.proyecto.length<3 || this.proyecto.length>50){
                     this.validaMensaje.push("El nombre del proyecto no debe tener menos de 3 caracteres y mas de 50 caracteres.");
                 }
-                if (!this.idcliente){
-                    this.validaMensaje.push("Seleccione un Cliente.");
-                }
                 if (!this.idep){
                     this.validaMensaje.push("Seleccione un Executive Producer.");
                 }
                 if (!this.idorigen){
                     this.validaMensaje.push("Seleccione un Origen.");
                 }
-                if (!this.idagencia){
-                    this.validaMensaje.push("Seleccione una Agencia.");
-                }
                 if (!this.idpitch){
                     this.validaMensaje.push("Seleccione un Pitch.");
                 }
                 if (!this.iddirector){
                     this.validaMensaje.push("Seleccione un Director.");
-                }
-                if (!this.idproductora){
-                    this.validaMensaje.push("Seleccione una Productora.");
                 }
                 if (!this.idtipoprod){
                     this.validaMensaje.push("Seleccione un Tipo de Producción.");
@@ -1274,9 +960,6 @@
                 }
                 if (!this.fecingreso){
                     this.validaMensaje.push("Ingrese una fecha de ingreso.");
-                }
-                if (!this.idposiciones){
-                    this.validaMensaje.push("Seleccione las posiciones requeridas.");
                 }
                 if (this.validaMensaje.length){
                     this.valida=1;

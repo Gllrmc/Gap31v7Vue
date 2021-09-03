@@ -229,7 +229,9 @@
                     'Subrubro': 'subrubro',
                     'Item' : 'item',
                     'Subitem': 'subitem',
-                    'Importe': 'importe'
+                    'Importe': {field: 'importe',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
                 },
                 this.json_data = this.controlrendiciones;
                 },          

@@ -235,13 +235,23 @@
                     'Subitem': 'subitem',
                     'Proveedor': 'proveedor',
                     'CUIT': 'cuit',
-                    'Fecha': 'fecha',
+                    'Fecha': {field: 'fecha',
+                        callback: (value) => {return value.substr(0,10)}
+                        },
                     '# HHEE': 'hhee',
                     '% HHEE': 'porhhee',
-                    'Imp.Base': 'impbase',
-                    'Imp.HHEE': 'imphhee',
-                    'Imp.Adic': 'impadic',
-                    'Imp.Total': 'imptotal'
+                    'Imp.Base': {field: 'impbase',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.HHEE': {field: 'imphhee',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.Adic': {field: 'impadic',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
+                    'Imp.Total': {field: 'imptotal',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
                 },
                 // this.json_data = this.controlmotions;
                 this.json_data = [];

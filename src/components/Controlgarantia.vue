@@ -247,11 +247,15 @@
                     'Proyecto': 'proyecto',
                     'Rubro': 'rubro',
                     'Proveedor': 'proveedor',
-                    'Importe': 'importe',
+                    'Importe': {field: 'importe',
+                        callback: (value) => {return value.toString().replace('.',',')}
+                    },
                     'Detalle': 'detalle',
                     'Banco' : 'banco',
                     'Nro Cheque': 'numcheque',
-                    'Fecha Cheque': 'feccheque',
+                    'Fecha Cheque': {field: 'feccheque',
+                        callback: (value) => {return value.substr(0,10)}
+                    },
                     'Vencimiento': 'fecvencimiento',
                     'Nro Cbte': 'numcomprobante',
                     'Entregado?': 'entregado',

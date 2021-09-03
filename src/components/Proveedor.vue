@@ -63,19 +63,6 @@
                                 </v-text-field>
                             </v-flex>
                             <v-flex xs6 sm6 md6>
-                                <v-select v-model="situacioniibb"
-                                :items = "situacionesiibb" @change="validarJurisdiccion()"  label = "IIBB"
-                                >
-                                </v-select>
-                            </v-flex>
-                            <v-flex xs6 sm6 md6>
-                                <v-select v-model="jurisdiccion"
-                                :items = "jurisdicciones" 
-                                :disabled="!esMl" 
-                                label = "Jurisdicción">
-                                </v-select>
-                            </v-flex>
-                            <v-flex xs6 sm6 md6>
                                 <v-text-field v-model="email" label="eMail"
                                 :disabled="generico">
                                 </v-text-field>
@@ -85,38 +72,6 @@
                                 :disabled="generico">
                                 </v-text-field>
                             </v-flex>
-                            <v-flex xs4 sm4 md4>
-                                <v-text-field v-model="direccion" label="Dirección"
-                                :disabled="generico">
-                                </v-text-field>
-                            </v-flex>
-                            <v-flex xs4 sm4 md4>
-                                <v-text-field v-model="localidad" label="Localidad"
-                                :disabled="generico">
-                                </v-text-field>
-                            </v-flex>
-                            <v-flex xs4 sm4 md4>
-                                <v-text-field v-model="cpostal" label="C.P."
-                                :disabled="generico">
-                                </v-text-field>
-                            </v-flex>
-                            <v-flex xs4 sm4 md4>
-                                <v-select v-model="idprovincia"
-                                :items = "provincias" label = "Provincia"
-                                :disabled="generico">
-                                </v-select>
-                            </v-flex>
-                            <v-flex xs4 sm4 md4>
-                                <v-select v-model="idpais"
-                                :items = "paises" label = "País" @change="selectCuit()"
-                                :disabled="generico">
-                                </v-select>
-                            </v-flex>
-                            <v-flex xs4 sm4 md4>
-                                <v-text-field v-model="formadepago" label="Forma de Pago"
-                                :disabled="generico">
-                                </v-text-field>
-                            </v-flex>                                
                             <v-flex xs4 sm4 md4>
                                 <v-select v-model="idpersona" clearable
                                 :items = "personas" label = "Contacto"
@@ -356,16 +311,8 @@
                     <td>{{ props.item.razonsocial }}</td>
                     <td>{{ props.item.cuit }}</td>
                     <td>{{ props.item.situacioniva }}</td>
-                    <td>{{ props.item.situacioniibb }}</td>
-                    <td>{{ props.item.jurisdiccion }}</td>                    
                     <td>{{ props.item.email }}</td>
                     <td>{{ props.item.telefono }}</td>
-                    <td>{{ props.item.direccion }}</td>
-                    <td>{{ props.item.localidad }}</td>
-                    <td>{{ props.item.cpostal }}</td>
-                    <td>{{ props.item.provincia }}</td>
-                    <td>{{ props.item.pais }}</td>
-                    <td>{{ props.item.persona }}</td>
                     <td>
                         <div v-if="props.item.generico">
                             <span class="red--text">Si</span>
@@ -414,15 +361,8 @@
                     { text: 'Razon Social', value: 'razonsocial', sortable: true },
                     { text: 'CUIT', value: 'cuit', sortable: true },
                     { text: 'IVA', value: 'situacioniva', sortable: true },
-                    { text: 'IIBB', value: 'situacioniibb', sortable: true },
-                    { text: 'Jurisdicción', value: 'jurisdiccion', sortable: true },
                     { text: 'eMail', value: 'email', sortable: true  },
                     { text: 'Telefono', value: 'telefono', sortable: true  },
-                    { text: 'Dirección', value: 'direccion', sortable: true },
-                    { text: 'Localidad', value: 'localidad', sortable: true },
-                    { text: 'C.P.', value: 'cpostal', sortable: true },
-                    { text: 'Provincia', value: 'provincia', sortable: true  },
-                    { text: 'Pais', value: 'pais', sortable: true  },
                     { text: 'Contacto', value: 'persona', sortable: true  },
                     { text: 'Generico', value: 'generico', sortable: true },
                     { text: 'Cbte.Generico', value: 'tipocomprobantegenerico', sortable: true },
@@ -482,48 +422,9 @@
                     {value: '13', text: 'Monotributista Social'},
                     {value: '14', text: 'Pequeño Contribuyente Eventual Social'}
                 ],
-                situacionesiibb: [
-                    {value: '1', text: 'No Inscripto'},
-                    {value: '2', text: 'Local'},
-                    {value: '3', text: 'Convenio Multilateral'},
-                    {value: '4', text: 'Regimen Simplificado'},
-                    {value: '5', text: 'Excento'}
-                ],                
-                jurisdicciones: [
-                    {value: '901', text: 'Capital Federal'},
-                    {value: '902', text: 'Buenos Aires'},
-                    {value: '903', text: 'Catamarca'},
-                    {value: '904', text: 'Córdoba'},
-                    {value: '905', text: 'Corrientes'},
-                    {value: '906', text: 'Chaco'},
-                    {value: '907', text: 'Chubut'},
-                    {value: '908', text: 'Entre Ríos'},
-                    {value: '909', text: 'Formosa'},
-                    {value: '910', text: 'Jujuy'},
-                    {value: '911', text: 'La Pampa'},
-                    {value: '912', text: 'La Rioja'},
-                    {value: '913', text: 'Mendoza'},
-                    {value: '914', text: 'Misiones'},
-                    {value: '915', text: 'Neuquén'},
-                    {value: '916', text: 'Río Negro'},
-                    {value: '917', text: 'Salta'},
-                    {value: '918', text: 'San Juan'},
-                    {value: '919', text: 'San Luis'},
-                    {value: '920', text: 'Santa Cruz'},
-                    {value: '921', text: 'Santa Fe'},
-                    {value: '922', text: 'Santiago del Estero'},
-                    {value: '923', text: 'Tierra del Fuego'},
-                    {value: '924', text: 'Tucumán'}
-                ],
                 situacioniva:'',
-                situacioniibb: '',
-                jurisdiccion: '',
                 email:'',
                 telefono:'',
-                direccion: '',
-                localidad: '',
-                cpostal: '',
-                formadepago: '',
                 idpersona:'',
                 //Detail Alternativas Pago
                 idalternativapago: '',
@@ -580,15 +481,8 @@
                     {title: "R.Social", dataKey: "razonsocial"},
                     {title: "CUIT", dataKey: "cuit"},
                     {title: "IVA", dataKey: "situacioniva"},
-                    {title: "IIBB", dataKey: "situacioniibb"},
-                    {title: "Jurisdicción", dataKey: "jurisdiccion"},
                     {title: "eMail", dataKey: "email"}, 
                     {title: "Teléfono", dataKey: "telefono"}, 
-                    {title: "Dirección", dataKey: "direccion"}, 
-                    {title: "Localidad", dataKey: "localidad"},
-                    {title: "C.P.", dataKey: "cpostal"}, 
-                    {title: "Provincia", dataKey: "provincia"}, 
-                    {title: "Pais", dataKey: "pais"}, 
                     {title: "Generico", dataKey: "generico"},                     
                     {title: "Activo", dataKey: "activo"}
                 ];
@@ -596,9 +490,7 @@
 
                 this.proveedores.map(function(x){
                     rows.push({razonsocial:x.razonsocial,generico:x.generico, cuit:x.cuit, situacioniva:x.situacioniva, email:x.email,
-                    situacioniibb:x.situacioniibb, jurisdiccion:x.jurisdiccion,
-                    telefono:x.telefono, direccion:x.direccion,localidad:x.localidad,provincia:x.provincia,pais:x.pais,
-                    activo:x.activo});
+                    telefono:x.telefono, activo:x.activo});
                 });
 
                 // Only pt supported (not mm or in)
@@ -668,22 +560,13 @@
             },
             editItem (item) {
                 this.idproveedor=item.idproveedor;
-                this.idprovincia=item.idprovincia;
-                this.idpais=item.idpais;
                 this.razonsocial=item.razonsocial;
                 this.generico=item.generico;
                 this.tipocomprobantegenerico=item.tipocomprobantegenerico;
                 this.cuit=item.cuit;
                 this.situacioniva=item.situacioniva;
-                this.situacioniibb=item.situacioniibb;
-                this.jurisdiccion=item.jurisdiccion;
-                this.validarJurisdiccion();
                 this.email=item.email;
                 this.telefono=item.telefono;
-                this.direccion=item.direccion;
-                this.localidad=item.localidad;
-                this.cpostal=item.cpostal;
-                this.formadepago=item.formadepago;
                 this.idpersona=item.idpersona;
                 this.iduseralta=item.iduseralta;
                 this.fecalta=item.fecalta;
@@ -698,22 +581,14 @@
             },
             limpiar(){
                 this.idproveedor="";
-                this.idpais="";
-                this.idprovincia="";
                 this.razonsocial="";
                 this.generico=false;
                 this.tipocomprobantegenerico='';
                 this.cuit="";
                 this.cuitoriginal="";
                 this.situacioniva="";
-                this.situacioniibb="";
-                this.jurisdiccion="";
                 this.email="";
                 this.telefono="";
-                this.direccion="";
-                this.localidad="";
-                this.cpostal="";
-                this.formadepago="";
                 this.idpersona="";
                 this.idpais="";
                 this.idprovincia="";
@@ -734,21 +609,13 @@
                     // console.log(me);
                     axios.put('api/Proveedores/Actualizar',{
                         'idproveedor': me.idproveedor,
-                        'idpais': me.idpais,
-                        'idprovincia': me.idprovincia,
                         'razonsocial': me.razonsocial,
                         'generico':me.generico,
                         'tipocomprobantegenerico':me.tipocomprobantegenerico,
                         'cuit': me.cuit,
                         'situacioniva': me.situacioniva,
-                        'situacioniibb': me.situacioniibb,
-                        'jurisdiccion': me.jurisdiccion,
                         'email': me.email,
                         'telefono': me.telefono,
-                        'direccion': me.direccion,
-                        'localidad': me.localidad,
-                        'cpostal': me.cpostal,
-                        'formadepago': me.formadepago,
                         'idpersona': me.idpersona,
                         'iduseralta': me.iduseralta,
                         'fecalta': me.fecalta,
@@ -775,14 +642,8 @@
                         'tipocomprobantegenerico':me.tipocomprobantegenerico,                        
                         'cuit': me.cuit,
                         'situacioniva': me.situacioniva,
-                        'situacioniibb': me.situacioniibb,
-                        'jurisdiccion': me.jurisdiccion,
                         'email': me.email,
                         'telefono': me.telefono,
-                        'direccion': me.direccion,
-                        'localidad': me.localidad,
-                        'cpostal': me.cpostal,
-                        'formadepago': me.formadepago,
                         'idpersona': me.idpersona,
                         'iduseralta': me.$store.state.usuario.idusuario,
                         'fecalta': new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString(),
@@ -804,15 +665,6 @@
                 this.idpais=1;
                 this.formadepago="CONTADO"
             },
-            validarJurisdiccion(){
-                if (this.situacioniibb == '3'){
-                    this.esMl = true;
-                }
-                else {
-                    this.esMl = false;
-                    this.jurisdiccion = '';
-                }
-            },
             selectCuit(){
                 var id = this.paises.findIndex(p => p.value === this.idpais);
                 if (this.paises[id].text!="ARGENTINA"){
@@ -826,26 +678,14 @@
                 if (this.razonsocial.length<3 || this.razonsocial.length>50){
                     this.validaMensaje.push("La razon social debe tener más de 3 caracteres y menos de 50 caracteres.");
                 }
-                if (!this.idpais && !this.generico ){
-                    this.validaMensaje.push("Seleccione un país.");
-                }
-                if (!this.idprovincia && !this.generico ){
-                    this.validaMensaje.push("Seleccione una provincia.");
-                }
                 if (!this.situacioniva){
                     this.validaMensaje.push("Seleccione una situacion IVA.");
-                }
-                if (!this.situacioniibb){
-                    this.validaMensaje.push("Seleccione una situacion IIBB.");
                 }
                 if ((!this.situacioniva=='05'&&!this.situacioniva=='07')||!this.cuit && !this.generico){
                     this.validaMensaje.push("Ingrese un CUIT.");
                 }
                 if (!this.cuitValido(this.cuit) && !this.generico){
                     this.validaMensaje.push("Numero de CUIT duplicado.");
-                }
-                if ((!this.jurisdiccion && this.situacioniibb=='3') && !this.generico) {
-                    this.validaMensaje.push("Seleccione una Jurisdicción.");
                 }
                 if (!this.tipocomprobantegenerico && this.generico ){
                     this.validaMensaje.push("Seleccione un Tipo de Cbte Generico.");
