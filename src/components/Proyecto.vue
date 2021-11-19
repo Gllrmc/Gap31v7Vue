@@ -1048,6 +1048,10 @@
                         'fecrodaje': me.fecrodaje,
                         'fecoffline': me.fecoffline,
                         'feconline': me.feconline,
+                        'cierreprod': me.cierreprod,
+                        'feccierreprod': me.feccierreprod,
+                        'cierreadmin': me.cierreadmin,
+                        'feccierreadmin': me.feccierreadmin,
                         'iduseralta': me.$store.state.usuario.idusuario,
                     },configuracion).then(function(response){
                         me.close();

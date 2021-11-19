@@ -728,7 +728,6 @@
                         //Código para guardar
                         let me=this;
                         // console.log(me);
-                        debugger;
                         axios.put('api/Rendicionfondos/Actualizar',{
                             'idrendicionfondo': me.idrendicionfondo,
                             'iddistribucionfondo': me.iddistribucionfondo,

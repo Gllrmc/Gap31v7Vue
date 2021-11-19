@@ -466,101 +466,121 @@
                 this.editedIndex=-1;
             },
             guardar () {
-                if (this.validar()){
-                    return;
-                }
                 var date = new Date();
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
-                if (this.editedIndex > -1) {
-                    //Código para editar
-                    //Código para guardar
-                    let me=this;
-                    //console.log(me);
-                    axios.put('api/Proyectos/Actualizar',{
-                        'idproyecto': me.idproyecto,
-                        'idraiz': me.idraiz,
-                        'orden': me.orden,
-                        'proyecto': me.proyecto,
-                        'idtipoprod': me.idtipoprod,
-                        'idempresa': me.idempresa,
-                        'idorigen': me.idorigen,
-                        'idagencia': me.idagencia,
-                        'idproductora': me.idproductora,
-                        'idcliente': me.idcliente,
-                        'iddirector': me.iddirector,
-                        'idcodirector': me.idcodirector,
-                        'idep': me.idep,
-                        'idlp': me.idlp,
-                        'idcp': me.idcp,
-                        'ars1usd': me.ars1usd,
-                        'fecadjudicacion': me.fecadjudicacion,
-                        'fecdesdxd': me.fecdesdxd,
-                        'fechasdxd': me.fechasdxd,
-                        'fecdescf': me.fecdescf,
-                        'fechascf': me.fechascf,
-                        'fecrodaje': me.fecrodaje,
-                        'fecoffline': me.fecoffline,
-                        'feconline': me.feconline,
-                        'cierreprod': me.cierreprod,
-                        'feccierreprod':  new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString(),
-                        'cierreadmin': me.cierreadmin,
-                        'feccierreadmin': me.feccierreadmin,
-                        'iduseralta': me.iduseralta,
-                        'fecalta': me.fecalta,
-                        'iduserumod': me.$store.state.usuario.idusuario,
-                        'fecumod': new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString()
-                    },configuracion).then(function(response){
-                        me.close();
-                        me.listar();
-                        me.limpiar();                        
-                    }).catch(function(error){
-                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
-                        me.snackbar = true;                     
-                        console.log(error);
+                //Código para editar
+                //Código para guardar
+                let me=this;
+                //console.log(me);
+                axios.put('api/Proyectos/Cierreprod/'+me.idproyecto,{},configuracion).then(function(){
+                    me.close();
+                    me.listar();
+                    me.limpiar();                        
+                }).catch(function(error){
+                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
+                    me.snackbar = true;                     
+                    console.log(error);
 
-                    });
-                } else {
-                    //Código para guardar
-                    let me=this;
-                    //console.log(me);
-                    axios.post('api/Proyectos/Crear',{
-                        'idraiz': me.idraiz,
-                        'orden': me.orden,
-                        'proyecto': me.proyecto,
-                        'idtipoprod': me.idtipoprod,
-                        'idempresa': me.idempresa,
-                        'idorigen': me.idorigen,
-                        'idagencia': me.idagencia,
-                        'idproductora': me.idproductora,
-                        'idcliente': me.idcliente,
-                        'iddirector': me.iddirector,
-                        'idcodirector': me.idcodirector,
-                        'idep': me.idep,
-                        'idlp': me.idlp,
-                        'idcp': me.idcp,
-                        'ars1usd': me.ars1usd,
-                        'fecadjudicacion': me.fecadjudicacion,
-                        'fecdesdxd': me.fecdesdxd,
-                        'fechasdxd': me.fechasdxd,
-                        'fecdescf': me.fecdescf,
-                        'fechascf': me.fechascf,
-                        'fecrodaje': me.fecrodaje,
-                        'fecoffline': me.fecoffline,
-                        'feconline': me.feconline,
-                        'cierreprod': me.cierreprod,
-                        'iduseralta': me.$store.state.usuario.idusuario,
-                    },configuracion).then(function(response){
-                        me.close();
-                        me.listar();
-                        me.limpiar();                        
-                    }).catch(function(error){
-                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
-                        me.snackbar = true;                     
-                        console.log(error);
-                    });
-                }
+                });
             },
+
+            // guardar () {
+            //     if (this.validar()){
+            //         return;
+            //     }
+            //     var date = new Date();
+            //     let header={"Authorization" : "Bearer " + this.$store.state.token};
+            //     let configuracion= {headers : header};
+            //     if (this.editedIndex > -1) {
+            //         //Código para editar
+            //         //Código para guardar
+            //         let me=this;
+            //         //console.log(me);
+            //         debugger
+            //         axios.put('api/Proyectos/Actualizar',{
+            //             'idproyecto': me.idproyecto,
+            //             'orden': me.orden,
+            //             'idraiz': me.idraiz,
+            //             'proyecto': me.proyecto,
+            //             'idtipoprod': me.idtipoprod,
+            //             'idempresa': me.idempresa,
+            //             'idorigen': me.idorigen,
+            //             'idagencia': me.idagencia,
+            //             'idproductora': me.idproductora,
+            //             'idcliente': me.idcliente,
+            //             'iddirector': me.iddirector,
+            //             'idcodirector': me.idcodirector,
+            //             'idep': me.idep,
+            //             'idlp': me.idlp,
+            //             'idcp': me.idcp,
+            //             'ars1usd': me.ars1usd,
+            //             'fecadjudicacion': me.fecadjudicacion,
+            //             'fecdesdxd': me.fecdesdxd,
+            //             'fechasdxd': me.fechasdxd,
+            //             'fecdescf': me.fecdescf,
+            //             'fechascf': me.fechascf,
+            //             'fecrodaje': me.fecrodaje,
+            //             'fecoffline': me.fecoffline,
+            //             'feconline': me.feconline,
+            //             'cierreprod': me.cierreprod,
+            //             'feccierreprod':  new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString(),
+            //             'cierreadmin': me.cierreadmin,
+            //             'feccierreadmin': me.feccierreadmin,
+            //             'iduserumod': me.$store.state.usuario.idusuario,
+            //         },configuracion).then(function(response){
+            //             me.close();
+            //             me.listar();
+            //             me.limpiar();                        
+            //         }).catch(function(error){
+            //             me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
+            //             me.snackbar = true;                     
+            //             console.log(error);
+
+            //         });
+            //     } else {
+            //         //Código para guardar
+            //         let me=this;
+            //         //console.log(me);
+            //         axios.post('api/Proyectos/Crear',{
+            //             'idraiz': me.idraiz,
+            //             'orden': me.orden,
+            //             'proyecto': me.proyecto,
+            //             'idtipoprod': me.idtipoprod,
+            //             'idempresa': me.idempresa,
+            //             'idorigen': me.idorigen,
+            //             'idagencia': me.idagencia,
+            //             'idproductora': me.idproductora,
+            //             'idcliente': me.idcliente,
+            //             'iddirector': me.iddirector,
+            //             'idcodirector': me.idcodirector,
+            //             'idep': me.idep,
+            //             'idlp': me.idlp,
+            //             'idcp': me.idcp,
+            //             'ars1usd': me.ars1usd,
+            //             'fecadjudicacion': me.fecadjudicacion,
+            //             'fecdesdxd': me.fecdesdxd,
+            //             'fechasdxd': me.fechasdxd,
+            //             'fecdescf': me.fecdescf,
+            //             'fechascf': me.fechascf,
+            //             'fecrodaje': me.fecrodaje,
+            //             'fecoffline': me.fecoffline,
+            //             'feconline': me.feconline,
+            //             'cierreprod': me.cierreprod,
+            //             'cierreadmin': me.cierreadmin,
+            //             'feccierreadmin': me.feccierreadmin,
+            //             'iduseralta': me.$store.state.usuario.idusuario,
+            //         },configuracion).then(function(response){
+            //             me.close();
+            //             me.listar();
+            //             me.limpiar();                        
+            //         }).catch(function(error){
+            //             me.snacktext = 'Se detectó un error. Código: '+ error.response.status;                     
+            //             me.snackbar = true;                     
+            //             console.log(error);
+            //         });
+            //     }
+            // },
             validar(){
                 let me=this;
                 me.valida=false;
