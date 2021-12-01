@@ -367,22 +367,24 @@
             },
             selectProyectosDeCliente(){
                 let me=this;
-                var proyectoRaizArray = [];
-                this.idraiz = "";
-                let header={"Authorization" : "Bearer " + this.$store.state.token};
-                let configuracion= {headers : header};
-                axios.get('api/Proyectos/SelectProyectosDeCliente/'+this.idcliente,configuracion)
-                .then(function(response){
-                    //console.log(response);
-                    proyectoRaizArray=response.data;
-                    proyectoRaizArray.map(function(x){
-                        me.raices.push({text: x.orden + ' ' + x.proyecto,value: x.idproyecto});
+                if (me.idcliente){
+                    var proyectoRaizArray = [];
+                    this.idraiz = "";
+                    let header={"Authorization" : "Bearer " + this.$store.state.token};
+                    let configuracion= {headers : header};
+                    axios.get('api/Proyectos/SelectProyectosDeCliente/'+this.idcliente,configuracion)
+                    .then(function(response){
+                        //console.log(response);
+                        proyectoRaizArray=response.data;
+                        proyectoRaizArray.map(function(x){
+                            me.raices.push({text: x.orden + ' ' + x.proyecto,value: x.idproyecto});
+                        });
+                    }).catch(function(error){
+                        me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
+                        me. snackbar = true;
+                        console.log(error);
                     });
-                }).catch(function(error){
-                    me.snacktext = 'Se detectó un error. Código: '+ error.response.status;
-                    me. snackbar = true;
-                    console.log(error);
-                });
+                }
             },            
             listar(){
                 let me=this;
@@ -617,13 +619,12 @@
                 if (this.validar()){
                     return;
                 }
+                let me=this;
                 var date = new Date();
                 let header={"Authorization" : "Bearer " + this.$store.state.token};
                 let configuracion= {headers : header};
                 if (this.editedIndex > -1) {
                     //Código para editar
-                    //Código para guardar
-                    let me=this;
                     // console.log(me);
                     axios.put('api/Proyectos/Actualizar',{
                         'idproyecto': me.idproyecto,
@@ -669,7 +670,6 @@
                     });
                 } else {
                     //Código para guardar
-                    let me=this;
                     // console.log(me);
                     axios.post('api/Proyectos/Crear',{
                         'idraiz': me.idraiz,
@@ -720,29 +720,14 @@
                 if (!this.idtipoprod){
                     this.validaMensaje.push("Ingrese una tipo de producción.");
                 }
-                if (!this.idempresa){
-                    this.validaMensaje.push("Ingrese una empresa.");
-                }
                 if (!this.idorigen){
                     this.validaMensaje.push("Ingrese un origen.");
-                }
-                if (!this.idagencia){
-                    this.validaMensaje.push("Ingrese una agencia.");
-                }
-                if (!this.idproductora){
-                    this.validaMensaje.push("Ingrese una productora.");
-                }
-                if (!this.idcliente){
-                    this.validaMensaje.push("Ingrese un cliente.");
                 }
                 if (!this.iddirector){
                     this.validaMensaje.push("Ingrese un Director.");
                 }
                 if (!this.idep){
                     this.validaMensaje.push("Ingrese un EP.");
-                }
-                if (!this.ars1usd){
-                    this.validaMensaje.push("Ingrese tipo de cambio ARS/USD.");
                 }
                 if (!this.fecadjudicacion){
                     this.validaMensaje.push("Ingrese fecha de adjudicacion.");
