@@ -248,7 +248,10 @@
                             <strong> Entregado: </strong>$ {{pad(formatPrice(totalEntregado=(calcularTotal)),20,'*')}}
                         </v-flex>
                         <v-flex class="text-xs-right">
-                            <strong> Disponile: </strong>$ {{pad(formatPrice(totalDisponible=(totalSolicitado-totalEntregado)),20,'*')}}
+                            <strong> Devuelto: </strong>$ {{pad(formatPrice(-totalDevuelto),20,'*')}}
+                        </v-flex>
+                        <v-flex class="text-xs-right">
+                            <strong> Disponible: </strong>$ {{pad(formatPrice(totalDisponible=(totalSolicitado-totalEntregado+totalDevuelto)),20,'*')}}
                         </v-flex>                        
                     </v-card-text>
                     <v-card-actions>
@@ -353,6 +356,7 @@
                 ],
                 totalSolicitado: 0,
                 totalEntregado: 0,
+                totalDevuelto: 0,
                 totalDisponible: 0,                   
                 search: '',
                 searchr: '',
@@ -372,8 +376,13 @@
                 },
             calcularTotal:function(){
                     var resultado=0.0;
+                    this.totalDevuelto = 0;
                     for(var i=0;i<this.distribucionfondos.length;i++){
-                        resultado=resultado+(this.distribucionfondos[i].activo?this.distribucionfondos[i].importe:0);
+                        if (!this.distribucionfondos[i].devolucion) {
+                            resultado=resultado+((this.distribucionfondos[i].activo)?this.distribucionfondos[i].importe:0);
+                        } else {
+                            this.totalDevuelto = this.totalDevuelto + this.distribucionfondos[i].importe
+                        }
                     }
                     return resultado;
                 }                             
@@ -506,6 +515,7 @@
                 this.importe = '';
                 this.totalSolicitado = 0;                
                 this.totalEntregado = 0;
+                this.totalDevuelto = 0;
                 this.totalDisponible = 0;  
             },
             limpiarDetail() {
@@ -521,6 +531,7 @@
                 this.iduserumod = '';
                 this.fecumod = '';
                 this.totalEntregado = 0;
+                this.totalDevuelto = 0;
                 this.totalDisponible = 0;
                 this.searchr = '';
                 this.editedIndex=-1;

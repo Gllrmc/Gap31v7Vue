@@ -243,13 +243,16 @@
                             </template>
                         </v-data-table>
                         <v-flex class="text-xs-right">
-                            <strong>Distribuido: </strong>$ {{pad(formatPrice(totalDistribucion=(CalcularTotalDist)),20,'*')}}
-                        </v-flex>
-                        <v-flex class="text-xs-right">
                             <strong>Pedido: </strong>$ {{pad(formatPrice(totalPedido=(calcularTotal)),20,'*')}}
                         </v-flex>
                         <v-flex class="text-xs-right">
-                            <strong>Pendiente: </strong>$ {{pad(formatPrice(totalPendiente=(totalDistribucion-totalPedido)),20,'*')}}
+                            <strong>Distribuido: </strong>$ {{pad(formatPrice(totalDistribucion=(CalcularTotalDist)),20,'*')}}
+                        </v-flex>
+                        <v-flex class="text-xs-right">
+                            <strong> Devuelto: </strong>$ {{pad(formatPrice(-totalDevuelto),20,'*')}}
+                        </v-flex>
+                        <v-flex class="text-xs-right">
+                            <strong>Pendiente: </strong>$ {{pad(formatPrice(totalPendiente=(totalPedido-totalDistribucion+totalDevuelto)),20,'*')}}
                         </v-flex>                        
                     </v-card-text>
                     <v-card-actions>
@@ -300,6 +303,7 @@
                 return {
                 totalPendiente:0,
                 totalPedido:0,
+                totalDevuelto: 0,
                 totalDistribucion:0,
                 snackbar:false,
                 snacktext: 'Hola',
@@ -369,7 +373,7 @@
                 formTitle () {
                     return this.editedIndex === -1 ? 'Nueva devolución' : 'Actualizar devolución'
                 },
-            calcularTotal:function(){
+                calcularTotal:function(){
                     var resultado=0.0;
                     for(var i=0;i<this.pedidofondos.length;i++){
                         if(this.pedidofondos[i].idpedidofondo == this.idpedidofondo ){
@@ -378,11 +382,15 @@
                     }
                     return resultado;
                 },
-            CalcularTotalDist:function(){
+                CalcularTotalDist:function(){
                     var resultado=0.0;
                     for(var i=0;i<this.distribucionfondos.length;i++){
                         if(this.distribucionfondos[i].idpedidofondo == this.idpedidofondo ){
-                            resultado=resultado+(this.distribucionfondos[i].activo?this.distribucionfondos[i].importe:0);
+                            if (!this.distribucionfondos[i].devolucion) {
+                                resultado=resultado+((this.distribucionfondos[i].activo)?this.distribucionfondos[i].importe:0);
+                            } else {
+                                this.totalDevuelto = this.totalDevuelto + this.distribucionfondos[i].importe
+                            }
                         }
                     }
                     return resultado;
@@ -625,7 +633,7 @@
                 if (!this.importe || Number(this.importe) > 0 ){
                     this.validaMensaje.push("Ingrese un importe negativo.");
                 }
-                if (-this.totalPendiente+Number(this.importe)<0){
+                if (this.totalPendiente+Number(this.importe)<0){
                     this.validaMensaje.push("Valide los montos ingresados vs disponibles.");
                 }
                 if (this.validaMensaje.length){

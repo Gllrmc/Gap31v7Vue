@@ -436,19 +436,27 @@
                         resultado=resultado+(this.rendicionfondos[i].activo?this.rendicionfondos[i].imptotal:0);
                     }
                     return resultado;
-                },
+            },
             CalcularTotalDist:function(){
-                    var resultado=0.0;
+                var resultado=0.0;
                     for(var i=0;i<this.distribucionfondos.length;i++){
-                        resultado=resultado+(this.distribucionfondos[i].activo?this.distribucionfondos[i].importe:0);
+                        if(this.distribucionfondos[i].idpedidofondo == this.idpedidofondo ){
+                            if (!this.distribucionfondos[i].devolucion) {
+                                resultado=resultado+((this.distribucionfondos[i].activo)?this.distribucionfondos[i].importe:0);
+                            }
+                        }
                     }
-                    return resultado;
-                },
+                return resultado;
+            },
             CalcularTotalProy:function(){
                     var resultado=0.0;
                     for(var i=0;i<this.distribucionfondos.length;i++){
                         if(this.distribucionfondos[i].idproyecto == this.idproyecto ){
-                            resultado=resultado+(this.distribucionfondos[i].activo?this.distribucionfondos[i].importe:0);
+                            if(this.distribucionfondos[i].idpedidofondo == this.idpedidofondo ){
+                                if (!this.distribucionfondos[i].devolucion) {
+                                    resultado=resultado+((this.distribucionfondos[i].activo)?this.distribucionfondos[i].importe:0);
+                                }
+                            }
                         }
                     }
                     return resultado;
